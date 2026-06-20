@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mindsizer — workspace wireframe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..900,0..100;1,9..144,400..900,0..100&family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBFBF8;
+    --surface:#FFFFFF;
+    --ink:#0F2542;
+    --muted:rgba(15,37,66,0.56);
+    --dim:rgba(15,37,66,0.34);
+    --line:rgba(15,37,66,0.12);
+    --line-soft:rgba(15,37,66,0.07);
+    --accent:#0E8A8F;
+    --accent-bg:rgba(14,138,143,0.08);
+    --live:#2B9D6E;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Geist',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    padding:40px 24px 56px;
+    background-image:radial-gradient(circle at 1px 1px, rgba(15,37,66,0.045) 1px, transparent 0);
+    background-size:26px 26px;
+  }
+  .wrap{max-width:1060px;margin:0 auto;}
+
+  .eyebrow{
+    font-family:'Geist Mono',monospace;
+    font-size:10.5px;letter-spacing:0.2em;text-transform:uppercase;
+    color:var(--dim);
+    display:flex;justify-content:space-between;align-items:baseline;
+    margin:0 4px 14px;gap:16px;
+  }
+  .eyebrow b{color:var(--muted);font-weight:500;}
+
+  /* ── window ─────────────────────────────────────── */
+  .win{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+
+  .titlebar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:11px 15px;border-bottom:1px solid var(--line-soft);
+    gap:14px;
+  }
+  .dots{display:flex;gap:6px;}
+  .dots span{width:10px;height:10px;border-radius:50%;background:var(--line);}
+  .addr{display:flex;align-items:center;gap:10px;min-width:0;}
+  .addr .url{font-family:'Geist Mono',monospace;font-size:12px;color:var(--dim);}
+  .live{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--live);white-space:nowrap;}
+  .live i{width:7px;height:7px;border-radius:50%;background:var(--live);display:inline-block;}
+  .tb-right{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+  .pill{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:12px;color:var(--accent);background:var(--accent-bg);
+    padding:5px 11px;border-radius:7px;white-space:nowrap;
+  }
+  .pill svg{width:13px;height:13px;}
+  .btn{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:'Geist',sans-serif;font-size:12.5px;color:var(--ink);
+    background:transparent;border:1px solid var(--line);
+    padding:6px 12px;border-radius:7px;cursor:pointer;transition:background .15s,border-color .15s;
+  }
+  .btn:hover{background:var(--paper);border-color:var(--muted);}
+  .btn svg{width:14px;height:14px;}
+
+  /* ── slide strip ────────────────────────────────── */
+  .strip{
+    display:flex;align-items:center;gap:8px;
+    padding:11px 15px;border-bottom:1px solid var(--line-soft);
+    overflow-x:auto;scrollbar-width:none;
+  }
+  .strip::-webkit-scrollbar{height:0;}
+  .strip-label{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--dim);margin-right:2px;flex:0 0 auto;}
+  .chip{
+    flex:0 0 auto;width:30px;height:30px;border-radius:7px;
+    border:1px solid var(--line);background:var(--surface);
+    font-family:'Geist Mono',monospace;font-size:11.5px;color:var(--muted);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    transition:border-color .15s,color .15s;
+  }
+  .chip:hover{border-color:var(--muted);color:var(--ink);}
+  .chip.active{border:1.5px solid var(--accent);color:var(--accent);background:var(--accent-bg);}
+  .chip.add{color:var(--dim);}
+  .chip svg{width:14px;height:14px;}
+
+  /* ── main panes ─────────────────────────────────── */
+  .main{display:grid;grid-template-columns:0.9fr 1.1fr;}
+  .pane{padding:16px 18px;}
+  .pane.outline{border-right:1px solid var(--line-soft);}
+  .pane.preview{background:#FAFAF7;}
+  .pane-head{display:flex;align-items:center;gap:9px;margin-bottom:15px;}
+  .pane-head .name{font-size:13.5px;font-weight:500;}
+  .tag{font-family:'Geist Mono',monospace;font-size:10.5px;color:var(--muted);background:var(--paper);border:1px solid var(--line-soft);padding:3px 8px;border-radius:6px;letter-spacing:0.02em;}
+  .tag.ok{color:var(--live);border-color:rgba(43,157,110,0.25);margin-left:auto;display:inline-flex;align-items:center;gap:4px;}
+  .tag.ok svg{width:12px;height:12px;}
+
+  /* outline content */
+  .o-title{font-size:18px;font-weight:500;margin:0 0 12px;letter-spacing:-0.01em;}
+  .o-points{margin:0;padding:0;list-style:none;}
+  .o-points li{display:flex;gap:10px;font-size:13.5px;line-height:1.5;color:var(--muted);padding:5px 0;}
+  .o-points li::before{content:'—';color:var(--dim);}
+  .meta-row{
+    display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center;
+    margin-top:16px;padding-top:13px;border-top:1px solid var(--line-soft);
+  }
+  .meta-label{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);}
+  .layout-val{display:flex;align-items:center;gap:8px;}
+  .layout-chip{font-family:'Geist Mono',monospace;font-size:12px;color:var(--ink);background:var(--paper);border:1px solid var(--line);padding:3px 9px;border-radius:6px;}
+  .layout-note{font-size:11.5px;color:var(--dim);}
+
+  /* ── the slide (Field theme) ────────────────────── */
+  .slide{
+    --s-bg:#0a1a2f; --s-fg:#f3efe5;
+    --s-muted:rgba(243,239,229,0.58); --s-dim:rgba(243,239,229,0.34);
+    --s-line:rgba(243,239,229,0.16); --s-cyan:#4DD9E0;
+    aspect-ratio:16/9;background:var(--s-bg);color:var(--s-fg);
+    border-radius:8px;padding:26px 30px;display:flex;flex-direction:column;
+    position:relative;overflow:hidden;
+    background-image:radial-gradient(circle at 1px 1px, rgba(243,239,229,0.05) 1px, transparent 0);
+    background-size:22px 22px;
+  }
+  .s-eyebrow{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--s-dim);margin-bottom:14px;}
+  .s-title{font-family:'Fraunces',serif;font-variation-settings:"SOFT" 90,"opsz" 90;font-weight:600;font-size:30px;line-height:1;letter-spacing:-0.02em;margin:0 0 20px;}
+  .s-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1;align-content:start;}
+  .s-col-label{font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--s-dim);margin-bottom:8px;}
+  .s-body{font-size:13px;line-height:1.5;color:var(--s-muted);margin:0;}
+  .s-analogy{border:1px solid var(--s-line);border-left:2px solid var(--s-cyan);border-radius:0 6px 6px 0;padding:12px 14px;}
+  .s-analogy .s-col-label{color:var(--s-cyan);display:flex;align-items:center;gap:5px;}
+  .s-analogy .s-col-label svg{width:12px;height:12px;}
+  .s-analogy .s-body{color:var(--s-fg);}
+  .s-analogy .s-body b{font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-variation-settings:"SOFT" 100;color:var(--s-cyan);}
+  .s-foot{display:flex;align-items:center;justify-content:space-between;margin-top:18px;}
+  .s-progress{height:2px;width:64px;background:var(--s-line);border-radius:2px;overflow:hidden;}
+  .s-progress i{display:block;height:100%;width:33%;background:var(--s-cyan);}
+  .s-num{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--s-dim);}
+
+  /* ── agent bar ──────────────────────────────────── */
+  .bar{display:flex;align-items:center;gap:11px;padding:13px 15px;border-top:1px solid var(--line-soft);}
+  .seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex:0 0 auto;}
+  .seg button{
+    font-family:'Geist',sans-serif;font-size:12.5px;color:var(--muted);
+    background:transparent;border:none;padding:7px 13px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;transition:background .15s,color .15s;
+  }
+  .seg button svg{width:14px;height:14px;}
+  .seg button.on{background:var(--accent-bg);color:var(--accent);}
+  .seg button:not(.on):hover{background:var(--paper);color:var(--ink);}
+  .field{flex:1;display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;padding:0 4px 0 13px;background:var(--surface);transition:border-color .15s;}
+  .field:focus-within{border-color:var(--accent);}
+  .field input{flex:1;border:none;outline:none;background:transparent;font-family:'Geist',sans-serif;font-size:13.5px;color:var(--ink);padding:9px 0;}
+  .field input::placeholder{color:var(--dim);}
+  .send{width:32px;height:32px;border-radius:6px;border:none;background:var(--ink);color:var(--paper);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:opacity .15s;}
+  .send:hover{opacity:0.85;}
+  .send svg{width:16px;height:16px;}
+
+  .caption{font-family:'Geist',sans-serif;font-size:12px;color:var(--dim);text-align:center;margin:14px 6px 0;line-height:1.5;}
+  .caption b{color:var(--muted);font-weight:500;}
+  .caption .route{color:var(--accent);font-weight:500;}
+
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+
+  @media (max-width:780px){
+    .main{grid-template-columns:1fr;}
+    .pane.outline{border-right:none;border-bottom:1px solid var(--line-soft);}
+    .s-title{font-size:24px;}
+    .bar{flex-wrap:wrap;}
+    .field{order:3;flex-basis:100%;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">
+    <span>mindsizer — workspace wireframe</span>
+    <span><b>local tool</b> · single-file artifact</span>
+  </div>
+
+  <div class="win">
+
+    <!-- titlebar -->
+    <div class="titlebar">
+      <div class="addr">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="url">localhost:4321</span>
+        <span class="live"><i></i>running locally</span>
+      </div>
+      <div class="tb-right">
+        <span class="pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="0.5" fill="currentColor"/></svg>
+          teaching · conceptual
+        </span>
+        <button class="btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg>
+          export
+        </button>
+      </div>
+    </div>
+
+    <!-- slide strip -->
+    <div class="strip" id="strip">
+      <span class="strip-label">slides</span>
+      <button class="chip">1</button>
+      <button class="chip">2</button>
+      <button class="chip active">3</button>
+      <button class="chip">4</button>
+      <button class="chip">5</button>
+      <button class="chip">6</button>
+      <button class="chip">7</button>
+      <button class="chip">8</button>
+      <button class="chip">9</button>
+      <button class="chip add" aria-label="add slide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+    </div>
+
+    <!-- main -->
+    <div class="main">
+
+      <!-- outline pane (content / source of truth) -->
+      <div class="pane outline">
+        <div class="pane-head">
+          <span class="name">Outline</span>
+          <span class="tag">content · source of truth</span>
+        </div>
+        <h2 class="o-title">Eventual consistency</h2>
+        <ul class="o-points">
+          <li>replicas converge once writes stop</li>
+          <li>reads may return stale data briefly</li>
+          <li>trades instant accuracy for availability</li>
+        </ul>
+        <div class="meta-row">
+          <span class="meta-label">layout</span>
+          <span class="layout-val">
+            <span class="layout-chip">analogy</span>
+            <span class="layout-note">the per-slide style knob</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- preview pane (design) -->
+      <div class="pane preview">
+        <div class="pane-head">
+          <span class="name">Slide preview</span>
+          <span class="tag">design</span>
+          <span class="tag ok">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L19 7"/></svg>
+            rendered &amp; checked
+          </span>
+        </div>
+
+        <div class="slide">
+          <div class="s-eyebrow">distributed systems</div>
+          <h3 class="s-title">Eventual consistency</h3>
+          <div class="s-cols">
+            <div>
+              <div class="s-col-label">what it means</div>
+              <p class="s-body">Every copy of the data agrees — eventually. A read can lag for a moment after a write.</p>
+            </div>
+            <div class="s-analogy">
+              <div class="s-col-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-11.2 7.3L4 21l1.7-5.8A8 8 0 1 1 21 12z"/></svg>
+                think of it like
+              </div>
+              <p class="s-body"><b>Office gossip</b> — everyone hears the news eventually, just not at the same instant.</p>
+            </div>
+          </div>
+          <div class="s-foot">
+            <span class="s-progress"><i></i></span>
+            <span class="s-num">03 / 09</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- agent bar -->
+    <div class="bar">
+      <div class="seg" id="seg">
+        <button data-mode="content">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h14v16H5z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+          content
+        </button>
+        <button class="on" data-mode="design">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="18" cy="13" r="2.5"/><circle cx="7" cy="9" r="2.5"/><path d="M9 20c-3 0-6-2-6-6 0-5 4-10 10-10s9 4 9 8c0 3-2 4-4 4h-2c-1 0-2 1-2 2s.5 2-3 2z"/></svg>
+          design
+        </button>
+      </div>
+      <label class="field">
+        <input type="text" placeholder="ask mindsizer to refine this slide…" aria-label="refine this slide" />
+      </label>
+      <button class="send" aria-label="send">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+      </button>
+    </div>
+
+  </div>
+
+  <p class="caption" id="caption">
+    edit routes by intent — this edit is going to <span class="route" id="routeWord">design</span>, so it touches <b>only this slide's HTML</b>.
+  </p>
+
+</div>
+
+<script>
+  (function(){
+    var seg = document.getElementById('seg');
+    var routeWord = document.getElementById('routeWord');
+    var caption = document.getElementById('caption');
+    var copy = {
+      content: ['content', "this edit is going to <span class='route'>content</span>, so it <b>rewrites the outline &amp; re-injects</b>."],
+      design:  ['design',  "this edit is going to <span class='route'>design</span>, so it touches <b>only this slide's HTML</b>."]
+    };
+    seg.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if(!b) return;
+      seg.querySelectorAll('button').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      caption.innerHTML = 'edit routes by intent — ' + copy[b.dataset.mode][1];
+    });
+
+    var strip = document.getElementById('strip');
+    strip.addEventListener('click', function(e){
+      var c = e.target.closest('.chip'); if(!c || c.classList.contains('add')) return;
+      strip.querySelectorAll('.chip').forEach(function(x){x.classList.remove('active');});
+      c.classList.add('active');
+    });
+  })();
+</script>
+</body>
+</html>
