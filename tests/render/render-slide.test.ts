@@ -35,4 +35,16 @@ describe("renderSlide", () => {
       renderSlide({ id: "s_b", layout: "bespoke", title: "x", markdown: "" }),
     ).toThrow(/no static renderer/);
   });
+
+  it("an analogy slide that is only a blockquote still fits the step-1 seam", () => {
+    const html = renderSlide({
+      id: "s_q",
+      layout: "analogy",
+      title: "Q",
+      markdown: "> just an **analogy**",
+    });
+    expect(validateSlideSection(html, "s_q")).toEqual([]);
+    expect(readBoundRegions(html).concept).toBe("");
+    expect(readBoundRegions(html).analogy).toContain("<strong>analogy</strong>");
+  });
 });

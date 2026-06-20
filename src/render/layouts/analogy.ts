@@ -6,6 +6,7 @@ export function renderAnalogy(
   slots: Record<string, string>,
   slide: OutlineSlide,
 ): string {
+  // slot HTML is trusted (marked over author markdown); title is plain text → escaped
   return `<section data-slide-id="${slide.id}" data-layout="analogy">
   <h2 class="s-title" data-bind="title">${escapeHtml(slide.title)}</h2>
   <div class="s-cols">

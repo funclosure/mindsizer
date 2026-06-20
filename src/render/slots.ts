@@ -1,5 +1,5 @@
 import type { Tokens } from "marked";
-import { blocks, inline, block } from "./markdown";
+import { blocks, block } from "./markdown";
 
 /** Map a slide's markdown body into a layout's named slots (agent-free). */
 export function extractSlots(layout: string, body: string): Record<string, string> {
@@ -8,13 +8,20 @@ export function extractSlots(layout: string, body: string): Record<string, strin
   throw new Error(`no slot mapping for layout: ${layout}`);
 }
 
+/**
+ * analogy layout convention: the FIRST blockquote becomes the analogy slot
+ * (rendered block-aware so any content degrades gracefully); every other
+ * non-space block becomes the concept (a second blockquote falls into the
+ * concept). No blockquote → empty analogy. Slot HTML is trusted: it is
+ * marked output over author-controlled markdown.
+ */
 function analogySlots(body: string): Record<string, string> {
   const toks = blocks(body);
   const firstBq = toks.find((t) => t.type === "blockquote") as
     | Tokens.Blockquote
     | undefined;
 
-  const analogy = firstBq ? inline(firstBq.text).trim() : "";
+  const analogy = firstBq ? block(firstBq.text).trim() : "";
   const concept = toks
     .filter((t) => t !== firstBq && t.type !== "space")
     .map((t) => block(t.raw).trim())

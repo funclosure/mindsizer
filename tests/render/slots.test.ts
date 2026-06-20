@@ -32,4 +32,16 @@ describe("extractSlots", () => {
   it("throws for a layout with no slot mapping", () => {
     expect(() => extractSlots("quote", "x")).toThrow(/no slot mapping/);
   });
+
+  it("analogy: a blockquote containing a list renders as a list, not raw markdown", () => {
+    const s = extractSlots("analogy", "concept here\n\n> - first\n> - second");
+    expect(s.analogy).toContain("<li>first</li>");
+    expect(s.analogy).not.toContain("- first"); // not raw markdown
+  });
+
+  it("analogy: a blockquote-only slide yields empty concept + rendered analogy", () => {
+    const s = extractSlots("analogy", "> just an **analogy**");
+    expect(s.concept).toBe("");
+    expect(s.analogy).toContain("<strong>analogy</strong>");
+  });
 });

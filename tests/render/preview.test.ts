@@ -1,4 +1,7 @@
 import { describe, it, expect } from "vitest";
+import { writeFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { renderPreviewPage } from "../../src/render/preview";
 
 describe("renderPreviewPage", () => {
@@ -9,5 +12,18 @@ describe("renderPreviewPage", () => {
     expect(page).toContain("fonts.googleapis.com"); // fonts linked
     expect(page).toContain("--s-cyan"); // theme css inlined
     expect(page).toContain('name="viewport"');
+  });
+
+  it("honors an explicit cssPath override", () => {
+    const tmp = join(tmpdir(), `field-${Date.now()}.css`);
+    writeFileSync(tmp, ".s-test{color:red}", "utf8");
+    try {
+      const page = renderPreviewPage('<section data-slide-id="s_x"></section>', {
+        cssPath: tmp,
+      });
+      expect(page).toContain(".s-test{color:red}");
+    } finally {
+      rmSync(tmp);
+    }
   });
 });
