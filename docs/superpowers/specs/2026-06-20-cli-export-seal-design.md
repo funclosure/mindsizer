@@ -57,7 +57,7 @@ mindsizer <outline.md> [-o <out.html>] [--open]
 2. For each slide in **document order**: `renderSlide(slide)` (step 2) → fragment. `renderSlide` already throws for unsupported layouts; `sealDeck` lets that propagate (the CLI formats it).
 3. Assemble one HTML document:
    - `<head>`: `<meta charset/viewport>`, then a single `<style>` containing **(a)** the `@font-face` rules from `fontFaceCss()`, **(b)** the contents of `theme/field.css` inlined once, **(c)** the `DECK_CSS` viewer chrome.
-   - `<body>`: a `<div class="deck">` containing all `<section>` fragments in order, the nav chrome (`<div class="deck-counter">`, `<div class="deck-progress">`), and a single inlined `<script>` with `NAV_JS`.
+   - `<body>`: a `<div class="deck">` containing all `<section>` fragments in order, followed by the fixed-position nav chrome (`<div class="deck-counter">`, `<div class="deck-progress">`) and a single inlined `<script>` with `NAV_JS` as trailing siblings of `.deck` (they are `position:fixed` / global, so placement outside the deck container is equivalent and idiomatic).
 
 Theme assets (`theme/field.css`, `theme/fonts/*`) are resolved **relative to the module file** (via `import.meta.url` → `fileURLToPath`), so `mindsizer` works regardless of the caller's working directory. (This avoids the cwd-coupling that the preview helper has; preview is unchanged here.)
 

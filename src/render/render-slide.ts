@@ -11,6 +11,8 @@ export function renderSlide(slide: OutlineSlide): string {
     case "plain":
       return renderPlain(extractSlots("plain", slide.markdown), slide);
     default:
-      throw new Error(`no static renderer for layout: ${slide.layout}`);
+      throw new Error(
+        `slide ${slide.id} uses layout '${slide.layout}' — no static renderer yet`,
+      );
   }
 }
