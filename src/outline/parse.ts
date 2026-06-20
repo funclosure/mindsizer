@@ -23,9 +23,10 @@ export function parseOutline(md: string): Outline {
   };
 
   // gray-matter has stripped the leading frontmatter, so remaining
-  // `---` lines are slide separators.
+  // `---` lines are slide separators — but only when immediately followed
+  // by a slide comment. A `---` thematic break inside a body is preserved.
   const blocks = content
-    .split(/^\s*---\s*$/m)
+    .split(/\n[ \t]*-{3,}[ \t]*\n(?=\s*<!--\s*slide\b)/)
     .map((b) => b.trim())
     .filter((b) => b.length > 0);
 

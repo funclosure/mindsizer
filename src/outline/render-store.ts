@@ -11,7 +11,11 @@ export async function writeSlide(
   await writeFile(join(dir, `${id}.html`), html, "utf8");
 }
 
-/** Read a slide render fragment by id. */
+/**
+ * Read a slide render fragment by id. Throws if the file is missing —
+ * reading a specific expected slide that is absent is an error (unlike
+ * `listSlideIds`, which treats a missing directory as simply empty).
+ */
 export async function readSlide(dir: string, id: string): Promise<string> {
   return readFile(join(dir, `${id}.html`), "utf8");
 }

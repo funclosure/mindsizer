@@ -58,3 +58,27 @@ describe("parseOutline", () => {
     expect(o.slides[0].layout).toBe("bespoke");
   });
 });
+
+describe("parseOutline — robustness", () => {
+  it("does not split a slide when --- appears in the body", () => {
+    const o = parseOutline(
+      `---\ntitle: T\npurpose: teach\ntheme: field\n---\n\n` +
+        `<!-- slide id=s_x layout=plain -->\n# H\n\nbefore\n\n---\n\nafter\n`,
+    );
+    expect(o.slides).toHaveLength(1);
+    expect(o.slides[0].markdown).toContain("before");
+    expect(o.slides[0].markdown).toContain("after");
+    expect(o.slides[0].markdown).toContain("---");
+  });
+
+  it("still splits real multi-slide decks on --- between slide comments", () => {
+    const o = parseOutline(
+      `---\ntitle: T\npurpose: teach\ntheme: field\n---\n\n` +
+        `<!-- slide id=s_a layout=plain -->\n# A\n\naaa\n\n---\n\n` +
+        `<!-- slide id=s_b layout=plain -->\n# B\n\nbbb\n`,
+    );
+    expect(o.slides.map((s) => s.id)).toEqual(["s_a", "s_b"]);
+    expect(o.slides[0].markdown).toBe("aaa");
+    expect(o.slides[1].markdown).toBe("bbb");
+  });
+});

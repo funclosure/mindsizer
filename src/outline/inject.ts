@@ -15,6 +15,9 @@ export function readBoundRegions(html: string): Record<string, string> {
  * Replace the inner content of named data-bind regions only.
  * Slots absent from `bindings` are left untouched; non-bound design
  * (classes, structure, other elements) is preserved.
+ *
+ * Binding values are treated as inner HTML and are NOT escaped — callers
+ * pass HTML, not raw untrusted text.
  */
 export function updateBoundRegions(
   html: string,
