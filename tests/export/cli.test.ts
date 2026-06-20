@@ -60,4 +60,46 @@ describe("mindsizer CLI", () => {
       }),
     ).toThrow();
   });
+
+  it("reports invalid-outline errors on stderr and exits non-zero", () => {
+    dir = mkdtempSync(join(tmpdir(), "mindsizer-cli-"));
+    const mdPath = join(dir, "bad.md");
+    // valid frontmatter but a slide missing its # heading → validateOutline fails
+    writeFileSync(
+      mdPath,
+      "---\ntitle: T\npurpose: teach\ntheme: field\n---\n\n<!-- slide id=s_a layout=plain -->\n\nbody only, no heading\n",
+    );
+    let stderr = "";
+    try {
+      execFileSync("bun", ["run", "src/cli.ts", mdPath], {
+        cwd: process.cwd(),
+        stdio: "pipe",
+      });
+      throw new Error("expected non-zero exit");
+    } catch (e: any) {
+      stderr = String(e.stderr ?? "");
+    }
+    expect(stderr).toContain("invalid outline");
+  });
+
+  it("names the slide + layout for an unsupported layout on stderr", () => {
+    dir = mkdtempSync(join(tmpdir(), "mindsizer-cli-"));
+    const mdPath = join(dir, "bespoke.md");
+    writeFileSync(
+      mdPath,
+      "---\ntitle: T\npurpose: teach\ntheme: field\n---\n\n<!-- slide id=s_x layout=bespoke -->\n# X\n\nbody\n",
+    );
+    let stderr = "";
+    try {
+      execFileSync("bun", ["run", "src/cli.ts", mdPath], {
+        cwd: process.cwd(),
+        stdio: "pipe",
+      });
+      throw new Error("expected non-zero exit");
+    } catch (e: any) {
+      stderr = String(e.stderr ?? "");
+    }
+    expect(stderr).toContain("slide s_x uses layout 'bespoke'");
+    expect(stderr).toContain("no static renderer yet");
+  });
 });

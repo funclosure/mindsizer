@@ -45,6 +45,8 @@ describe("sealDeck", () => {
 
   it("throws naming the slide + layout for an unsupported layout", () => {
     const md = `---\ntitle: T\npurpose: teach\ntheme: field\n---\n\n<!-- slide id=s_x layout=bespoke -->\n# X\n\nbody\n`;
-    expect(() => sealDeck(parseOutline(md))).toThrow(/no static renderer/);
+    expect(() => sealDeck(parseOutline(md))).toThrow(
+      /slide s_x uses layout 'bespoke' — no static renderer yet/,
+    );
   });
 });

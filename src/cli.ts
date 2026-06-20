@@ -20,9 +20,12 @@ function main(argv: string[]): void {
     const a = args[k];
     if (a === "-o" || a === "--out") {
       out = args[++k];
+      if (out === undefined) fail("-o requires a path");
     } else if (a === "--open") {
       open = true;
-    } else if (!a.startsWith("-")) {
+    } else if (a.startsWith("-")) {
+      fail(`unknown option ${a}`);
+    } else {
       input ??= a;
     }
   }
@@ -36,6 +39,8 @@ function main(argv: string[]): void {
     fail(`cannot read ${input}`);
   }
 
+  // parseOutline is total by contract (the outline module never throws);
+  // failures surface as validation issues from sealDeck, handled below.
   const outline = parseOutline(md);
   process.stdout.write(`✓ parsed ${outline.slides.length} slides\n`);
 
