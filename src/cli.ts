@@ -1,17 +1,16 @@
 #!/usr/bin/env bun
 import { readFileSync, writeFileSync } from "node:fs";
 import { basename, extname, resolve, dirname, join } from "node:path";
-import { spawn } from "node:child_process";
 import { parseOutline } from "./outline/index";
 import { sealDeck } from "./export/index";
+import { ingest, anthropicClient, fixedPrompter, terminalPrompter } from "./agent/index";
 
 function fail(msg: string): never {
   process.stderr.write(`error: ${msg}\n`);
   process.exit(1);
 }
 
-function main(argv: string[]): void {
-  const args = argv.slice(2);
+function runSeal(args: string[]): void {
   let input: string | undefined;
   let out: string | undefined;
   let open = false;
@@ -65,8 +64,77 @@ function main(argv: string[]): void {
         : process.platform === "win32"
           ? "start"
           : "xdg-open";
-    spawn(opener, [outPath], { detached: true, stdio: "ignore" }).unref();
+    import("node:child_process").then(({ spawn }) =>
+      spawn(opener, [outPath], { detached: true, stdio: "ignore" }).unref(),
+    );
   }
+}
+
+async function runIngest(args: string[]): Promise<void> {
+  let input: string | undefined;
+  let out: string | undefined;
+  let angle: string | undefined;
+  let yes = false;
+
+  for (let k = 0; k < args.length; k++) {
+    const a = args[k];
+    if (a === "-o" || a === "--out") {
+      out = args[++k];
+      if (out === undefined) fail("-o requires a path");
+    } else if (a === "--angle") {
+      angle = args[++k];
+      if (angle === undefined) fail("--angle requires an id");
+    } else if (a === "--yes") {
+      yes = true;
+    } else if (a.startsWith("-")) {
+      fail(`unknown option ${a}`);
+    } else {
+      input ??= a;
+    }
+  }
+
+  if (!input)
+    fail("usage: mindsizer ingest <text-file> [--angle <id>] [-o <out.md>] [--yes]");
+
+  let text: string;
+  try {
+    text = readFileSync(resolve(input), "utf8");
+  } catch {
+    fail(`cannot read ${input}`);
+  }
+
+  process.stdout.write("digesting…\n");
+  const prompter = angle || yes ? fixedPrompter(angle) : terminalPrompter();
+
+  let result: Awaited<ReturnType<typeof ingest>>;
+  try {
+    result = await ingest(text, {
+      model: anthropicClient(),
+      prompter,
+      onDigest: (d) =>
+        process.stdout.write(`✓ digested (${d.keyPoints.length} points)\n`),
+    });
+  } catch (e) {
+    fail((e as Error).message);
+  }
+
+  const outPath =
+    out ??
+    join(
+      dirname(resolve(input)),
+      basename(input, extname(input)) + ".outline.md",
+    );
+  writeFileSync(outPath, result.outlineMarkdown, "utf8");
+  process.stdout.write(`✓ wrote ${outPath}\n`);
+}
+
+function main(argv: string[]): void {
+  const args = argv.slice(2);
+  if (args[0] === "ingest") {
+    void runIngest(args.slice(1));
+    return;
+  }
+  runSeal(args);
 }
 
 main(process.argv);
