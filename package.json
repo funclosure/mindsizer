@@ -1,6 +1,7 @@
 {
   "name": "mindsizer",
   "module": "src/index.ts",
+  "bin": { "mindsizer": "src/cli.ts" },
   "type": "module",
   "private": true,
   "scripts": {
