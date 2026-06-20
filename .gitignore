@@ -40,3 +40,6 @@ Thumbs.db
 
 # Render demo output
 examples/out/
+
+# Playwright MCP scratch output
+.playwright-mcp/
