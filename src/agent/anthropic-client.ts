@@ -24,6 +24,7 @@ async function runQuery(systemPrompt: string, userPrompt: string): Promise<strin
       systemPrompt,
       model: MODEL,
       permissionMode: "bypassPermissions",
+      allowDangerouslySkipPermissions: true,
       allowedTools: [],
       disallowedTools: [
         "Bash", "Read", "Write", "Edit", "Glob", "Grep",

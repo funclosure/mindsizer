@@ -22,6 +22,16 @@ describe("extractJson", () => {
   it("throws when there is no JSON", () => {
     expect(() => extractJson("no json here")).toThrow();
   });
+
+  it("returns the first balanced block when two are present", () => {
+    expect(extractJson('{"a":1} and {"b":2}')).toBe('{"a":1}');
+  });
+
+  it("ignores braces inside string values", () => {
+    expect(extractJson('{"markdown":"> Like {this}"} trailing')).toBe(
+      '{"markdown":"> Like {this}"}',
+    );
+  });
 });
 
 describe("parseValidated", () => {

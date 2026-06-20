@@ -91,4 +91,32 @@ describe("ingest", () => {
       ingest("text", { model: fakeModel().client, prompter: fixedPrompter("nope") }),
     ).rejects.toThrow(/unknown angle/);
   });
+
+  it("falls back to the digest title when the draft title is empty", async () => {
+    const model: ModelClient = {
+      digest: async () => ({ title: "Digest Title", keyPoints: ["a"], sourceCharacter: "x" }),
+      proposeDirections: async () => [{ id: "only", label: "L", description: "d" }],
+      generateOutline: async () => ({
+        title: "",
+        slides: [{ title: "S", layout: "plain" as const, markdown: "b" }],
+      }),
+    };
+    const res = await ingest("text", { model, prompter: fixedPrompter() });
+    expect(res.outlineMarkdown).toContain("title: Digest Title");
+  });
+
+  it("throws when the generated outline fails validation", async () => {
+    const model: ModelClient = {
+      digest: async () => ({ title: "T", keyPoints: ["a"], sourceCharacter: "x" }),
+      proposeDirections: async () => [{ id: "only", label: "L", description: "d" }],
+      generateOutline: async () => ({
+        title: "T",
+        // empty slide title → validateOutline flags "slide missing title"
+        slides: [{ title: "", layout: "plain" as const, markdown: "b" }],
+      }),
+    };
+    await expect(
+      ingest("text", { model, prompter: fixedPrompter() }),
+    ).rejects.toThrow(/generated outline invalid/);
+  });
 });

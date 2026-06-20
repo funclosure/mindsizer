@@ -124,7 +124,11 @@ async function runIngest(args: string[]): Promise<void> {
       dirname(resolve(input)),
       basename(input, extname(input)) + ".outline.md",
     );
-  writeFileSync(outPath, result.outlineMarkdown, "utf8");
+  try {
+    writeFileSync(outPath, result.outlineMarkdown, "utf8");
+  } catch {
+    fail(`cannot write ${outPath}`);
+  }
   process.stdout.write(`✓ wrote ${outPath}\n`);
 }
 
