@@ -37,3 +37,9 @@ Thumbs.db
 *.swp
 .vscode/*
 !.vscode/extensions.json
+
+# Render demo output
+examples/out/
+
+# Playwright MCP scratch output
+.playwright-mcp/
