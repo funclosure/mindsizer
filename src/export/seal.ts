@@ -15,8 +15,16 @@ const THEME_DIR = join(
   "theme",
 );
 
+/** Read the bundled Field theme stylesheet. */
+export function readFieldCss(): string {
+  return readFileSync(join(THEME_DIR, "field.css"), "utf8");
+}
+
 /** Assemble an Outline into one self-contained, offline deck.html string. */
-export function sealDeck(outline: Outline): string {
+export function sealDeck(
+  outline: Outline,
+  opts: { sections?: Map<string, string> } = {},
+): string {
   const issues = validateOutline(outline);
   if (issues.length > 0) {
     throw new Error(
@@ -27,8 +35,10 @@ export function sealDeck(outline: Outline): string {
     );
   }
 
-  const sections = outline.slides.map((s) => renderSlide(s)).join("\n");
-  const fieldCss = readFileSync(join(THEME_DIR, "field.css"), "utf8");
+  const sections = outline.slides
+    .map((s) => opts.sections?.get(s.id) ?? renderSlide(s))
+    .join("\n");
+  const fieldCss = readFieldCss();
   const title = escapeHtml(outline.meta.title || "deck");
 
   return `<!DOCTYPE html>
