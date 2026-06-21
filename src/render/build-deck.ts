@@ -21,8 +21,8 @@ export async function buildDeck(
   for (const slide of outline.slides) {
     const built = await buildSlide(slide, deck, deps);
     sections.set(slide.id, built.html);
-    if (!built.fits) {
-      warnings.push(`${slide.id} did not fit after ${built.passes} passes`);
+    if (!built.approved) {
+      warnings.push(`${slide.id} did not pass review after ${built.passes} passes`);
     }
   }
   return { sections, warnings };

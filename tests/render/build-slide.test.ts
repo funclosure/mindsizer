@@ -24,7 +24,7 @@ describe("buildSlide", () => {
   it("returns on the first attempt when it fits", async () => {
     const a = recordingAuthor([ok]);
     const r = await buildSlide(slide, deck, { author: a.author, fit: fitsAlways });
-    expect(r).toEqual({ html: ok, passes: 1, fits: true });
+    expect(r).toEqual({ html: ok, passes: 1, fits: true, approved: true });
     expect(a.reqs).toHaveLength(1);
     expect(a.reqs[0].fix).toBeUndefined();
   });
@@ -71,5 +71,35 @@ describe("buildSlide", () => {
     expect(r.fits).toBe(true);
     expect(r.passes).toBe(1); // not treated as malformed
     expect(r.html).toContain("<style>");
+  });
+});
+
+describe("buildSlide with a vision critic", () => {
+  const png = Buffer.from("fakepng");
+  const fitOK = {
+    check: async (): Promise<FitResult> => ({ fits: true, overflowPx: 0, detail: "fits", png }),
+  };
+
+  it("re-authors when the critic rejects, then approves", async () => {
+    const a = recordingAuthor([ok, ok]);
+    let n = 0;
+    const critic = {
+      critique: async () =>
+        ++n === 1
+          ? { approved: false, problems: ["lower third is empty"] }
+          : { approved: true, problems: [] },
+    };
+    const r = await buildSlide(slide, deck, { author: a.author, fit: fitOK, critic });
+    expect(r.approved).toBe(true);
+    expect(r.passes).toBe(2);
+    expect(a.reqs[1].fix?.problem).toContain("lower third is empty");
+  });
+
+  it("exhausts with approved:false when the critic keeps rejecting", async () => {
+    const a = recordingAuthor([ok]);
+    const critic = { critique: async () => ({ approved: false, problems: ["too sparse"] }) };
+    const r = await buildSlide(slide, deck, { author: a.author, fit: fitOK, critic, maxPasses: 2 });
+    expect(r.approved).toBe(false);
+    expect(r.passes).toBe(2);
   });
 });
