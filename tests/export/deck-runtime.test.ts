@@ -8,6 +8,11 @@ describe("deck runtime", () => {
     expect(DECK_CSS).toContain(".deck-progress");
   });
 
+  it("hides non-active slides with !important so bespoke inline styles can't override", () => {
+    expect(DECK_CSS).toContain("display: none !important");
+    expect(DECK_CSS).toContain("display: flex !important");
+  });
+
   it("NAV_JS handles arrow keys and updates counter + progress", () => {
     expect(NAV_JS).toContain("ArrowRight");
     expect(NAV_JS).toContain("ArrowLeft");
