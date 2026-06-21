@@ -31,4 +31,12 @@ describe("playwrightFitChecker", () => {
     expect(r.fits).toBe(false);
     expect(r.overflowPx).toBeGreaterThan(0);
   }, 30000);
+
+  it("returns a non-empty PNG screenshot", async () => {
+    const r = await checker.check(
+      `<section data-slide-id="c"><h2 class="s-title">Shot</h2><p class="s-body">x</p></section>`,
+    );
+    expect(r.png).toBeDefined();
+    expect((r.png as Buffer).length).toBeGreaterThan(0);
+  }, 30000);
 });

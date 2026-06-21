@@ -1,4 +1,4 @@
-import { runQuery } from "./query";
+import { runQuery, runVisionQuery } from "./query";
 import { slideAuthorPrompt, type AuthorRequest } from "../render/design-brief";
 import type { SlideAuthor } from "../render/build-slide";
 
@@ -14,7 +14,12 @@ export function anthropicSlideAuthor(): SlideAuthor {
   return {
     async authorSlide(req: AuthorRequest) {
       const p = slideAuthorPrompt(req);
-      return stripFences(await runQuery(p.system, p.user));
+      // On a fix pass, let the author SEE its own previous render (eyes), not just read the problems.
+      const png = req.fix?.previousPng;
+      const text = png
+        ? await runVisionQuery(p.system, p.user, png.toString("base64"))
+        : await runQuery(p.system, p.user);
+      return stripFences(text);
     },
   };
 }

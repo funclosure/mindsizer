@@ -3,8 +3,9 @@ export const DECK_CSS = `
   html, body { margin: 0; height: 100%; background: #070d16; }
   body { font-family: "Geist", system-ui, sans-serif; }
   .deck { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
-  .deck section[data-slide-id] { display: none; width: min(96vw, calc(96vh * 16 / 9)); }
-  .deck section[data-slide-id].is-active { display: flex; }
+  /* !important so a bespoke slide's own <style> can never override the one-at-a-time display */
+  .deck section[data-slide-id] { display: none !important; width: min(96vw, calc(96vh * 16 / 9)); }
+  .deck section[data-slide-id].is-active { display: flex !important; }
   .deck-counter {
     position: fixed; right: 18px; bottom: 14px;
     font-family: "Geist Mono", monospace; font-size: 11px;
