@@ -93,6 +93,7 @@ describe("buildSlide with a vision critic", () => {
     expect(r.approved).toBe(true);
     expect(r.passes).toBe(2);
     expect(a.reqs[1].fix?.problem).toContain("lower third is empty");
+    expect(a.reqs[1].fix?.previousPng).toBeDefined(); // author SEES its own render on the fix pass
   });
 
   it("exhausts with approved:false when the critic keeps rejecting", async () => {

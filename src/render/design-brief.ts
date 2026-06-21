@@ -3,7 +3,7 @@ import type { OutlineSlide } from "../outline/types";
 export interface AuthorRequest {
   slide: OutlineSlide;
   deck: { title: string; slideTitles: string[] };
-  fix?: { previousHtml: string; problem: string };
+  fix?: { previousHtml: string; problem: string; previousPng?: Buffer };
 }
 
 export interface AuthorPrompt {
@@ -53,14 +53,15 @@ export function slideAuthorPrompt(req: AuthorRequest): AuthorPrompt {
     `Suggested layout: ${slide.layout}\n` +
     `Content (markdown):\n${slide.markdown}\n`;
   if (fix) {
+    const sawImage = fix.previousPng !== undefined;
     user +=
-      `\n---\nYour previous attempt did NOT fit the 1280x720 frame.\n` +
-      `PROBLEM: ${fix.problem}\n` +
-      `This almost always means too many STACKED ROWS or too much copy. RESTRUCTURE, don't just shrink fonts:\n` +
-      `  • turn a vertical stack of stages/blocks into a HORIZONTAL row of columns;\n` +
-      `  • REMOVE a stage/section/row, or merge two;\n` +
-      `  • cut copy to the essentials (a sentence or two per region).\n` +
-      `Re-output the COMPLETE slide. Keep the core idea intact.\n` +
+      `\n---\n` +
+      (sawImage
+        ? `The attached image shows how your previous attempt RENDERED at 1280x720. LOOK at it. `
+        : ``) +
+      `It did NOT pass review.\n` +
+      `PROBLEMS: ${fix.problem}\n` +
+      `Fix exactly those problems. RESTRUCTURE rather than shrink fonts — e.g. turn a vertical stack into a horizontal row, remove or merge a section, ENLARGE a hero element to fill empty space, or cut copy. Re-output the COMPLETE slide; keep the core idea intact.\n` +
       `Previous HTML:\n${fix.previousHtml}\n`;
   }
   return { system: DESIGN_BRIEF, user };

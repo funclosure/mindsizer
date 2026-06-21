@@ -35,7 +35,7 @@ export async function buildSlide(
 
   for (let pass = 1; pass <= maxPasses; pass++) {
     const req: AuthorRequest = problem
-      ? { slide, deck, fix: { previousHtml: html, problem } }
+      ? { slide, deck, fix: { previousHtml: html, problem, previousPng: lastFit.png } }
       : { slide, deck };
     html = await deps.author.authorSlide(req);
 
