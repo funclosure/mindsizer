@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { basename, extname, resolve, dirname, join } from "node:path";
 import { parseOutline, validateOutline, writeSlide } from "./outline/index";
 import { sealDeck, fontFaceCss, readFieldCss } from "./export/index";
-import { ingest, anthropicClient, fixedPrompter, terminalPrompter, anthropicSlideAuthor } from "./agent/index";
+import { ingest, anthropicClient, fixedPrompter, terminalPrompter, anthropicSlideAuthor, anthropicSlideCritic } from "./agent/index";
 import { buildDeck } from "./render/index";
 import { playwrightFitChecker } from "./render/fit-check";
 
@@ -182,6 +182,7 @@ async function runBuild(args: string[]): Promise<void> {
       result = await buildDeck(outline, {
         author: anthropicSlideAuthor(),
         fit,
+        critic: anthropicSlideCritic(),
         maxPasses: 4,
       });
     } finally {
