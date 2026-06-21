@@ -6,7 +6,7 @@ export interface AuthorRequest {
   fix?: { previousHtml: string; problem: string };
 }
 
-export interface Prompt {
+export interface AuthorPrompt {
   system: string;
   user: string;
 }
@@ -34,7 +34,7 @@ export const DESIGN_BRIEF = [
   "- Output ONLY the HTML (optional <style> + the <section>) — no markdown fences, no commentary.",
 ].join("\n");
 
-export function slideAuthorPrompt(req: AuthorRequest): Prompt {
+export function slideAuthorPrompt(req: AuthorRequest): AuthorPrompt {
   const { slide, deck, fix } = req;
   let user =
     `Deck: ${deck.title}\n` +
