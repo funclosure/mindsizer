@@ -182,7 +182,7 @@ async function runBuild(args: string[]): Promise<void> {
       result = await buildDeck(outline, {
         author: anthropicSlideAuthor(),
         fit,
-        maxPasses: 3,
+        maxPasses: 4,
       });
     } finally {
       await fit.dispose().catch(() => {});
