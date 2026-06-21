@@ -8,7 +8,7 @@
     "skipLibCheck": true,
     "types": ["node"],
     "noEmit": true,
-    "lib": ["ESNext", "DOM"]
+    "lib": ["ESNext"]
   },
   "include": ["src", "tests"]
 }

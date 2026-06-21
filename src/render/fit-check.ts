@@ -1,5 +1,9 @@
 import { chromium, type Browser } from "playwright";
 
+// `document` exists only inside the page.evaluate() callback (browser context).
+// Declared module-locally so we don't need the DOM lib repo-wide.
+declare const document: { querySelector(selector: string): null | Record<string, number> };
+
 export interface FitResult {
   fits: boolean;
   overflowPx: number;
@@ -36,7 +40,7 @@ export function playwrightFitChecker(themeCss: string): FitChecker {
           { waitUntil: "networkidle" },
         );
         const m = await page.evaluate(() => {
-          const s = document.querySelector("section[data-slide-id]") as HTMLElement | null;
+          const s = document.querySelector("section[data-slide-id]");
           if (!s) return null;
           return { sh: s.scrollHeight, ch: s.clientHeight, sw: s.scrollWidth, cw: s.clientWidth };
         });

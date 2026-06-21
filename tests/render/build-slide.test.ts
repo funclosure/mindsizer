@@ -61,4 +61,15 @@ describe("buildSlide", () => {
     expect(a.reqs).toHaveLength(2);
     expect(a.reqs[1].fix).toBeDefined();
   });
+
+  it("accepts an authored slide that leads with an id-scoped <style>", async () => {
+    const styled =
+      `<style>#s_x .k{color:red}</style>` +
+      `<section data-slide-id="s_x" data-layout="bespoke"><div class="k">hi</div></section>`;
+    const a = recordingAuthor([styled]);
+    const r = await buildSlide(slide, deck, { author: a.author, fit: fitsAlways });
+    expect(r.fits).toBe(true);
+    expect(r.passes).toBe(1); // not treated as malformed
+    expect(r.html).toContain("<style>");
+  });
 });

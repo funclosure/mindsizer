@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { basename, extname, resolve, dirname, join } from "node:path";
-import { parseOutline, writeSlide } from "./outline/index";
+import { parseOutline, validateOutline, writeSlide } from "./outline/index";
 import { sealDeck, fontFaceCss, readFieldCss } from "./export/index";
 import { ingest, anthropicClient, fixedPrompter, terminalPrompter, anthropicSlideAuthor } from "./agent/index";
 import { buildDeck } from "./render/index";
@@ -163,22 +163,33 @@ async function runBuild(args: string[]): Promise<void> {
   }
 
   const outline = parseOutline(md);
+  const issues = validateOutline(outline);
+  if (issues.length > 0) {
+    fail(
+      "invalid outline:\n" +
+        issues
+          .map((i) => `  - ${i.slideId ? i.slideId + ": " : ""}${i.message}`)
+          .join("\n"),
+    );
+  }
   process.stdout.write(`building ${outline.slides.length} slides…\n`);
 
   const fitTheme = fontFaceCss() + "\n" + readFieldCss();
   const fit = playwrightFitChecker(fitTheme);
   let result: Awaited<ReturnType<typeof buildDeck>>;
   try {
-    result = await buildDeck(outline, {
-      author: anthropicSlideAuthor(),
-      fit,
-      maxPasses: 3,
-    });
+    try {
+      result = await buildDeck(outline, {
+        author: anthropicSlideAuthor(),
+        fit,
+        maxPasses: 3,
+      });
+    } finally {
+      await fit.dispose().catch(() => {});
+    }
   } catch (e) {
-    await fit.dispose();
     fail((e as Error).message);
   }
-  await fit.dispose();
 
   const baseDir = dirname(resolve(input));
   const slidesDir = join(baseDir, basename(input, extname(input)) + ".slides");
