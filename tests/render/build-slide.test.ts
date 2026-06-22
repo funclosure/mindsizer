@@ -1,106 +1,56 @@
+// tests/render/build-slide.test.ts
 import { describe, it, expect } from "vitest";
 import { buildSlide, type SlideAuthor } from "../../src/render/build-slide";
-import type { FitResult } from "../../src/render/fit-check";
 import type { AuthorRequest } from "../../src/render/design-brief";
+import type { RenderResult } from "../../src/render/fit-check";
+import type { SlideMaterials } from "../../src/render/materials";
 
-const slide = { id: "s_x", layout: "plain" as const, title: "T", markdown: "body" };
+const slide = { id: "s_x", layout: "bespoke" as const, title: "T", markdown: "b" };
 const deck = { title: "D", slideTitles: ["T"] };
+const materials: SlideMaterials = { digest: ["p"], angle: "a", neighborTitles: [] };
 const ok = `<section data-slide-id="s_x" data-layout="bespoke">ok</section>`;
 
-function recordingAuthor(seq: string[]) {
+function fakeAuthor(html: string) {
   const reqs: AuthorRequest[] = [];
-  let i = 0;
-  const author: SlideAuthor = {
-    async authorSlide(req) {
-      reqs.push(req);
-      return seq[Math.min(i++, seq.length - 1)];
-    },
-  };
+  const author: SlideAuthor = { async authorSlide(req) { reqs.push(req); return html; } };
   return { author, reqs };
 }
-const fitsAlways = { check: async (): Promise<FitResult> => ({ fits: true, overflowPx: 0, detail: "fits" }) };
 
 describe("buildSlide", () => {
-  it("returns on the first attempt when it fits", async () => {
-    const a = recordingAuthor([ok]);
-    const r = await buildSlide(slide, deck, { author: a.author, fit: fitsAlways });
-    expect(r).toEqual({ html: ok, passes: 1, fits: true, approved: true });
-    expect(a.reqs).toHaveLength(1);
-    expect(a.reqs[0].fix).toBeUndefined();
+  it("returns the authored html and passes materials through", async () => {
+    const a = fakeAuthor(ok);
+    const r = await buildSlide(slide, deck, materials, { author: a.author });
+    expect(r.html).toBe(ok);
+    expect(r.warnings).toEqual([]);
+    expect(a.reqs[0].materials).toEqual(materials);
   });
 
-  it("re-authors with the overflow problem, then succeeds", async () => {
-    const a = recordingAuthor([ok, ok]);
-    let n = 0;
-    const fit = {
-      check: async (): Promise<FitResult> =>
-        ++n === 1
-          ? { fits: false, overflowPx: 100, detail: "overflows by 100px" }
-          : { fits: true, overflowPx: 0, detail: "fits" },
+  it("warns on a malformed section but still returns it", async () => {
+    const bad = `<div>not a section</div>`;
+    const a = fakeAuthor(bad);
+    const r = await buildSlide(slide, deck, materials, { author: a.author });
+    expect(r.html).toBe(bad);
+    expect(r.warnings.length).toBeGreaterThan(0);
+  });
+
+  it("runs a final fit-check when a renderer is given and warns on overflow", async () => {
+    const a = fakeAuthor(ok);
+    const renderer = {
+      render: async (): Promise<RenderResult> =>
+        ({ shots: [Buffer.from("p")], overflowPx: 80, fits: false, consoleErrors: [] }),
     };
-    const r = await buildSlide(slide, deck, { author: a.author, fit });
-    expect(r.fits).toBe(true);
-    expect(r.passes).toBe(2);
-    expect(a.reqs[1].fix?.problem).toBe("overflows by 100px");
-    expect(a.reqs[1].fix?.previousHtml).toBe(ok);
-  });
-
-  it("gives up after maxPasses, flagging fits:false", async () => {
-    const a = recordingAuthor([ok]);
-    const fit = { check: async (): Promise<FitResult> => ({ fits: false, overflowPx: 200, detail: "overflows by 200px" }) };
-    const r = await buildSlide(slide, deck, { author: a.author, fit, maxPasses: 2 });
+    const r = await buildSlide(slide, deck, materials, { author: a.author, renderer });
     expect(r.fits).toBe(false);
-    expect(r.passes).toBe(2);
-    expect(a.reqs).toHaveLength(2);
+    expect(r.warnings.some((w) => /80px/.test(w))).toBe(true);
   });
 
-  it("treats a malformed section as a problem and re-authors", async () => {
-    const a = recordingAuthor(["<div>not a section</div>", ok]);
-    const r = await buildSlide(slide, deck, { author: a.author, fit: fitsAlways });
-    expect(r.fits).toBe(true);
-    expect(a.reqs).toHaveLength(2);
-    expect(a.reqs[1].fix).toBeDefined();
-  });
-
-  it("accepts an authored slide that leads with an id-scoped <style>", async () => {
-    const styled =
-      `<style>#s_x .k{color:red}</style>` +
-      `<section data-slide-id="s_x" data-layout="bespoke"><div class="k">hi</div></section>`;
-    const a = recordingAuthor([styled]);
-    const r = await buildSlide(slide, deck, { author: a.author, fit: fitsAlways });
-    expect(r.fits).toBe(true);
-    expect(r.passes).toBe(1); // not treated as malformed
-    expect(r.html).toContain("<style>");
-  });
-});
-
-describe("buildSlide with a vision critic", () => {
-  const png = Buffer.from("fakepng");
-  const fitOK = {
-    check: async (): Promise<FitResult> => ({ fits: true, overflowPx: 0, detail: "fits", png }),
-  };
-
-  it("re-authors when the critic rejects, then approves", async () => {
-    const a = recordingAuthor([ok, ok]);
-    let n = 0;
-    const critic = {
-      critique: async () =>
-        ++n === 1
-          ? { approved: false, problems: ["lower third is empty"] }
-          : { approved: true, problems: [] },
+  it("surfaces console errors from the fit-check", async () => {
+    const a = fakeAuthor(ok);
+    const renderer = {
+      render: async (): Promise<RenderResult> =>
+        ({ shots: [Buffer.from("p")], overflowPx: 0, fits: true, consoleErrors: ["boom"] }),
     };
-    const r = await buildSlide(slide, deck, { author: a.author, fit: fitOK, critic });
-    expect(r.approved).toBe(true);
-    expect(r.passes).toBe(2);
-    expect(a.reqs[1].fix?.problem).toContain("lower third is empty");
-    expect(a.reqs[1].fix?.previousPng).toBeDefined(); // author SEES its own render on the fix pass
-  });
-
-  it("exhausts with approved:false when the critic keeps rejecting", async () => {
-    const a = recordingAuthor([ok]);
-    const critic = { critique: async () => ({ approved: false, problems: ["too sparse"] }) };
-    const r = await buildSlide(slide, deck, { author: a.author, fit: fitOK, critic, maxPasses: 2 });
-    expect(r.approved).toBe(false);
-    expect(r.passes).toBe(2);
+    const r = await buildSlide(slide, deck, materials, { author: a.author, renderer });
+    expect(r.warnings.some((w) => /boom/.test(w))).toBe(true);
   });
 });

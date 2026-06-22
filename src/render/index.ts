@@ -4,6 +4,7 @@ export { extractSlots } from "./slots";
 export { blocks, inline, block } from "./markdown";
 export { escapeHtml } from "./html";
 export * from "./design-brief";
-export * from "./critic-brief";
 export * from "./build-slide";
 export * from "./build-deck";
+export * from "./materials";
+export * from "./render-helpers";

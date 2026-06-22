@@ -120,3 +120,18 @@ describe("ingest", () => {
     ).rejects.toThrow(/generated outline invalid/);
   });
 });
+
+describe("ingest digest passthrough", () => {
+  it("returns the digest key-points for sidecar persistence", async () => {
+    const fakeModel: ModelClient = {
+      digest: async () => ({ title: "T", keyPoints: ["k1", "k2", "k3"], sourceCharacter: "x" }),
+      proposeDirections: async () => [{ id: "d1", label: "L", description: "b" }],
+      generateOutline: async () => ({
+        title: "T",
+        slides: [{ layout: "plain" as const, title: "A", markdown: "a" }],
+      }),
+    };
+    const r = await ingest("source text", { model: fakeModel, prompter: fixedPrompter("d1") });
+    expect(r.digest).toEqual(["k1", "k2", "k3"]);
+  });
+});

@@ -80,4 +80,18 @@ describe("sealDeck", () => {
     expect(html).toContain("<style>#s_a .k{color:cyan}</style>");
     expect(html).toContain('class="k">XAUTHORED');
   });
+
+  it("inlines a section's scoped <script> into the deck document", () => {
+    const outline = parseOutline(MD);
+    const section =
+      '<section data-slide-id="s_a" data-layout="bespoke">x</section>' +
+      "<script>(function(){window.__s_a=1;})();</script>";
+    const html = sealDeck(outline, {
+      sections: new Map([["s_a", section]]),
+    });
+    expect(html).toContain("window.__s_a=1");
+    // the slide script sits inside the deck document, before the nav runtime's closing tag
+    expect(html.indexOf("window.__s_a=1")).toBeLessThan(html.lastIndexOf("</script>"));
+    expect(html).not.toContain("http://"); // still self-contained, no external refs
+  });
 });

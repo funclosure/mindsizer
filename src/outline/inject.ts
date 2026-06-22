@@ -37,7 +37,7 @@ export interface SlideSectionIssue {
   message: string;
 }
 
-/** Validate a slide render fragment: exactly one section with the expected id. */
+/** Validate a slide fragment: exactly one section with the expected id; optional scoped <script>. */
 export function validateSlideSection(
   html: string,
   expectedId: string,
@@ -45,15 +45,20 @@ export function validateSlideSection(
   const root = parseHtml(html);
   const sections = root.querySelectorAll("section[data-slide-id]");
   if (sections.length !== 1) {
-    return [
-      {
-        message: `expected exactly one <section data-slide-id>, found ${sections.length}`,
-      },
-    ];
+    return [{ message: `expected exactly one <section data-slide-id>, found ${sections.length}` }];
   }
   const id = sections[0].getAttribute("data-slide-id");
   if (id !== expectedId) {
     return [{ message: `data-slide-id "${id}" != expected "${expectedId}"` }];
   }
-  return [];
+  const issues: SlideSectionIssue[] = [];
+  for (const script of root.querySelectorAll("script")) {
+    const src = script.innerHTML;
+    if (src.trim() && !src.includes(expectedId)) {
+      issues.push({
+        message: `slide ${expectedId}: <script> does not reference the slide id — scope DOM queries under #${expectedId}`,
+      });
+    }
+  }
+  return issues;
 }

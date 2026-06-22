@@ -1,39 +1,37 @@
+// tests/render/design-brief.test.ts
 import { describe, it, expect } from "vitest";
-import { DESIGN_BRIEF, slideAuthorPrompt } from "../../src/render/design-brief";
+import { slideAuthorPrompt, IDENTITY_BRIEF, type AuthorRequest } from "../../src/render/design-brief";
 
-const slide = {
-  id: "s_demo",
-  layout: "analogy" as const,
-  title: "Eventual consistency",
-  markdown: "Every copy agrees.\n\n> Like office gossip.",
+const req: AuthorRequest = {
+  slide: { id: "s_x", layout: "bespoke", title: "The lens", markdown: "- a\n- b" },
+  deck: { title: "Deck", slideTitles: ["intro", "The lens", "end"] },
+  materials: {
+    digest: ["point one", "point two"],
+    angle: "How to think about it",
+    sourceExcerpt: "the relevant source span",
+    neighborTitles: ["intro", "end"],
+  },
 };
-const deck = { title: "EC Deck", slideTitles: ["Eventual consistency", "Trade-off"] };
 
-describe("design brief", () => {
-  it("DESIGN_BRIEF carries the Field language + output contract", () => {
-    expect(DESIGN_BRIEF).toContain("#4DD9E0");
-    expect(DESIGN_BRIEF).toContain("Fraunces");
-    expect(DESIGN_BRIEF).toContain("data-slide-id");
-    expect(DESIGN_BRIEF).toContain("16:9");
-    expect(DESIGN_BRIEF.toLowerCase()).toContain("avoid generic");
+describe("IDENTITY_BRIEF", () => {
+  it("states the instrument-not-landing-page identity and 16:9 linear constraint", () => {
+    expect(IDENTITY_BRIEF).toMatch(/landing page/i);
+    expect(IDENTITY_BRIEF).toMatch(/1280|16:9/);
+    expect(IDENTITY_BRIEF).toMatch(/render/i); // tells the agent it has eyes
   });
+});
 
-  it("slideAuthorPrompt includes the slide id, title, content, and deck title", () => {
-    const p = slideAuthorPrompt({ slide, deck });
-    expect(p.user).toContain("s_demo");
-    expect(p.user).toContain("Eventual consistency");
-    expect(p.user).toContain("Like office gossip");
-    expect(p.user).toContain("EC Deck");
-    expect(p.system).toBe(DESIGN_BRIEF);
+describe("slideAuthorPrompt", () => {
+  it("uses IDENTITY_BRIEF as the system prompt", () => {
+    expect(slideAuthorPrompt(req).system).toBe(IDENTITY_BRIEF);
   });
-
-  it("includes the fix problem + previous html on a revision", () => {
-    const p = slideAuthorPrompt({
-      slide,
-      deck,
-      fix: { previousHtml: "<section>old</section>", problem: "overflows by 120px" },
-    });
-    expect(p.user).toContain("overflows by 120px");
-    expect(p.user).toContain("<section>old</section>");
+  it("feeds the author the idea: title, slide id, angle, digest, source excerpt, neighbours", () => {
+    const u = slideAuthorPrompt(req).user;
+    expect(u).toContain("s_x");
+    expect(u).toContain("The lens");
+    expect(u).toContain("How to think about it");
+    expect(u).toContain("point one");
+    expect(u).toContain("the relevant source span");
+    expect(u).toContain("intro");
   });
 });
