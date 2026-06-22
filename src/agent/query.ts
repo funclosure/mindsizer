@@ -44,30 +44,6 @@ export async function runQuery(systemPrompt: string, userPrompt: string): Promis
   return drain(q as AsyncIterable<SDKMessage>);
 }
 
-/** One isolated single-shot turn with an attached image (vision) → full assistant text. */
-export async function runVisionQuery(
-  systemPrompt: string,
-  userText: string,
-  pngBase64: string,
-): Promise<string> {
-  async function* gen() {
-    yield {
-      type: "user" as const,
-      message: {
-        role: "user" as const,
-        content: [
-          { type: "image", source: { type: "base64", media_type: "image/png", data: pngBase64 } },
-          { type: "text", text: userText },
-        ],
-      },
-      parent_tool_use_id: null,
-      session_id: "mindsizer",
-    };
-  }
-  const q = query({ prompt: gen() as any, options: options(systemPrompt) as any }) as any;
-  return drain(q as AsyncIterable<SDKMessage>);
-}
-
 export interface AgenticTools {
   render(html: string, interactions?: { click?: string; press?: string; wait?: number }[]): Promise<Buffer[]>;
 }
@@ -118,7 +94,13 @@ export async function runAgentic(
     } as any,
   }) as any;
 
-  let text = "";
+  // A tool session emits several assistant turns ("let me render…" → tool → final HTML →
+  // maybe a trailing "done!"). Prefer the LAST assistant turn that actually contains a
+  // slide; fall back to the last assistant turn, then to streamed deltas. extractSlideHtml
+  // is the final safety net, but the drain should already pick the right turn.
+  let lastTurn = "";
+  let lastSlideTurn = "";
+  let streamed = "";
   for await (const msg of q as AsyncIterable<any>) {
     if (
       msg.type === "stream_event" &&
@@ -126,13 +108,16 @@ export async function runAgentic(
       msg.event.delta?.type === "text_delta" &&
       msg.event.delta.text
     ) {
-      text += msg.event.delta.text;
+      streamed += msg.event.delta.text;
     }
     if (msg.type === "assistant" && Array.isArray(msg.message?.content)) {
       const t = msg.message.content.filter((b: any) => b.type === "text").map((b: any) => b.text).join("");
-      if (t) text = t;
+      if (t) {
+        lastTurn = t;
+        if (t.includes("<section")) lastSlideTurn = t;
+      }
     }
     if (msg.type === "result") break;
   }
-  return text;
+  return lastSlideTurn || lastTurn || streamed;
 }

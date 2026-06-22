@@ -33,4 +33,15 @@ describe("extractSlideHtml", () => {
   it("returns the raw text when no slide markup is present", () => {
     expect(extractSlideHtml("just prose, no html")).toBe("just prose, no html");
   });
+
+  it("is not fooled by trailing prose that mentions a closing tag", () => {
+    const raw = `${section}\n\nNote: I made sure to close the </section> tag properly.`;
+    expect(extractSlideHtml(raw)).toBe(section);
+  });
+
+  it("includes a scoped script immediately after the section but not later prose", () => {
+    const withScript = `${section}<script>(function(){/*#s_x*/})();</script>`;
+    const raw = `${withScript}\n\nDone — the </script> is closed.`;
+    expect(extractSlideHtml(raw)).toBe(withScript);
+  });
 });
