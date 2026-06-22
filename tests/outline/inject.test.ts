@@ -56,3 +56,28 @@ describe("validateSlideSection", () => {
     expect(issues[0].message).toContain("expected exactly one");
   });
 });
+
+describe("validateSlideSection — interactive slides", () => {
+  const ok = `<section data-slide-id="s_x" data-layout="bespoke">hi</section>`;
+
+  it("accepts a section followed by a scoped IIFE script", () => {
+    const html = ok + `<script>(function(){document.querySelector('#s_x .k');})();</script>`;
+    expect(validateSlideSection(html, "s_x")).toEqual([]);
+  });
+
+  it("still accepts a leading style + section (no script)", () => {
+    const html = `<style>#s_x .k{color:red}</style>` + ok;
+    expect(validateSlideSection(html, "s_x")).toEqual([]);
+  });
+
+  it("warns when a script never references the slide id", () => {
+    const html = ok + `<script>(function(){document.body.innerHTML='';})();</script>`;
+    const issues = validateSlideSection(html, "s_x");
+    expect(issues.some((i) => /scope/i.test(i.message))).toBe(true);
+  });
+
+  it("still rejects the wrong section id", () => {
+    expect(validateSlideSection(`<section data-slide-id="nope">x</section>`, "s_x"))
+      .toHaveLength(1);
+  });
+});
