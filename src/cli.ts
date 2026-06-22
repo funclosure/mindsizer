@@ -3,9 +3,9 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { basename, extname, resolve, dirname, join } from "node:path";
 import { parseOutline, validateOutline, writeSlide } from "./outline/index";
 import { sealDeck, fontFaceCss, readFieldCss } from "./export/index";
-import { ingest, anthropicClient, fixedPrompter, terminalPrompter, anthropicSlideAuthor, anthropicSlideCritic } from "./agent/index";
+import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath } from "./agent/index";
 import { buildDeck } from "./render/index";
-import { playwrightFitChecker } from "./render/fit-check";
+import { playwrightRenderer } from "./render/fit-check";
 
 function fail(msg: string): never {
   process.stderr.write(`error: ${msg}\n`);
@@ -175,18 +175,24 @@ async function runBuild(args: string[]): Promise<void> {
   process.stdout.write(`building ${outline.slides.length} slides…\n`);
 
   const fitTheme = fontFaceCss() + "\n" + readFieldCss();
-  const fit = playwrightFitChecker(fitTheme);
+  const renderer = playwrightRenderer(fitTheme);
+
+  // load the optional context sidecar written by ingest
+  let context;
+  try {
+    const raw = readFileSync(sidecarPath(resolve(input)), "utf8");
+    context = parseContext(raw) ?? undefined;
+    if (context) process.stdout.write(`✓ loaded context (${context.digest.length} digest points)\n`);
+  } catch {
+    process.stdout.write("· no context sidecar — authoring from the outline only\n");
+  }
+
   let result: Awaited<ReturnType<typeof buildDeck>>;
   try {
     try {
-      result = await buildDeck(outline, {
-        author: anthropicSlideAuthor(),
-        fit,
-        critic: anthropicSlideCritic(),
-        maxPasses: 4,
-      });
+      result = await buildDeck(outline, { author: agenticAuthor(renderer), renderer, context });
     } finally {
-      await fit.dispose().catch(() => {});
+      await renderer.dispose().catch(() => {});
     }
   } catch (e) {
     fail((e as Error).message);
