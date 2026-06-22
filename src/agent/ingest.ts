@@ -15,6 +15,7 @@ export interface IngestResult {
   outlineMarkdown: string;
   pointCount: number;
   angle: Direction;
+  digest: string[];
 }
 
 /** text → digest → direction → outline.md (markdown string). No IO of its own. */
@@ -55,5 +56,6 @@ export async function ingest(
     outlineMarkdown: serializeOutline(outline),
     pointCount: digest.keyPoints.length,
     angle,
+    digest: digest.keyPoints,
   };
 }

@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { basename, extname, resolve, dirname, join } from "node:path";
 import { parseOutline, validateOutline, writeSlide } from "./outline/index";
 import { sealDeck, fontFaceCss, readFieldCss } from "./export/index";
-import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath } from "./agent/index";
+import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath, serializeContext } from "./agent/index";
 import { buildDeck } from "./render/index";
 import { playwrightRenderer } from "./render/fit-check";
 
@@ -132,6 +132,19 @@ async function runIngest(args: string[]): Promise<void> {
     fail(`cannot write ${outPath}`);
   }
   process.stdout.write(`✓ wrote ${outPath}\n`);
+
+  // persist the deck context next to the outline so `build` gets the idea, not just the bullet
+  try {
+    const sc = sidecarPath(outPath);
+    writeFileSync(
+      sc,
+      serializeContext({ sourcePath: resolve(input), digest: result.digest, angle: result.angle.label }),
+      "utf8",
+    );
+    process.stdout.write(`✓ wrote ${sc}\n`);
+  } catch {
+    /* sidecar is best-effort; build degrades gracefully without it */
+  }
 }
 
 async function runBuild(args: string[]): Promise<void> {
