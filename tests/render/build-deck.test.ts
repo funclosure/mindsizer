@@ -1,45 +1,39 @@
+// tests/render/build-deck.test.ts
 import { describe, it, expect } from "vitest";
 import { buildDeck } from "../../src/render/build-deck";
-import { parseOutline } from "../../src/outline/index";
 import type { SlideAuthor } from "../../src/render/build-slide";
-import type { FitResult } from "../../src/render/fit-check";
+import type { Outline } from "../../src/outline/types";
 
-const MD = `---
-title: Demo
-purpose: teach
-theme: field
----
-
-<!-- slide id=s_a layout=plain -->
-# A
-
-aaa
-
----
-
-<!-- slide id=s_b layout=plain -->
-# B
-
-bbb
-`;
-
-const section = (id: string) => `<section data-slide-id="${id}" data-layout="bespoke">${id}</section>`;
+const outline: Outline = {
+  meta: { title: "D", purpose: "teach", theme: "field" },
+  slides: [
+    { id: "s_a", layout: "bespoke", title: "A", markdown: "a" },
+    { id: "s_b", layout: "bespoke", title: "B", markdown: "b" },
+  ],
+};
+const section = (id: string) => `<section data-slide-id="${id}" data-layout="bespoke">x</section>`;
 
 describe("buildDeck", () => {
-  it("builds a section per slide, keyed by id", async () => {
+  it("authors every slide and keys sections by id", async () => {
     const author: SlideAuthor = { async authorSlide(req) { return section(req.slide.id); } };
-    const fit = { check: async (): Promise<FitResult> => ({ fits: true, overflowPx: 0, detail: "fits" }) };
-    const res = await buildDeck(parseOutline(MD), { author, fit });
-    expect([...res.sections.keys()].sort()).toEqual(["s_a", "s_b"]);
-    expect(res.sections.get("s_a")).toContain('data-slide-id="s_a"');
-    expect(res.warnings).toEqual([]);
+    const r = await buildDeck(outline, { author });
+    expect([...r.sections.keys()]).toEqual(["s_a", "s_b"]);
+    expect(r.warnings).toEqual([]);
   });
 
-  it("records a warning for a slide that never fits", async () => {
-    const author: SlideAuthor = { async authorSlide(req) { return section(req.slide.id); } };
-    const fit = { check: async (): Promise<FitResult> => ({ fits: false, overflowPx: 99, detail: "overflows by 99px" }) };
-    const res = await buildDeck(parseOutline(MD), { author, fit, maxPasses: 1 });
-    expect(res.warnings.length).toBe(2);
-    expect(res.warnings[0]).toContain("s_a");
+  it("collects per-slide warnings with the slide id prefix", async () => {
+    const author: SlideAuthor = { async authorSlide() { return `<div>bad</div>`; } };
+    const r = await buildDeck(outline, { author });
+    expect(r.warnings.every((w) => /^s_[ab]:/.test(w))).toBe(true);
+    expect(r.warnings.length).toBe(2);
+  });
+
+  it("passes deck-context-derived materials to the author", async () => {
+    let seenAngle = "";
+    const author: SlideAuthor = {
+      async authorSlide(req) { seenAngle = req.materials.angle; return section(req.slide.id); },
+    };
+    await buildDeck(outline, { author, context: { digest: ["p"], angle: "lens" } });
+    expect(seenAngle).toBe("lens");
   });
 });

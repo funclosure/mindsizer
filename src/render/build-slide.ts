@@ -1,8 +1,9 @@
+// src/render/build-slide.ts
 import type { OutlineSlide } from "../outline/types";
 import { validateSlideSection } from "../outline/inject";
 import type { AuthorRequest } from "./design-brief";
-import type { FitChecker, FitResult } from "./fit-check";
-import type { SlideCritic } from "./critic-brief";
+import type { SlideRenderer } from "./fit-check";
+import type { SlideMaterials } from "./materials";
 
 export interface SlideAuthor {
   authorSlide(req: AuthorRequest): Promise<string>;
@@ -10,58 +11,35 @@ export interface SlideAuthor {
 
 export interface BuildSlideDeps {
   author: SlideAuthor;
-  fit: Pick<FitChecker, "check">;
-  critic?: SlideCritic;
-  maxPasses?: number;
+  renderer?: Pick<SlideRenderer, "render">; // optional final fit-check (warn only)
 }
 
 export interface BuiltSlide {
   html: string;
-  passes: number;
-  fits: boolean; // overflow within tolerance
-  approved: boolean; // overflow OK AND (critic approved, or no critic)
+  fits: boolean;     // true unless the final fit-check found overflow
+  warnings: string[];
 }
 
-/** author → validate → fit-check + (optional) vision critique → re-author with problems (capped). Pure of IO. */
+/**
+ * Invoke the (self-iterating) author, validate the section, optionally run a final
+ * non-interactive fit-check. The author owns its own render→look→fix loop; the shell
+ * only validates and warns. Pure of process IO.
+ */
 export async function buildSlide(
   slide: OutlineSlide,
   deck: { title: string; slideTitles: string[] },
+  materials: SlideMaterials,
   deps: BuildSlideDeps,
 ): Promise<BuiltSlide> {
-  const maxPasses = deps.maxPasses ?? 3;
-  let html = "";
-  let problem: string | undefined;
-  let lastFit: FitResult = { fits: false, overflowPx: 0, detail: "" };
+  const html = await deps.author.authorSlide({ slide, deck, materials });
+  const warnings = validateSlideSection(html, slide.id).map((i) => i.message);
 
-  for (let pass = 1; pass <= maxPasses; pass++) {
-    const req: AuthorRequest = problem
-      ? { slide, deck, fix: { previousHtml: html, problem, previousPng: lastFit.png } }
-      : { slide, deck };
-    html = await deps.author.authorSlide(req);
-
-    const sectionIssues = validateSlideSection(html, slide.id);
-    if (sectionIssues.length > 0) {
-      problem = sectionIssues[0].message;
-      lastFit = { fits: false, overflowPx: 0, detail: problem };
-      continue;
-    }
-
-    lastFit = await deps.fit.check(html);
-    const problems: string[] = [];
-    if (!lastFit.fits) problems.push(lastFit.detail);
-    if (deps.critic && lastFit.png) {
-      const verdict = await deps.critic.critique({
-        png: lastFit.png,
-        slide,
-        overflowPx: lastFit.overflowPx,
-      });
-      if (!verdict.approved) problems.push(...verdict.problems);
-    }
-
-    if (problems.length === 0) {
-      return { html, passes: pass, fits: true, approved: true };
-    }
-    problem = problems.join("; ");
+  let fits = true;
+  if (deps.renderer && warnings.length === 0) {
+    const r = await deps.renderer.render(html);
+    fits = r.fits;
+    if (!r.fits) warnings.push(`overflows the 16:9 frame by ${r.overflowPx}px`);
+    for (const e of r.consoleErrors) warnings.push(`console error: ${e}`);
   }
-  return { html, passes: maxPasses, fits: lastFit.fits, approved: false };
+  return { html, fits, warnings };
 }
