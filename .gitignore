@@ -43,3 +43,18 @@ examples/out/
 
 # Playwright MCP scratch output
 .playwright-mcp/
+
+# Demo / scratch artifacts — generated decks, per-deck outlines + slides, context
+# sidecars, screenshots, demo source texts, and one-off reference generators. These are
+# experiment output, not product source. Root-scoped so src/tests/theme/docs are untouched.
+/*.deck.html
+/*.outline.html
+/*.outline.md
+/*.outline.slides/
+/*.context.json
+/adolescence.*.html
+/adolescence.txt
+/scale.txt
+/*.png
+/build-*.ts
+/*.tmp.ts
