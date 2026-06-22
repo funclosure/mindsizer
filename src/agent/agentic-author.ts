@@ -1,13 +1,9 @@
 // src/agent/agentic-author.ts
 import { runAgentic } from "./query";
+import { extractSlideHtml } from "./extract-slide";
 import { slideAuthorPrompt, type AuthorRequest } from "../render/design-brief";
 import type { SlideAuthor } from "../render/build-slide";
 import type { SlideRenderer } from "../render/fit-check";
-
-/** Strip accidental markdown fences the model may add. */
-function stripFences(s: string): string {
-  return s.replace(/^```[a-z]*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
-}
 
 /**
  * Live agentic author: hands the model the materials + identity brief and a bounded
@@ -20,7 +16,9 @@ export function agenticAuthor(renderer: SlideRenderer): SlideAuthor {
       const text = await runAgentic(system, user, {
         render: async (html, interactions) => (await renderer.render(html, interactions)).shots,
       });
-      return stripFences(text);
+      // The model sometimes wraps the HTML in fences or prose despite the brief —
+      // keep only the slide markup so stray text never leaks into the sealed deck.
+      return extractSlideHtml(text);
     },
   };
 }
