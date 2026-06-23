@@ -1,0 +1,17 @@
+{
+  "sourcePath": "examples/dont-scale.txt",
+  "digest": [
+    "Startups don't take off on their own — founders make them take off, like hand-cranking a car engine before it can run by itself",
+    "The most common unscalable move is recruiting users manually and one-by-one, instead of waiting for them to come to you (e.g. Stripe's 'Collison installation', Airbnb going door-to-door)",
+    "Founders resist this out of shyness/laziness and because early absolute numbers look tiny — but they underestimate compound weekly growth (10%/week turns 100 users into millions in two years)",
+    "Almost all startups are extremely fragile at first and get misjudged by the standards of established companies; the right question is 'how big could this get if the founders did the right things?'",
+    "Take extraordinary, unscalable measures to delight early users (hand-written notes, personal attention) — a level of service big companies literally can't provide",
+    "Aim for an 'insanely great' experience, not necessarily an insanely great product: attentiveness can make up for an early, buggy, incomplete product",
+    "Direct engagement with earliest users is also the best feedback loop for making the product good",
+    "Start in a deliberately narrow market to reach critical mass (Facebook starting at Harvard) — like containing a fire to get it hot before adding logs",
+    "Hardware startups can 'pull a Meraki' by assembling units themselves; B2B startups can act as consultants building for a single user, or do tasks manually before automating",
+    "Tactics that usually fail: the Big Launch and partnerships with big companies — any strategy that omits real effort is suspect",
+    "Think of a startup idea as a vector: what you'll build plus the unscalable things you'll do to start — and ideally those unscalable habits permanently shape the company's DNA"
+  ],
+  "angle": "The Mental Model"
+}
