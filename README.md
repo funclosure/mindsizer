@@ -26,33 +26,39 @@ Decks stay **linear and presentable** (one frame at a time, arrow-key navigation
 
 ## Quick start
 
-Requires [Bun](https://bun.sh).
+Three ways in, easiest first.
+
+### 1. Just look — no install
+
+Open the bundled, prebuilt example deck. Zero setup, zero auth:
+
+```bash
+open examples/dont-scale.deck.html
+```
+
+(Or the live version: <https://funclosure.github.io/mindsizer/dont-scale/>.) Navigate with **← / →**; click and drag the controls on the interactive slides. See [`examples/`](examples/) for what's bundled.
+
+### 2. Rebuild the bundled example
+
+Requires [Bun](https://bun.sh):
 
 ```bash
 bun install
 bunx playwright install chromium   # the author uses headless chromium as its "eyes"
-bun link                            # registers the `mindsizer` command globally
+bun link                            # registers the `mindsizer` command
+bun run example                     # rebuilds examples/dont-scale.deck.html and opens it
 ```
 
 Authentication: the agent talks to Claude via the [Claude Agent SDK](https://docs.claude.com). It uses your Claude Code session by default (no API key needed), and falls back to `ANTHROPIC_API_KEY` if set.
 
-### Turn an article into a deck
+### 3. Your own text
 
 ```bash
-# 1. Digest the text and choose a teaching angle (how to frame it).
-mindsizer ingest article.txt -o article.outline.md
-#    → writes article.outline.md  + article.outline.context.json (the digest + angle)
-
-# 2. Build the rich, interactive deck (the agent authors each slide and checks its own render).
-mindsizer build article.outline.md --open
-#    → writes article.outline.html — one self-contained, offline, interactive deck
+mindsizer ingest article.txt -o article.outline.md   # digest → pick a teaching angle
+mindsizer build  article.outline.md --open           # author the interactive deck
 ```
 
-`ingest` is interactive (it proposes a few angles and asks you to pick). To run unattended, use `--yes` to take the first angle:
-
-```bash
-mindsizer ingest article.txt --yes -o article.outline.md
-```
+`ingest` proposes a few angles and asks you to pick; add `--yes` to take the first automatically. `build` writes one self-contained, offline `article.outline.html`.
 
 ### View a deck
 

@@ -8,7 +8,8 @@
   "private": true,
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "example": "bun run src/cli.ts build examples/dont-scale.outline.md -o examples/dont-scale.deck.html --open"
   },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.2.86",
