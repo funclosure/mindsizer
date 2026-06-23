@@ -9,7 +9,8 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "example": "bun run src/cli.ts build examples/dont-scale.outline.md -o examples/dont-scale.deck.html --open"
+    "example": "bun run src/cli.ts build examples/dont-scale.outline.md -o examples/dont-scale.deck.html --open",
+    "deploy": "bash scripts/deploy.sh"
   },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.2.86",
