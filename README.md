@@ -2,6 +2,8 @@
 
 **Paste dense text → get an interactive deck that makes the idea _click_.**
 
+▶ **[Try the live example](https://funclosure.github.io/mindsizer/)** — an interactive deck built from Paul Graham's _Do Things that Don't Scale_. Use **← / →** to navigate; click and drag the controls on each slide.
+
 mindsizer is a local-first tool that digests hard or dense writing, asks what you need it _for_, and rebuilds it into a self-contained deck of comprehension-first slides — including genuinely **interactive** ones you can operate. Everything ships as **one offline HTML file** you can open anywhere.
 
 > Summarizers make it _shorter_. Deck-makers make it _prettier_. **mindsizer makes it _click_** — rebuilding hard information into the shape your purpose demands.
