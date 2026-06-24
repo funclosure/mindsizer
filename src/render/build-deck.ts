@@ -44,6 +44,9 @@ export async function buildDeck(
     const onPass = (p: { pass: number; modelMs: number; renderMs: number; overflowPx: number; consoleErrors: number }) =>
       sink.emit({ type: "render_pass", at: Date.now(), index, id: slide.id, ...p });
     try {
+      // On an overload retry the whole buildSlide re-runs, so onPass re-fires render_pass from
+      // pass 1 — a retried slide's pass counter visibly resets in the log (the slide_retry event
+      // emitted between attempts marks the boundary). Expected: we re-author, not resume.
       const built = await withRetry(
         () => buildSlide(slide, deck, materials, { author: deps.author, renderer: deps.renderer }, onPass),
         {
