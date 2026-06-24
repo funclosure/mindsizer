@@ -6,6 +6,7 @@ import { sealDeck, fontFaceCss, readFieldCss, fileSink } from "./export/index";
 import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath, serializeContext } from "./agent/index";
 import { buildDeck } from "./render/index";
 import { playwrightRenderer, verifyDeck } from "./render/fit-check";
+import { hasUsableSection } from "./outline/inject";
 
 function fail(msg: string): never {
   process.stderr.write(`error: ${msg}\n`);
@@ -151,6 +152,7 @@ async function runBuild(args: string[]): Promise<void> {
   let input: string | undefined;
   let out: string | undefined;
   let open = false;
+  let resume = false;
   const envC = Number(process.env.MINDSIZER_CONCURRENCY);
   let concurrency = Number.isFinite(envC) && envC >= 1 ? Math.floor(envC) : 4;
 
@@ -165,6 +167,8 @@ async function runBuild(args: string[]): Promise<void> {
       const v = Number(args[++k]);
       if (!Number.isFinite(v) || v < 1) fail("--concurrency requires an integer ≥ 1");
       concurrency = Math.floor(v);
+    } else if (a === "--resume") {
+      resume = true;
     } else if (a.startsWith("-")) {
       fail(`unknown option ${a}`);
     } else {
@@ -172,7 +176,7 @@ async function runBuild(args: string[]): Promise<void> {
     }
   }
 
-  if (!input) fail("usage: mindsizer build <outline.md> [-o <out.html>] [--open] [--concurrency <n>]");
+  if (!input) fail("usage: mindsizer build <outline.md> [-o <out.html>] [--open] [--concurrency <n>] [--resume]");
 
   let md: string;
   try {
@@ -213,11 +217,21 @@ async function runBuild(args: string[]): Promise<void> {
   // the sink writes progress.jsonl/status.json under buildDir and re-seals outPath incrementally
   const sink = fileSink(buildDir, outline, outPath);
   process.stdout.write(`· progress → ${join(buildDir, "progress.jsonl")}\n`);
+  const reuse = new Map<string, string>();
+  if (resume) {
+    for (const s of outline.slides) {
+      try {
+        const saved = readFileSync(join(buildDir, "slides", `${s.id}.html`), "utf8");
+        if (hasUsableSection(saved, s.id)) reuse.set(s.id, saved);
+      } catch { /* slide not built yet */ }
+    }
+    process.stdout.write(`· resume: reusing ${reuse.size}/${outline.slides.length} saved slides\n`);
+  }
 
   let result: Awaited<ReturnType<typeof buildDeck>>;
   try {
     try {
-      result = await buildDeck(outline, { author: agenticAuthor(renderer), renderer, context, sink, concurrency });
+      result = await buildDeck(outline, { author: agenticAuthor(renderer), renderer, context, sink, concurrency, reuse });
     } finally {
       await renderer.dispose().catch(() => {});
     }
