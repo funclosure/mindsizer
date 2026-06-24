@@ -49,10 +49,10 @@ function pageHtml(themeCss: string, sectionHtml: string): string {
 
 /** Headless-chromium renderer: 16:9 frame, optional scripted interactions, overflow + console capture. */
 export function playwrightRenderer(themeCss: string): SlideRenderer {
-  let browser: Browser | null = null;
-  async function getBrowser(): Promise<Browser> {
-    if (!browser) browser = await chromium.launch();
-    return browser;
+  let browserP: Promise<Browser> | null = null;
+  function getBrowser(): Promise<Browser> {
+    if (!browserP) browserP = chromium.launch();
+    return browserP;
   }
 
   async function render(html: string, interactions: Interaction[] = []): Promise<RenderResult> {
@@ -94,7 +94,7 @@ export function playwrightRenderer(themeCss: string): SlideRenderer {
       };
     },
     async dispose(): Promise<void> {
-      if (browser) { await browser.close(); browser = null; }
+      if (browserP) { const b = browserP; browserP = null; await (await b).close(); }
     },
   };
 }
