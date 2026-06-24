@@ -22,6 +22,7 @@ export type ProgressEvent =
       timing: SlideTiming; warnings: string[] }
   | { type: "slide_failed"; at: number; index: number; id: string; reason: string }
   | { type: "slide_retry"; at: number; index: number; id: string; attempt: number; reason: string }
+  | { type: "slide_reused"; at: number; index: number; id: string; html: string }
   | { type: "deck_done"; at: number; slides: number; totalMs: number;
       byCategory: Record<StepCategory, number> };
 
