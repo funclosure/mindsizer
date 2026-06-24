@@ -151,6 +151,8 @@ async function runBuild(args: string[]): Promise<void> {
   let input: string | undefined;
   let out: string | undefined;
   let open = false;
+  const envC = Number(process.env.MINDSIZER_CONCURRENCY);
+  let concurrency = Number.isFinite(envC) && envC >= 1 ? Math.floor(envC) : 4;
 
   for (let k = 0; k < args.length; k++) {
     const a = args[k];
@@ -159,6 +161,10 @@ async function runBuild(args: string[]): Promise<void> {
       if (out === undefined) fail("-o requires a path");
     } else if (a === "--open") {
       open = true;
+    } else if (a === "--concurrency" || a === "-c") {
+      const v = Number(args[++k]);
+      if (!Number.isFinite(v) || v < 1) fail("--concurrency requires an integer ≥ 1");
+      concurrency = Math.floor(v);
     } else if (a.startsWith("-")) {
       fail(`unknown option ${a}`);
     } else {
@@ -166,7 +172,7 @@ async function runBuild(args: string[]): Promise<void> {
     }
   }
 
-  if (!input) fail("usage: mindsizer build <outline.md> [-o <out.html>] [--open]");
+  if (!input) fail("usage: mindsizer build <outline.md> [-o <out.html>] [--open] [--concurrency <n>]");
 
   let md: string;
   try {
@@ -211,7 +217,7 @@ async function runBuild(args: string[]): Promise<void> {
   let result: Awaited<ReturnType<typeof buildDeck>>;
   try {
     try {
-      result = await buildDeck(outline, { author: agenticAuthor(renderer), renderer, context, sink });
+      result = await buildDeck(outline, { author: agenticAuthor(renderer), renderer, context, sink, concurrency });
     } finally {
       await renderer.dispose().catch(() => {});
     }
