@@ -76,11 +76,11 @@ Navigate with **→ / ← / Space**. On interactive slides, click or drag the co
 
 | Command | What it does |
 | --- | --- |
-| `mindsizer ingest <text-file> [--angle <id>] [--yes] [-o out.md]` | Digest text → propose teaching angles → write a canonical `outline.md` + a `*.context.json` sidecar (digest + chosen angle). |
-| `mindsizer build <outline.md> [-o out.html] [--open]` | The rich path: an agentic author writes a bespoke (often interactive) slide per outline entry, renders + critiques its own work, then seals everything into one offline deck. |
+| `mindsizer ingest <text-file> [--yes] [-o out.md]` | Digest text → propose teaching angles (pick interactively, or `--yes` to take the first) → write a canonical `outline.md` + a `*.context.json` sidecar (digest + chosen angle). |
+| `mindsizer build <outline.md> [-o out.html] [--open] [--concurrency <n>]` | The rich path: an agentic author writes a bespoke (often interactive) slide per outline entry, renders + critiques its own work, then seals everything into one offline deck. Slides author **in parallel** (a bounded pool, default 4). |
 | `mindsizer <outline.md> [-o out.html] [--open]` | The fast, no-LLM path: mechanically render + seal the outline (for `analogy` / `plain` layouts). |
 
-`MINDSIZER_MODEL` overrides the model (default `claude-opus-4-8`).
+`MINDSIZER_MODEL` overrides the model (default `claude-opus-4-8`). `MINDSIZER_CONCURRENCY` sets how many slides author at once (default 4; `--concurrency`/`-c` overrides it; `1` = sequential).
 
 ---
 
@@ -91,18 +91,22 @@ text ──▶ ingest ──▶ outline.md  +  *.context.json
                          │  (digest + chosen angle)
 mindsizer build ─────────┘
    orchestrator (deterministic, unit-tested):
-     for each slide:
+     author slides in a bounded pool (default 4, --concurrency) — each:
        gather materials (the idea: source + digest + angle + neighbours)
          └▶ agentic author  [bounded "render" tool — no fs/Bash/network]
-              think → write HTML → render at 1280×720 → LOOK → fix   (self-iterating)
+              think → write HTML → render at 1280×720 → LOOK → fix
+              ↳ converges: stop the moment a render is clean; seal the BEST pass
          ◀ returns a slide: <style>? <section> <script>?
-       validate → (optional fit-check, warn)
+       validate + guarantee the section id ;  overload → retry/backoff
+     progress streams to <stem>.build/  (progress.jsonl · status.json)
    seal ──▶ ONE self-contained, offline, LINEAR, interactive deck.html
+   verify the sealed deck  (section count · 0 console errors · no loose text)
 ```
 
 Key ideas:
 
 - **Hybrid author.** A free agentic author (an Agent-SDK session with a single, bounded `render` tool) iterates on its _own_ screenshots — the way a designer would — wrapped in a deterministic shell that gathers context, validates, and seals. The shell is unit-tested with fakes; the agent and browser are verified by running.
+- **Converged & parallel.** Slides author concurrently (a bounded pool), and each loop stops the moment its render is clean — sealing the _best_ rendered pass, not a later regression. Overloads retry with backoff, every build streams telemetry to `<stem>.build/`, and the assembled deck is checked end-to-end before you see it.
 - **The agent gets the idea, not a bullet.** `ingest` persists the digest and chosen angle in a `*.context.json` sidecar so the author understands the argument, not just a one-line label.
 - **Interactive slides.** A slide may carry a scoped per-slide `<script>`; it's sealed into the offline deck. The deck renders every slide on a fixed **1280×720 stage scaled to fit**, so all slides are uniform and exactly match what the author saw while building.
 - **Identity over rulebook.** Authoring is steered by a short "instrument, not landing page" brief in the [Field](#design-language) aesthetic, rather than a long list of rules.
@@ -141,10 +145,10 @@ bun run test:watch  # watch mode
 bunx tsc --noEmit   # typecheck
 ```
 
-The deterministic core (outline, orchestrator, contract, seal, sidecar, materials) is unit-tested with fakes. The browser renderer (`src/render/fit-check.ts`) and the live agentic author are kept out of the unit graph and verified by running. See `docs/` for the design specs and implementation plans.
+The deterministic core (outline, orchestrator, the pool/retry primitives, contract, seal, sidecar, materials) is unit-tested with fakes. The render _barrel_ keeps Playwright off the fast path; the headless renderer (`src/render/fit-check.ts`) has its own running tests, and the live agentic author is verified by running. See `docs/` for the design specs and implementation plans.
 
 ---
 
 ## Status
 
-Early, local-first, and private. The v1 flow — `ingest` → pick an angle → `build` → an offline interactive deck — works end to end. The slide-authoring harness is the active surface; output ambition (and the workspace UI) is still growing.
+Early, local-first, and private. The v1 flow — `ingest` → pick an angle → `build` → an offline interactive deck — works end to end, now with parallel authoring, per-build telemetry, and a post-seal deck check. The slide-authoring harness is the active surface; output ambition (and the workspace UI) is still growing.
