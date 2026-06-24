@@ -12,18 +12,17 @@ function fmtMs(ms: number): string {
 /** Render the end-of-build step breakdown (printed + a sane fallback if totals are zero). */
 export function formatBreakdown(
   done: Extract<ProgressEvent, { type: "deck_done" }>,
-  slideTimings: SlideTiming[],
+  slides: { index: number; timing: SlideTiming }[],
 ): string {
   const c = done.byCategory;
   const stepSum = c.author + c.revise + c.render + c.finalize;
   const overhead = Math.max(0, done.totalMs - stepSum);
   const denom = done.totalMs || 1;
   const pct = (n: number) => `${Math.round((n / denom) * 100)}%`;
-  const slowest = [...slideTimings]
-    .map((t, i) => ({ i, t }))
-    .sort((a, b) => b.t.totalMs - a.t.totalMs)
+  const slowest = [...slides]
+    .sort((a, b) => b.timing.totalMs - a.timing.totalMs)
     .slice(0, 3)
-    .map((x) => `#${x.i + 1} ${fmtMs(x.t.totalMs)} (${x.t.passes.length} passes)`)
+    .map((x) => `#${x.index + 1} ${fmtMs(x.timing.totalMs)} (${x.timing.passes.length} passes)`)
     .join(" · ");
   return (
     `build complete — ${done.slides} slides in ${fmtMs(done.totalMs)}\n` +
@@ -46,7 +45,7 @@ export function fileSink(buildDir: string, outline: Outline, outPath: string): P
   // every slide starts as a placeholder so the partial deck always has the full count
   const sections = new Map<string, string>();
   for (const s of outline.slides) sections.set(s.id, placeholderSection(s));
-  const slideTimings: SlideTiming[] = [];
+  const slides: { index: number; timing: SlideTiming }[] = [];
   let doneCount = 0;
   let current: { index: number; total: number; id: string; title: string; pass: number } | null = null;
 
@@ -77,7 +76,7 @@ export function fileSink(buildDir: string, outline: Outline, outPath: string): P
         process.stdout.write(`   pass ${e.pass} · render ${fmtMs(e.renderMs)} · overflow ${e.overflowPx} · +${fmtMs(e.modelMs)} model\n`);
       } else if (e.type === "slide_done") {
         sections.set(e.id, e.html);
-        slideTimings.push(e.timing);
+        slides.push({ index: e.index, timing: e.timing });
         doneCount++;
         try { writeFileSync(join(buildDir, "slides", `${e.id}.html`), e.html, "utf8"); } catch { /* best-effort */ }
         reseal();
@@ -90,11 +89,11 @@ export function fileSink(buildDir: string, outline: Outline, outPath: string): P
         try {
           writeFileSync(
             join(buildDir, "timing.json"),
-            JSON.stringify({ totalMs: e.totalMs, byCategory: e.byCategory, slides: slideTimings }, null, 2),
+            JSON.stringify({ totalMs: e.totalMs, byCategory: e.byCategory, slides }, null, 2),
             "utf8",
           );
         } catch { /* best-effort */ }
-        process.stdout.write("\n" + formatBreakdown(e, slideTimings));
+        process.stdout.write("\n" + formatBreakdown(e, slides));
       }
 
       writeStatus(e.type);

@@ -46,6 +46,7 @@ export function computeSlideTiming(
   const render = passes.reduce((a, p) => a + p.renderMs, 0);
   const author = passes.length ? passes[0].modelMs : totalMs;
   const revise = passes.slice(1).reduce((a, p) => a + p.modelMs, 0);
-  const finalize = totalMs - author - revise - render;
+  // Date.now() is wall-clock, not monotonic; a backward NTP step could make this negative.
+  const finalize = Math.max(0, totalMs - author - revise - render);
   return { totalMs, passes, byCategory: { author, revise, render, finalize } };
 }
