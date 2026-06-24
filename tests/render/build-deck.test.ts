@@ -63,15 +63,49 @@ describe("buildDeck", () => {
     expect(done.byCategory.render).toBe(4); // 2 slides × renderMs 2
   });
 
-  it("emits slide_failed and keeps going when an author throws", async () => {
-    let n = 0;
+  it("isolates a permanently failing slide and finishes the rest", async () => {
     const author: SlideAuthor = {
-      async authorSlide(req) { if (n++ === 0) throw new Error("kaboom"); return { html: section(req.slide.id) }; },
+      async authorSlide(req) { if (req.slide.id === "s_a") throw new Error("boom"); return { html: section(req.slide.id) }; },
     };
     const { sink, events } = recordingSink();
-    const r = await buildDeck(outline, { author, sink });
+    const r = await buildDeck(outline, { author, sink, sleep: () => Promise.resolve() });
     expect(events.some((e) => e.type === "slide_failed")).toBe(true);
     expect(events[events.length - 1].type).toBe("deck_done");
-    expect([...r.sections.keys()]).toEqual(["s_b"]); // first failed, second authored
+    expect([...r.sections.keys()]).toEqual(["s_b"]);
+  });
+
+  it("runs at most `concurrency` slides at once", async () => {
+    const big: Outline = {
+      meta: outline.meta,
+      slides: Array.from({ length: 6 }, (_, i) => ({ id: `s${i}`, layout: "bespoke" as const, title: `T${i}`, markdown: "m" })),
+    };
+    let active = 0;
+    let peak = 0;
+    const author: SlideAuthor = {
+      async authorSlide(req) {
+        active++; peak = Math.max(peak, active);
+        await new Promise((r) => setTimeout(r, 5));
+        active--;
+        return { html: section(req.slide.id) };
+      },
+    };
+    await buildDeck(big, { author, concurrency: 2 });
+    expect(peak).toBe(2);
+  });
+
+  it("retries an overloaded slide and recovers", async () => {
+    const attempts: Record<string, number> = {};
+    const author: SlideAuthor = {
+      async authorSlide(req) {
+        attempts[req.slide.id] = (attempts[req.slide.id] ?? 0) + 1;
+        if (req.slide.id === "s_a" && attempts.s_a < 3) throw new Error("529 overloaded");
+        return { html: section(req.slide.id) };
+      },
+    };
+    const { sink, events } = recordingSink();
+    const r = await buildDeck(outline, { author, sink, sleep: () => Promise.resolve() });
+    expect(events.filter((e) => e.type === "slide_retry").length).toBe(2); // s_a failed twice, retried twice
+    expect(events.filter((e) => e.type === "slide_done").length).toBe(2);
+    expect([...r.sections.keys()].sort()).toEqual(["s_a", "s_b"]);
   });
 });
