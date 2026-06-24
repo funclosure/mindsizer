@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { sealDeck, readFieldCss } from "../../src/export/seal";
+import { sealDeck, readFieldCss, placeholderSection } from "../../src/export/seal";
 import { parseOutline } from "../../src/outline/index";
 import type { Outline } from "../../src/outline/types";
 
@@ -93,5 +93,27 @@ describe("sealDeck", () => {
     // the slide script sits inside the deck document, before the nav runtime's closing tag
     expect(html.indexOf("window.__s_a=1")).toBeLessThan(html.lastIndexOf("</script>"));
     expect(html).not.toContain("http://"); // still self-contained, no external refs
+  });
+});
+
+describe("placeholderSection + partial deck", () => {
+  it("placeholderSection is one valid section carrying id and data-slide-id", () => {
+    const s = placeholderSection({ id: "s_z", title: "Zed" });
+    expect(s).toContain('id="s_z"');
+    expect(s).toContain('data-slide-id="s_z"');
+    expect(s).toContain("Zed");
+    expect(s).toContain("building");
+  });
+
+  it("seals a partial deck with a placeholder for a not-yet-built slide", () => {
+    const outline = parseOutline(MD); // MD is already defined at the top of this test file (slides s_a, s_b)
+    const sections = new Map([
+      ["s_a", '<section data-slide-id="s_a" data-layout="bespoke">DONE_A</section>'],
+      ["s_b", placeholderSection({ id: "s_b", title: "B" })],
+    ]);
+    const html = sealDeck(outline, { sections });
+    expect(html).toContain("DONE_A");
+    expect(html).toContain("building");
+    expect(html).toContain('data-slide-id="s_b"');
   });
 });

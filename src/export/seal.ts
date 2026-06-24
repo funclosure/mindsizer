@@ -20,6 +20,15 @@ export function readFieldCss(): string {
   return readFileSync(join(THEME_DIR, "field.css"), "utf8");
 }
 
+/** A minimal valid section for a slide that hasn't been authored yet (partial-deck preview). */
+export function placeholderSection(slide: { id: string; title: string }): string {
+  return (
+    `<section id="${slide.id}" data-slide-id="${slide.id}" data-layout="bespoke">` +
+    `<div class="s-title">${escapeHtml(slide.title)}</div>` +
+    `<div class="s-body">building…</div></section>`
+  );
+}
+
 /** Assemble an Outline into one self-contained, offline deck.html string. */
 export function sealDeck(
   outline: Outline,
