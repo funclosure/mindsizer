@@ -54,13 +54,29 @@ describe("formatBreakdown", () => {
     const out = formatBreakdown(
       { type: "deck_done", at: 0, slides: 2, totalMs: 100, byCategory: { author: 120, revise: 60, render: 10, finalize: 10 } },
       [],
-      { peakInFlight: 4, retries: 1, failedCount: 0 },
+      { peakInFlight: 4, retries: 1, failedCount: 0, reused: 3 },
     );
     // work = 200 model-ms, wall = 100 → 2.0× parallel; revise 60/200 = 30%
     expect(out).toMatch(/2\.0×/);
     expect(out).toMatch(/revise 30%/);
     expect(out).toMatch(/peak in-flight: 4/);
     expect(out).toMatch(/retries: 1/);
+    expect(out).toMatch(/reused: 3/);
     expect(out).not.toMatch(/overhead/);
   });
+});
+
+it("reuses a saved slide: sets the section, writes the file, counts it done", () => {
+  const dir = mkdtempSync(join(tmpdir(), "ms-sink-reuse-"));
+  const buildDir = join(dir, "out.build");
+  const outPath = join(dir, "out.html");
+  const sink = fileSink(buildDir, outline, outPath);
+
+  sink.emit({ type: "slide_reused", at: 1, index: 0, id: "s_a", html: '<section data-slide-id="s_a" data-layout="bespoke">REUSED_A</section>' });
+
+  expect(readFileSync(join(buildDir, "slides", "s_a.html"), "utf8")).toContain("REUSED_A");
+  expect(readFileSync(outPath, "utf8")).toContain("REUSED_A"); // in the partial deck
+  const status = JSON.parse(readFileSync(join(buildDir, "status.json"), "utf8"));
+  expect(status.doneCount).toBe(1);
+  expect(status.reused).toBe(1);
 });
