@@ -105,4 +105,9 @@ describe("ensureSectionId", () => {
   it("returns the input unchanged when there is no section", () => {
     expect(ensureSectionId(`<div>nope</div>`, "s_x")).toBe(`<div>nope</div>`);
   });
+
+  it("still injects id when another *-id attribute is present (not a real id)", () => {
+    const out = ensureSectionId(`<section data-id="foo" data-slide-id="s_x" data-layout="bespoke">x</section>`, "s_x");
+    expect(out).toContain('<section id="s_x" data-id="foo" data-slide-id="s_x"');
+  });
 });

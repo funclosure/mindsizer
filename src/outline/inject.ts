@@ -43,7 +43,9 @@ export function ensureSectionId(html: string, expectedId: string): string {
   if (!open) return html;
   const tag = open[0];
   const withoutDsid = tag.replace(/\bdata-slide-id=("|')[^"']*\1/i, "");
-  if (/\bid=("|')/.test(withoutDsid)) return html; // already has a standalone id
+  // a REAL standalone id attribute starts at a tag/word boundary (after whitespace), not after a
+  // hyphen — so `data-id="…"` / `aria-…` don't count as "already has an id".
+  if (/(^|\s)id=("|')/i.test(withoutDsid)) return html;
   const fixed = tag.replace(/<section\b/i, `<section id="${expectedId}"`);
   return html.replace(tag, fixed);
 }
