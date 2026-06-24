@@ -50,13 +50,17 @@ describe("fileSink", () => {
 });
 
 describe("formatBreakdown", () => {
-  it("reports each category as a percentage that includes an overhead remainder", () => {
+  it("reports categories relative to model-work and a parallel speedup", () => {
     const out = formatBreakdown(
-      { type: "deck_done", at: 0, slides: 2, totalMs: 200, byCategory: { author: 120, revise: 60, render: 10, finalize: 5 } },
+      { type: "deck_done", at: 0, slides: 2, totalMs: 100, byCategory: { author: 120, revise: 60, render: 10, finalize: 10 } },
       [],
+      { peakInFlight: 4, retries: 1, failedCount: 0 },
     );
-    expect(out).toMatch(/author/);
-    expect(out).toMatch(/revise/);
-    expect(out).toMatch(/overhead/); // 200 - 195 = 5 → ~2%
+    // work = 200 model-ms, wall = 100 → 2.0× parallel; revise 60/200 = 30%
+    expect(out).toMatch(/2\.0×/);
+    expect(out).toMatch(/revise 30%/);
+    expect(out).toMatch(/peak in-flight: 4/);
+    expect(out).toMatch(/retries: 1/);
+    expect(out).not.toMatch(/overhead/);
   });
 });

@@ -1,3 +1,4 @@
+// src/export/build-sink.ts
 import { mkdirSync, writeFileSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Outline } from "../outline/types";
@@ -9,32 +10,36 @@ function fmtMs(ms: number): string {
   return s >= 60 ? `${Math.floor(s / 60)}m${String(s % 60).padStart(2, "0")}s` : `${s}s`;
 }
 
-/** Render the end-of-build step breakdown (printed + a sane fallback if totals are zero). */
+export interface BreakdownStats { peakInFlight: number; retries: number; failedCount: number; }
+
+/** End-of-build breakdown: category %s are relative to total model-work; headline shows wall-clock + parallel speedup. */
 export function formatBreakdown(
   done: Extract<ProgressEvent, { type: "deck_done" }>,
   slides: { index: number; timing: SlideTiming }[],
+  stats: BreakdownStats,
 ): string {
   const c = done.byCategory;
-  const stepSum = c.author + c.revise + c.render + c.finalize;
-  const overhead = Math.max(0, done.totalMs - stepSum);
-  const denom = done.totalMs || 1;
+  const work = c.author + c.revise + c.render + c.finalize; // total model-work across slides
+  const denom = work || 1;
   const pct = (n: number) => `${Math.round((n / denom) * 100)}%`;
+  const speedup = done.totalMs ? work / done.totalMs : 1;
   const slowest = [...slides]
     .sort((a, b) => b.timing.totalMs - a.timing.totalMs)
     .slice(0, 3)
     .map((x) => `#${x.index + 1} ${fmtMs(x.timing.totalMs)} (${x.timing.passes.length} passes)`)
     .join(" · ");
   return (
-    `build complete — ${done.slides} slides in ${fmtMs(done.totalMs)}\n` +
-    `  by step:  revise ${pct(c.revise)} · author ${pct(c.author)} · render ${pct(c.render)} · finalize ${pct(c.finalize)} · overhead ${pct(overhead)}\n` +
+    `build complete — ${done.slides} slides in ${fmtMs(done.totalMs)}  (work ${fmtMs(work)} · ${speedup.toFixed(1)}× parallel)\n` +
+    `  by step:  revise ${pct(c.revise)} · author ${pct(c.author)} · render ${pct(c.render)} · finalize ${pct(c.finalize)}\n` +
+    `  peak in-flight: ${stats.peakInFlight} · retries: ${stats.retries} · failed: ${stats.failedCount}\n` +
     (slowest ? `  slowest:  ${slowest}\n` : "")
   );
 }
 
 /**
- * The build's IO sink: writes a structured event log + status snapshot, persists each finished
- * slide, re-seals a partial deck (placeholders for pending slides) so it's openable mid-build,
- * and prints/saves the step breakdown at the end.
+ * The build's IO sink: structured event log + a multi-in-flight status snapshot, persists each
+ * finished slide, re-seals a partial deck (placeholders for pending slides), and prints an
+ * id-prefixed event stream + the end-of-build breakdown. Concurrency-aware: many slides in flight.
  */
 export function fileSink(buildDir: string, outline: Outline, outPath: string): ProgressSink {
   mkdirSync(join(buildDir, "slides"), { recursive: true });
@@ -42,12 +47,15 @@ export function fileSink(buildDir: string, outline: Outline, outPath: string): P
   const statusPath = join(buildDir, "status.json");
   const start = Date.now();
 
-  // every slide starts as a placeholder so the partial deck always has the full count
   const sections = new Map<string, string>();
   for (const s of outline.slides) sections.set(s.id, placeholderSection(s));
   const slides: { index: number; timing: SlideTiming }[] = [];
+  const inFlight = new Map<number, { index: number; id: string; title: string; pass: number; lastOverflowPx: number }>();
+  const total = outline.slides.length;
   let doneCount = 0;
-  let current: { index: number; total: number; id: string; title: string; pass: number } | null = null;
+  let failedCount = 0;
+  let retries = 0;
+  let peakInFlight = 0;
 
   const reseal = () => {
     try { writeFileSync(outPath, sealDeck(outline, { sections }), "utf8"); } catch { /* best-effort */ }
@@ -56,7 +64,11 @@ export function fileSink(buildDir: string, outline: Outline, outPath: string): P
     try {
       writeFileSync(
         statusPath,
-        JSON.stringify({ current, elapsedMs: Date.now() - start, doneCount, lastEvent }, null, 2),
+        JSON.stringify(
+          { total, doneCount, failedCount, peakInFlight, retries, elapsedMs: Date.now() - start, lastEvent, inFlight: [...inFlight.values()] },
+          null,
+          2,
+        ),
         "utf8",
       );
     } catch { /* best-effort */ }
@@ -69,31 +81,38 @@ export function fileSink(buildDir: string, outline: Outline, outPath: string): P
       try { appendFileSync(progressPath, JSON.stringify(e) + "\n"); } catch { /* best-effort */ }
 
       if (e.type === "slide_start") {
-        current = { index: e.index, total: e.total, id: e.id, title: e.title, pass: 0 };
-        process.stdout.write(`▶ ${e.index + 1}/${e.total} "${e.title}"\n`);
+        inFlight.set(e.index, { index: e.index, id: e.id, title: e.title, pass: 0, lastOverflowPx: -1 });
+        peakInFlight = Math.max(peakInFlight, inFlight.size);
+        process.stdout.write(`[#${e.index + 1}] author… "${e.title}"\n`);
       } else if (e.type === "render_pass") {
-        if (current) current.pass = e.pass;
-        process.stdout.write(`   pass ${e.pass} · render ${fmtMs(e.renderMs)} · overflow ${e.overflowPx} · +${fmtMs(e.modelMs)} model\n`);
+        const f = inFlight.get(e.index);
+        if (f) { f.pass = e.pass; f.lastOverflowPx = e.overflowPx; }
+        process.stdout.write(`[#${e.index + 1}] pass ${e.pass} · ovf ${e.overflowPx} · +${fmtMs(e.modelMs)} model\n`);
+      } else if (e.type === "slide_retry") {
+        retries++;
+        process.stdout.write(`[#${e.index + 1}] ⟳ retry ${e.attempt} (${e.reason})\n`);
       } else if (e.type === "slide_done") {
+        inFlight.delete(e.index);
         sections.set(e.id, e.html);
         slides.push({ index: e.index, timing: e.timing });
         doneCount++;
         try { writeFileSync(join(buildDir, "slides", `${e.id}.html`), e.html, "utf8"); } catch { /* best-effort */ }
         reseal();
-        process.stdout.write(`✓ ${e.index + 1}/${current?.total ?? "?"} done · ${fmtMs(e.timing.totalMs)}\n`);
+        process.stdout.write(`[#${e.index + 1}] ✓ done · ${fmtMs(e.timing.totalMs)} (${e.timing.passes.length} passes)\n`);
       } else if (e.type === "slide_failed") {
-        doneCount++;
-        process.stderr.write(`✗ ${e.index + 1} ${e.id}: ${e.reason}\n`);
+        inFlight.delete(e.index);
+        failedCount++;
+        process.stderr.write(`[#${e.index + 1}] ✗ ${e.id}: ${e.reason}\n`);
       } else if (e.type === "deck_done") {
         reseal();
         try {
           writeFileSync(
             join(buildDir, "timing.json"),
-            JSON.stringify({ totalMs: e.totalMs, byCategory: e.byCategory, slides }, null, 2),
+            JSON.stringify({ totalMs: e.totalMs, byCategory: e.byCategory, slides, peakInFlight, retries, failedCount }, null, 2),
             "utf8",
           );
         } catch { /* best-effort */ }
-        process.stdout.write("\n" + formatBreakdown(e, slides));
+        process.stdout.write("\n" + formatBreakdown(e, slides, { peakInFlight, retries, failedCount }));
       }
 
       writeStatus(e.type);
