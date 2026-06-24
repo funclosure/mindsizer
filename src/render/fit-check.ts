@@ -2,8 +2,8 @@
 import { chromium, type Browser } from "playwright";
 import { computeOverflow } from "./render-helpers";
 
-// `document` exists only inside page.evaluate() (browser context).
-declare const document: { querySelector(selector: string): null | Record<string, number> };
+// `document` exists only inside page.evaluate() (browser context); typed loosely on purpose.
+declare const document: any;
 
 export interface FitResult {
   fits: boolean;
@@ -101,3 +101,37 @@ export function playwrightRenderer(themeCss: string): SlideRenderer {
 
 /** @deprecated use playwrightRenderer */
 export const playwrightFitChecker = playwrightRenderer;
+
+export interface DeckCheck {
+  sectionCount: number;
+  consoleErrors: string[];
+  looseText: string[]; // non-whitespace text nodes that are direct children of .deck (prose leak)
+}
+
+/** Load a sealed deck once headless and report structural problems for the whole-deck gate. */
+export async function verifyDeck(html: string): Promise<DeckCheck> {
+  const browser = await chromium.launch();
+  try {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+    const consoleErrors: string[] = [];
+    page.on("console", (m) => { if (m.type() === "error") consoleErrors.push(m.text()); });
+    page.on("pageerror", (e) => consoleErrors.push(String(e)));
+    await page.setContent(html, { waitUntil: "networkidle" });
+    const data = await page.evaluate(() => {
+      const deck = document.querySelector(".deck");
+      const sectionCount = document.querySelectorAll(".deck section[data-slide-id]").length;
+      const looseText: string[] = [];
+      if (deck) {
+        for (const n of Array.from(deck.childNodes) as any[]) {
+          if (n.nodeType === 3 && n.textContent && n.textContent.trim()) {
+            looseText.push(String(n.textContent).trim().slice(0, 80));
+          }
+        }
+      }
+      return { sectionCount, looseText };
+    });
+    return { sectionCount: data.sectionCount, consoleErrors, looseText: data.looseText };
+  } finally {
+    await browser.close();
+  }
+}
