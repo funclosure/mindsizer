@@ -4,9 +4,15 @@ import { validateSlideSection } from "../outline/inject";
 import type { AuthorRequest } from "./design-brief";
 import type { SlideRenderer } from "./fit-check";
 import type { SlideMaterials } from "./materials";
+import type { PassTiming, SlideTiming } from "./progress";
+
+export interface AuthoredSlide {
+  html: string;
+  timing?: SlideTiming;
+}
 
 export interface SlideAuthor {
-  authorSlide(req: AuthorRequest): Promise<string>;
+  authorSlide(req: AuthorRequest, onPass?: (p: PassTiming) => void): Promise<AuthoredSlide>;
 }
 
 export interface BuildSlideDeps {
@@ -16,22 +22,25 @@ export interface BuildSlideDeps {
 
 export interface BuiltSlide {
   html: string;
-  fits: boolean;     // true unless the final fit-check found overflow
+  fits: boolean;
   warnings: string[];
+  timing?: SlideTiming;
 }
 
 /**
  * Invoke the (self-iterating) author, validate the section, optionally run a final
- * non-interactive fit-check. The author owns its own render→look→fix loop; the shell
- * only validates and warns. Pure of process IO.
+ * non-interactive fit-check. The author owns its own render→look→fix loop and reports
+ * per-pass timing via onPass; the shell only validates and warns. Pure of process IO.
  */
 export async function buildSlide(
   slide: OutlineSlide,
   deck: { title: string; slideTitles: string[] },
   materials: SlideMaterials,
   deps: BuildSlideDeps,
+  onPass?: (p: PassTiming) => void,
 ): Promise<BuiltSlide> {
-  const html = await deps.author.authorSlide({ slide, deck, materials });
+  const authored = await deps.author.authorSlide({ slide, deck, materials }, onPass);
+  const html = authored.html;
   const warnings = validateSlideSection(html, slide.id).map((i) => i.message);
 
   let fits = true;
@@ -41,5 +50,5 @@ export async function buildSlide(
     if (!r.fits) warnings.push(`overflows the 16:9 frame by ${r.overflowPx}px`);
     for (const e of r.consoleErrors) warnings.push(`console error: ${e}`);
   }
-  return { html, fits, warnings };
+  return { html, fits, warnings, timing: authored.timing };
 }
