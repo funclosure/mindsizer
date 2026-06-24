@@ -8,3 +8,4 @@ export * from "./build-slide";
 export * from "./build-deck";
 export * from "./materials";
 export * from "./render-helpers";
+export * from "./progress";

@@ -4,6 +4,7 @@ import { buildSlide, type SlideAuthor } from "../../src/render/build-slide";
 import type { AuthorRequest } from "../../src/render/design-brief";
 import type { RenderResult } from "../../src/render/fit-check";
 import type { SlideMaterials } from "../../src/render/materials";
+import type { PassTiming, SlideTiming } from "../../src/render/progress";
 
 const slide = { id: "s_x", layout: "bespoke" as const, title: "T", markdown: "b" };
 const deck = { title: "D", slideTitles: ["T"] };
@@ -12,7 +13,7 @@ const ok = `<section data-slide-id="s_x" data-layout="bespoke">ok</section>`;
 
 function fakeAuthor(html: string) {
   const reqs: AuthorRequest[] = [];
-  const author: SlideAuthor = { async authorSlide(req) { reqs.push(req); return html; } };
+  const author: SlideAuthor = { async authorSlide(req) { reqs.push(req); return { html }; } };
   return { author, reqs };
 }
 
@@ -26,10 +27,9 @@ describe("buildSlide", () => {
   });
 
   it("warns on a malformed section but still returns it", async () => {
-    const bad = `<div>not a section</div>`;
-    const a = fakeAuthor(bad);
+    const a = fakeAuthor(`<div>not a section</div>`);
     const r = await buildSlide(slide, deck, materials, { author: a.author });
-    expect(r.html).toBe(bad);
+    expect(r.html).toBe(`<div>not a section</div>`);
     expect(r.warnings.length).toBeGreaterThan(0);
   });
 
@@ -52,5 +52,17 @@ describe("buildSlide", () => {
     };
     const r = await buildSlide(slide, deck, materials, { author: a.author, renderer });
     expect(r.warnings.some((w) => /boom/.test(w))).toBe(true);
+  });
+
+  it("returns the author's timing and forwards onPass", async () => {
+    const pass: PassTiming = { pass: 1, modelMs: 5, renderMs: 2, overflowPx: 0, consoleErrors: 0 };
+    const timing: SlideTiming = { totalMs: 10, passes: [pass], byCategory: { author: 5, revise: 0, render: 2, finalize: 3 } };
+    const seen: PassTiming[] = [];
+    const author: SlideAuthor = {
+      async authorSlide(_req, onPass) { onPass?.(pass); return { html: ok, timing }; },
+    };
+    const r = await buildSlide(slide, deck, materials, { author }, (p) => seen.push(p));
+    expect(r.timing).toEqual(timing);
+    expect(seen).toEqual([pass]);
   });
 });

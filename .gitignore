@@ -61,3 +61,7 @@ examples/out/
 
 # Skill-dev eval scratch (trigger eval sets + result JSON live here during tuning)
 .claude/skills/*-workspace/
+
+# Build observability output — progress.jsonl / status.json / timing.json / per-slide HTML.
+# `mindsizer build` writes one `<stem>.build/` dir next to the outline; it's regenerated each run.
+*.build/
