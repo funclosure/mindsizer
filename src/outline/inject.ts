@@ -33,6 +33,23 @@ export function updateBoundRegions(
   return root.toString();
 }
 
+/**
+ * Ensure the slide's <section data-slide-id="X"> also carries id="X" so the author's
+ * `#X{…}` CSS/JS selectors actually match. String surgery on the opening tag only —
+ * never reserializes the body, so <style>/<script> content is untouched. Idempotent.
+ */
+export function ensureSectionId(html: string, expectedId: string): string {
+  const open = html.match(/<section\b[^>]*\bdata-slide-id=("|')[^"']+\1[^>]*>/i);
+  if (!open) return html;
+  const tag = open[0];
+  const withoutDsid = tag.replace(/\bdata-slide-id=("|')[^"']*\1/i, "");
+  // a REAL standalone id attribute starts at a tag/word boundary (after whitespace), not after a
+  // hyphen — so `data-id="…"` / `aria-…` don't count as "already has an id".
+  if (/(^|\s)id=("|')/i.test(withoutDsid)) return html;
+  const fixed = tag.replace(/<section\b/i, `<section id="${expectedId}"`);
+  return html.replace(tag, fixed);
+}
+
 export interface SlideSectionIssue {
   message: string;
 }

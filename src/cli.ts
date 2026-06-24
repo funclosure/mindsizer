@@ -5,7 +5,7 @@ import { parseOutline, validateOutline } from "./outline/index";
 import { sealDeck, fontFaceCss, readFieldCss, fileSink } from "./export/index";
 import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath, serializeContext } from "./agent/index";
 import { buildDeck } from "./render/index";
-import { playwrightRenderer } from "./render/fit-check";
+import { playwrightRenderer, verifyDeck } from "./render/fit-check";
 
 function fail(msg: string): never {
   process.stderr.write(`error: ${msg}\n`);
@@ -221,6 +221,26 @@ async function runBuild(args: string[]): Promise<void> {
 
   for (const w of result.warnings) process.stderr.write(`⚠ ${w}\n`);
   process.stdout.write(`✓ sealed → ${outPath}\n`);
+
+  // whole-deck gate: load the assembled deck once and assert it's structurally sound
+  try {
+    const sealed = readFileSync(outPath, "utf8");
+    const check = await verifyDeck(sealed);
+    const problems: string[] = [];
+    if (check.sectionCount !== outline.slides.length) {
+      problems.push(`section count ${check.sectionCount} ≠ ${outline.slides.length} outline slides`);
+    }
+    for (const e of check.consoleErrors) problems.push(`console error on load: ${e}`);
+    for (const t of check.looseText) problems.push(`loose text outside a slide: "${t}"`);
+    if (problems.length) {
+      process.stderr.write("\n✗ deck check FAILED:\n" + problems.map((p) => `  - ${p}`).join("\n") + "\n");
+      process.exitCode = 1; // signal failure but leave the deck on disk for inspection
+    } else {
+      process.stdout.write(`✓ deck check passed (${check.sectionCount} slides, 0 console errors)\n`);
+    }
+  } catch (e) {
+    process.stderr.write(`· deck check skipped (${(e as Error).message})\n`);
+  }
 
   if (open) {
     const opener =

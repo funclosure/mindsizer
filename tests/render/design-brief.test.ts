@@ -14,10 +14,11 @@ const req: AuthorRequest = {
 };
 
 describe("IDENTITY_BRIEF", () => {
-  it("states the instrument-not-landing-page identity and 16:9 linear constraint", () => {
+  it("states the instrument-not-landing-page identity, the 16:9 constraint, eyes, and convergence", () => {
     expect(IDENTITY_BRIEF).toMatch(/landing page/i);
     expect(IDENTITY_BRIEF).toMatch(/1280|16:9/);
-    expect(IDENTITY_BRIEF).toMatch(/render/i); // tells the agent it has eyes
+    expect(IDENTITY_BRIEF).toMatch(/render/i);             // it has eyes
+    expect(IDENTITY_BRIEF).toMatch(/clean/i);              // converge: stop when clean
   });
 });
 

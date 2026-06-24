@@ -30,7 +30,7 @@ export const IDENTITY_BRIEF = [
   "In the sealed deck each slide's <script> runs once on load WHILE the slide is hidden, so do NOT measure layout at load time (getBoundingClientRect / offsetWidth / canvas sizing read 0 for an inactive slide). Drive visuals from CSS or fixed SVG coordinates, or (re)compute geometry inside the interaction handlers, not at load.",
   "",
   "## You have EYES — use them",
-  "You have a `render` tool that returns screenshots of your slide at 1280x720. Render your work and LOOK. If interactive, pass interaction steps (e.g. click a control, wait) and inspect those states too. Fix overflow, dead space, weak hierarchy, off-brand styling. Iterate until it is genuinely strong, then return the final HTML.",
+  "You have a `render` tool that returns screenshots of your slide at 1280x720. Render your work and LOOK. If interactive, pass interaction steps (e.g. click a control, wait) and inspect those states too. Fix overflow, dead space, weak hierarchy, off-brand styling. The MOMENT a render comes back clean — no overflow and no console errors — the slide is fit-complete: output the final HTML and STOP. The render tool will tell you when it's clean; do NOT keep polishing a clean slide (extra passes tend to make it worse, not better). Your section's `id` is added automatically, so use `#SLIDE_ID` selectors freely.",
   "",
   "## Output contract",
   "Return EXACTLY, with no markdown fences and no commentary:",

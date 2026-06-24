@@ -44,8 +44,10 @@ export async function runQuery(systemPrompt: string, userPrompt: string): Promis
   return drain(q as AsyncIterable<SDKMessage>);
 }
 
+export type RenderToolResult = { images: Buffer[] } | { text: string };
+
 export interface AgenticTools {
-  render(html: string, interactions?: { click?: string; press?: string; wait?: number }[]): Promise<Buffer[]>;
+  render(html: string, interactions?: { click?: string; press?: string; wait?: number }[]): Promise<RenderToolResult>;
 }
 
 /**
@@ -68,9 +70,12 @@ export async function runAgentic(
         .optional(),
     },
     async (args: { html: string; interactions?: { click?: string; press?: string; wait?: number }[] }) => {
-      const shots = await tools.render(args.html, args.interactions);
+      const out = await tools.render(args.html, args.interactions);
+      if ("text" in out) {
+        return { content: [{ type: "text" as const, text: out.text }] };
+      }
       return {
-        content: shots.map((png) => ({
+        content: out.images.map((png) => ({
           type: "image" as const,
           data: png.toString("base64"),
           mimeType: "image/png",

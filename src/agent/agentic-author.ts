@@ -1,15 +1,18 @@
 // src/agent/agentic-author.ts
-import { runAgentic } from "./query";
+import { runAgentic, type RenderToolResult } from "./query";
 import { extractSlideHtml } from "./extract-slide";
+import { ensureSectionId } from "../outline/inject";
 import { slideAuthorPrompt, type AuthorRequest } from "../render/design-brief";
 import type { SlideAuthor, AuthoredSlide } from "../render/build-slide";
 import type { SlideRenderer } from "../render/fit-check";
 import { computeSlideTiming, type PassTiming } from "../render/progress";
+import { isCleanCandidate, pickBestCandidate, RENDER_PASS_CAP, type Candidate } from "../render/converge";
 
 /**
- * Live agentic author: hands the model the materials + identity brief and a bounded
- * `render` tool, lets it self-iterate on its own screenshots, returns the final slide HTML.
- * Times each render pass from the tool-call boundaries and reports them via onPass.
+ * Live agentic author. The harness governs the render loop: every pass is scored and kept as a
+ * candidate; once a render is clean (or the cap is hit) the render tool returns a text "finalize
+ * now" signal instead of screenshots; afterward we seal the BEST candidate (not the model's last
+ * text), normalized with the section id guaranteed. Times each pass via onPass (unchanged).
  */
 export function agenticAuthor(renderer: SlideRenderer): SlideAuthor {
   return {
@@ -18,11 +21,12 @@ export function agenticAuthor(renderer: SlideRenderer): SlideAuthor {
       const startMs = Date.now();
       let lastBoundary = startMs;
       const passes: PassTiming[] = [];
+      const candidates: Candidate[] = [];
 
       const text = await runAgentic(system, user, {
-        render: async (html, interactions) => {
+        render: async (html, interactions): Promise<RenderToolResult> => {
           const reqAt = Date.now();
-          const modelMs = reqAt - lastBoundary; // author (pass 1) or revise (later)
+          const modelMs = reqAt - lastBoundary;
           const r = await renderer.render(html, interactions);
           const renderMs = Date.now() - reqAt;
           lastBoundary = Date.now();
@@ -35,12 +39,24 @@ export function agenticAuthor(renderer: SlideRenderer): SlideAuthor {
           };
           passes.push(p);
           onPass?.(p);
-          return r.shots;
+          const cand: Candidate = { html, overflowPx: r.overflowPx, consoleErrors: r.consoleErrors.length };
+          candidates.push(cand);
+
+          if (isCleanCandidate(cand)) {
+            return { text: "✅ This slide is clean — no overflow, no console errors. Output the FINAL HTML now and do NOT call render again." };
+          }
+          if (candidates.length >= RENDER_PASS_CAP) {
+            return { text: `Render budget reached (${RENDER_PASS_CAP} passes). Output your BEST version now and do NOT call render again.` };
+          }
+          return { images: r.shots };
         },
       });
 
+      const best = pickBestCandidate(candidates);
+      const raw = best ? best.html : text; // fall back to model's final text only if it never rendered
+      const finalHtml = ensureSectionId(extractSlideHtml(raw), req.slide.id);
       const timing = computeSlideTiming(startMs, passes, Date.now());
-      return { html: extractSlideHtml(text), timing };
+      return { html: finalHtml, timing };
     },
   };
 }
