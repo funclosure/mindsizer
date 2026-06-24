@@ -15,6 +15,16 @@ export function isOverload(e: unknown): boolean {
   return /\b(429|529)\b/.test(s) || s.includes("overload") || s.includes("rate limit") || s.includes("rate_limit");
 }
 
+const USAGE_LIMIT = /(out of\b.*\busage|usage limit|resets \d)/;
+const TRANSIENT = /(socket|econnreset|etimedout|connection reset|connection closed|api error|fetch failed|network)/;
+
+/** Retry overload + transient network/API errors, but NOT a usage-limit (which won't self-heal). */
+export function isRetryableError(e: unknown): boolean {
+  const s = String((e as { message?: unknown })?.message ?? e).toLowerCase();
+  if (USAGE_LIMIT.test(s)) return false;
+  return isOverload(e) || TRANSIENT.test(s);
+}
+
 /** Run `fn`, retrying retryable failures with exponential backoff + jitter. `sleep`/`jitter` injected for tests. */
 export async function withRetry<R>(fn: () => Promise<R>, opts: RetryOpts = {}): Promise<R> {
   const retries = opts.retries ?? 3;

@@ -50,6 +50,12 @@ export function ensureSectionId(html: string, expectedId: string): string {
   return html.replace(tag, fixed);
 }
 
+/** True iff html has exactly one <section data-slide-id> whose id === expectedId. */
+export function hasUsableSection(html: string, expectedId: string): boolean {
+  const sections = parseHtml(html).querySelectorAll("section[data-slide-id]");
+  return sections.length === 1 && sections[0].getAttribute("data-slide-id") === expectedId;
+}
+
 export interface SlideSectionIssue {
   message: string;
 }

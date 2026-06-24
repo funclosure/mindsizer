@@ -4,6 +4,7 @@ import {
   updateBoundRegions,
   validateSlideSection,
   ensureSectionId,
+  hasUsableSection,
 } from "../../src/outline/inject";
 
 const SLIDE = `<section data-slide-id="s_intro" data-layout="analogy">
@@ -109,5 +110,24 @@ describe("ensureSectionId", () => {
   it("still injects id when another *-id attribute is present (not a real id)", () => {
     const out = ensureSectionId(`<section data-id="foo" data-slide-id="s_x" data-layout="bespoke">x</section>`, "s_x");
     expect(out).toContain('<section id="s_x" data-id="foo" data-slide-id="s_x"');
+  });
+});
+
+describe("hasUsableSection", () => {
+  const sec = (id: string) => `<section data-slide-id="${id}" data-layout="bespoke">x</section>`;
+  it("true for exactly one section with the expected id", () => {
+    expect(hasUsableSection(sec("s_a"), "s_a")).toBe(true);
+  });
+  it("true with a leading <style> and trailing <script>", () => {
+    expect(hasUsableSection(`<style>#s_a{}</style>${sec("s_a")}<script>/*x*/</script>`, "s_a")).toBe(true);
+  });
+  it("false when there is no section (error text / garbage)", () => {
+    expect(hasUsableSection("API Error: The socket connection was closed unexpectedly.", "s_a")).toBe(false);
+  });
+  it("false when the id does not match", () => {
+    expect(hasUsableSection(sec("s_b"), "s_a")).toBe(false);
+  });
+  it("false when there are two sections", () => {
+    expect(hasUsableSection(sec("s_a") + sec("s_a"), "s_a")).toBe(false);
   });
 });

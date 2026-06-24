@@ -29,7 +29,13 @@ describe("buildDeck", () => {
   });
 
   it("collects per-slide warnings with the slide id prefix", async () => {
-    const author: SlideAuthor = { async authorSlide() { return { html: `<div>bad</div>` }; } };
+    // a valid section (so it isn't rejected by the guard) whose <script> doesn't reference the
+    // slide id → validateSlideSection emits an advisory warning per slide.
+    const author: SlideAuthor = {
+      async authorSlide(req) {
+        return { html: `<section data-slide-id="${req.slide.id}" data-layout="bespoke"><script>doStuff()</script></section>` };
+      },
+    };
     const r = await buildDeck(outline, { author });
     expect(r.warnings.every((w) => /^s_[ab]:/.test(w))).toBe(true);
     expect(r.warnings.length).toBe(2);
@@ -106,6 +112,20 @@ describe("buildDeck", () => {
     const r = await buildDeck(outline, { author, sink, sleep: () => Promise.resolve() });
     expect(events.filter((e) => e.type === "slide_retry").length).toBe(2); // s_a failed twice, retried twice
     expect(events.filter((e) => e.type === "slide_done").length).toBe(2);
+    expect([...r.sections.keys()].sort()).toEqual(["s_a", "s_b"]);
+  });
+
+  it("reuses cached slides without calling the author, authoring the rest", async () => {
+    const authored: string[] = [];
+    const author: SlideAuthor = {
+      async authorSlide(req) { authored.push(req.slide.id); return { html: section(req.slide.id) }; },
+    };
+    const { sink, events } = recordingSink();
+    const reuse = new Map([["s_a", section("s_a")]]);
+    const r = await buildDeck(outline, { author, sink, reuse });
+    expect(authored).toEqual(["s_b"]); // s_a reused, only s_b authored
+    expect(events.some((e) => e.type === "slide_reused" && e.id === "s_a")).toBe(true);
+    expect(events.some((e) => e.type === "slide_start" && e.id === "s_a")).toBe(false); // reused → no slide_start
     expect([...r.sections.keys()].sort()).toEqual(["s_a", "s_b"]);
   });
 });

@@ -10,7 +10,7 @@ function fmtMs(ms: number): string {
   return s >= 60 ? `${Math.floor(s / 60)}m${String(s % 60).padStart(2, "0")}s` : `${s}s`;
 }
 
-export interface BreakdownStats { peakInFlight: number; retries: number; failedCount: number; }
+export interface BreakdownStats { peakInFlight: number; retries: number; failedCount: number; reused: number; }
 
 /** End-of-build breakdown: category %s are relative to total model-work; headline shows wall-clock + parallel speedup. */
 export function formatBreakdown(
@@ -31,7 +31,7 @@ export function formatBreakdown(
   return (
     `build complete — ${done.slides} slides in ${fmtMs(done.totalMs)}  (work ${fmtMs(work)} · ${speedup.toFixed(1)}× parallel)\n` +
     `  by step:  revise ${pct(c.revise)} · author ${pct(c.author)} · render ${pct(c.render)} · finalize ${pct(c.finalize)}\n` +
-    `  peak in-flight: ${stats.peakInFlight} · retries: ${stats.retries} · failed: ${stats.failedCount}\n` +
+    `  peak in-flight: ${stats.peakInFlight} · retries: ${stats.retries} · reused: ${stats.reused} · failed: ${stats.failedCount}\n` +
     (slowest ? `  slowest:  ${slowest}\n` : "")
   );
 }
@@ -56,6 +56,7 @@ export function fileSink(buildDir: string, outline: Outline, outPath: string): P
   let failedCount = 0;
   let retries = 0;
   let peakInFlight = 0;
+  let reusedCount = 0;
 
   const reseal = () => {
     try { writeFileSync(outPath, sealDeck(outline, { sections }), "utf8"); } catch { /* best-effort */ }
@@ -65,7 +66,7 @@ export function fileSink(buildDir: string, outline: Outline, outPath: string): P
       writeFileSync(
         statusPath,
         JSON.stringify(
-          { total, doneCount, failedCount, peakInFlight, retries, elapsedMs: Date.now() - start, lastEvent, inFlight: [...inFlight.values()] },
+          { total, doneCount, failedCount, peakInFlight, retries, reused: reusedCount, elapsedMs: Date.now() - start, lastEvent, inFlight: [...inFlight.values()] },
           null,
           2,
         ),
@@ -91,6 +92,13 @@ export function fileSink(buildDir: string, outline: Outline, outPath: string): P
       } else if (e.type === "slide_retry") {
         retries++;
         process.stdout.write(`[#${e.index + 1}] ⟳ retry ${e.attempt} (${e.reason})\n`);
+      } else if (e.type === "slide_reused") {
+        sections.set(e.id, e.html);
+        doneCount++;
+        reusedCount++;
+        try { writeFileSync(join(buildDir, "slides", `${e.id}.html`), e.html, "utf8"); } catch { /* best-effort */ }
+        reseal();
+        process.stdout.write(`[#${e.index + 1}] ↺ reused\n`);
       } else if (e.type === "slide_done") {
         inFlight.delete(e.index);
         sections.set(e.id, e.html);
@@ -108,11 +116,11 @@ export function fileSink(buildDir: string, outline: Outline, outPath: string): P
         try {
           writeFileSync(
             join(buildDir, "timing.json"),
-            JSON.stringify({ totalMs: e.totalMs, byCategory: e.byCategory, slides, peakInFlight, retries, failedCount }, null, 2),
+            JSON.stringify({ totalMs: e.totalMs, byCategory: e.byCategory, slides, peakInFlight, retries, reusedCount, failedCount }, null, 2),
             "utf8",
           );
         } catch { /* best-effort */ }
-        process.stdout.write("\n" + formatBreakdown(e, slides, { peakInFlight, retries, failedCount }));
+        process.stdout.write("\n" + formatBreakdown(e, slides, { peakInFlight, retries, failedCount, reused: reusedCount }));
       }
 
       writeStatus(e.type);
