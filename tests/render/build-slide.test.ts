@@ -26,11 +26,9 @@ describe("buildSlide", () => {
     expect(a.reqs[0].materials).toEqual(materials);
   });
 
-  it("warns on a malformed section but still returns it", async () => {
+  it("throws when the author returns no usable <section> (malformed output)", async () => {
     const a = fakeAuthor(`<div>not a section</div>`);
-    const r = await buildSlide(slide, deck, materials, { author: a.author });
-    expect(r.html).toBe(`<div>not a section</div>`);
-    expect(r.warnings.length).toBeGreaterThan(0);
+    await expect(buildSlide(slide, deck, materials, { author: a.author })).rejects.toThrow(/no usable <section>/);
   });
 
   it("runs a final fit-check when a renderer is given and warns on overflow", async () => {
@@ -64,5 +62,22 @@ describe("buildSlide", () => {
     const r = await buildSlide(slide, deck, materials, { author }, (p) => seen.push(p));
     expect(r.timing).toEqual(timing);
     expect(seen).toEqual([pass]);
+  });
+});
+
+describe("buildSlide output guard", () => {
+  const slide = { id: "s_a", layout: "bespoke" as const, title: "A", markdown: "a" };
+  const deck = { title: "D", slideTitles: ["A"] };
+  const materials = { digest: [], angle: "", sourceExcerpt: "", neighborTitles: [] };
+
+  it("throws when the author returns no usable <section> (transient error text)", async () => {
+    const author: SlideAuthor = { async authorSlide() { return { html: "API Error: socket connection closed unexpectedly" }; } };
+    await expect(buildSlide(slide, deck, materials, { author })).rejects.toThrow(/no usable <section>/);
+  });
+
+  it("returns normally when the author returns a valid section", async () => {
+    const author: SlideAuthor = { async authorSlide() { return { html: `<section data-slide-id="s_a" data-layout="bespoke">x</section>` }; } };
+    const built = await buildSlide(slide, deck, materials, { author });
+    expect(built.html).toContain("s_a");
   });
 });
