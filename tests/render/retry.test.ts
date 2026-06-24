@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { withRetry, isOverload } from "../../src/render/retry";
+import { withRetry, isOverload, isRetryableError } from "../../src/render/retry";
 
 const noWait = () => Promise.resolve();
 
@@ -59,5 +59,24 @@ describe("withRetry", () => {
     ).rejects.toThrow("boom");
     expect(calls).toBe(1);
     expect(slept).toBe(0);
+  });
+});
+
+describe("isRetryableError", () => {
+  it("retries overload + rate-limit", () => {
+    expect(isRetryableError(new Error("529 overloaded"))).toBe(true);
+    expect(isRetryableError(new Error("rate limit"))).toBe(true);
+  });
+  it("retries transient network / API errors", () => {
+    expect(isRetryableError(new Error("API Error: The socket connection was closed unexpectedly."))).toBe(true);
+    expect(isRetryableError(new Error("read ECONNRESET"))).toBe(true);
+    expect(isRetryableError(new Error("fetch failed"))).toBe(true);
+  });
+  it("does NOT retry a usage-limit (it won't self-heal)", () => {
+    expect(isRetryableError(new Error("You're out of extra usage · resets 10:50pm"))).toBe(false);
+    expect(isRetryableError(new Error("usage limit reached"))).toBe(false);
+  });
+  it("does NOT retry unknown errors", () => {
+    expect(isRetryableError(new Error("boom"))).toBe(false);
   });
 });
