@@ -15,7 +15,7 @@ export function isOverload(e: unknown): boolean {
   return /\b(429|529)\b/.test(s) || s.includes("overload") || s.includes("rate limit") || s.includes("rate_limit");
 }
 
-const USAGE_LIMIT = /(out of\b.*\busage|usage limit|resets )/;
+const USAGE_LIMIT = /(out of\b.*\busage|usage limit|resets \d)/;
 const TRANSIENT = /(socket|econnreset|etimedout|connection reset|connection closed|api error|fetch failed|network)/;
 
 /** Retry overload + transient network/API errors, but NOT a usage-limit (which won't self-heal). */
