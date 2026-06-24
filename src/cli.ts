@@ -1,8 +1,8 @@
 #!/usr/bin/env bun
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { basename, extname, resolve, dirname, join } from "node:path";
-import { parseOutline, validateOutline, writeSlide } from "./outline/index";
-import { sealDeck, fontFaceCss, readFieldCss } from "./export/index";
+import { parseOutline, validateOutline } from "./outline/index";
+import { sealDeck, fontFaceCss, readFieldCss, fileSink } from "./export/index";
 import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath, serializeContext } from "./agent/index";
 import { buildDeck } from "./render/index";
 import { playwrightRenderer } from "./render/fit-check";
@@ -200,10 +200,18 @@ async function runBuild(args: string[]): Promise<void> {
     process.stdout.write("· no context sidecar — authoring from the outline only\n");
   }
 
+  const baseDir = dirname(resolve(input));
+  const stem = basename(input, extname(input));
+  const outPath = out ?? join(baseDir, stem + ".html");
+  const buildDir = join(baseDir, stem + ".build");
+  // the sink writes progress.jsonl/status.json under buildDir and re-seals outPath incrementally
+  const sink = fileSink(buildDir, outline, outPath);
+  process.stdout.write(`· progress → ${join(buildDir, "progress.jsonl")}\n`);
+
   let result: Awaited<ReturnType<typeof buildDeck>>;
   try {
     try {
-      result = await buildDeck(outline, { author: agenticAuthor(renderer), renderer, context });
+      result = await buildDeck(outline, { author: agenticAuthor(renderer), renderer, context, sink });
     } finally {
       await renderer.dispose().catch(() => {});
     }
@@ -211,22 +219,7 @@ async function runBuild(args: string[]): Promise<void> {
     fail((e as Error).message);
   }
 
-  const baseDir = dirname(resolve(input));
-  const slidesDir = join(baseDir, basename(input, extname(input)) + ".slides");
-  mkdirSync(slidesDir, { recursive: true });
-  for (const [id, html] of result.sections) {
-    await writeSlide(slidesDir, id, html);
-  }
   for (const w of result.warnings) process.stderr.write(`⚠ ${w}\n`);
-  process.stdout.write(`✓ authored ${result.sections.size} slides\n`);
-
-  const outPath =
-    out ?? join(baseDir, basename(input, extname(input)) + ".html");
-  try {
-    writeFileSync(outPath, sealDeck(outline, { sections: result.sections }), "utf8");
-  } catch {
-    fail(`cannot write ${outPath}`);
-  }
   process.stdout.write(`✓ sealed → ${outPath}\n`);
 
   if (open) {
