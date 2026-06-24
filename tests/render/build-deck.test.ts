@@ -29,7 +29,13 @@ describe("buildDeck", () => {
   });
 
   it("collects per-slide warnings with the slide id prefix", async () => {
-    const author: SlideAuthor = { async authorSlide() { return { html: `<div>bad</div>` }; } };
+    // a valid section (so it isn't rejected by the guard) whose <script> doesn't reference the
+    // slide id → validateSlideSection emits an advisory warning per slide.
+    const author: SlideAuthor = {
+      async authorSlide(req) {
+        return { html: `<section data-slide-id="${req.slide.id}" data-layout="bespoke"><script>doStuff()</script></section>` };
+      },
+    };
     const r = await buildDeck(outline, { author });
     expect(r.warnings.every((w) => /^s_[ab]:/.test(w))).toBe(true);
     expect(r.warnings.length).toBe(2);
