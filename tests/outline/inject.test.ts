@@ -3,6 +3,7 @@ import {
   readBoundRegions,
   updateBoundRegions,
   validateSlideSection,
+  ensureSectionId,
 } from "../../src/outline/inject";
 
 const SLIDE = `<section data-slide-id="s_intro" data-layout="analogy">
@@ -79,5 +80,29 @@ describe("validateSlideSection — interactive slides", () => {
   it("still rejects the wrong section id", () => {
     expect(validateSlideSection(`<section data-slide-id="nope">x</section>`, "s_x"))
       .toHaveLength(1);
+  });
+});
+
+describe("ensureSectionId", () => {
+  it("injects id when the section has only data-slide-id", () => {
+    const out = ensureSectionId(`<section data-slide-id="s_x" data-layout="bespoke">hi</section>`, "s_x");
+    expect(out).toContain('<section id="s_x" data-slide-id="s_x" data-layout="bespoke">');
+  });
+
+  it("is idempotent when a standalone id is already present", () => {
+    const html = `<section id="s_x" data-slide-id="s_x" data-layout="bespoke">hi</section>`;
+    expect(ensureSectionId(html, "s_x")).toBe(html);
+  });
+
+  it("leaves a leading <style> and trailing <script> untouched", () => {
+    const html = `<style>#s_x .k{color:red}</style><section data-slide-id="s_x" data-layout="bespoke"><b class="k">x</b></section><script>/*#s_x*/</script>`;
+    const out = ensureSectionId(html, "s_x");
+    expect(out).toContain("<style>#s_x .k{color:red}</style>");
+    expect(out).toContain("<script>/*#s_x*/</script>");
+    expect(out).toContain('<section id="s_x" data-slide-id="s_x"');
+  });
+
+  it("returns the input unchanged when there is no section", () => {
+    expect(ensureSectionId(`<div>nope</div>`, "s_x")).toBe(`<div>nope</div>`);
   });
 });
