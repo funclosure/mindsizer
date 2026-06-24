@@ -5,7 +5,7 @@ import { gatherMaterials } from "./materials";
 import type { DeckContext } from "../agent/context-sidecar";
 import { NOOP_SINK, ZERO_TIMING, type ProgressSink, type StepCategory } from "./progress";
 import { mapPool } from "./pool";
-import { withRetry, isOverload } from "./retry";
+import { withRetry, isRetryableError } from "./retry";
 
 export interface BuildDeckResult {
   sections: Map<string, string>;
@@ -19,6 +19,7 @@ export interface BuildDeckDeps {
   sink?: ProgressSink;
   concurrency?: number;                      // default 4; clamped ≥ 1 (1 = sequential)
   sleep?: (ms: number) => Promise<void>;     // retry-backoff seam (default real setTimeout)
+  reuse?: Map<string, string>;               // id → saved valid html (from --resume); skips authoring
 }
 
 /** Author every slide concurrently (bounded pool) with overload retry, emitting progress. */
@@ -39,6 +40,12 @@ export async function buildDeck(
   const agg: Record<StepCategory, number> = { author: 0, revise: 0, render: 0, finalize: 0 };
 
   await mapPool(outline.slides, concurrency, async (slide, index) => {
+    const cached = deps.reuse?.get(slide.id);
+    if (cached) {
+      sections.set(slide.id, cached);
+      sink.emit({ type: "slide_reused", at: Date.now(), index, id: slide.id, html: cached });
+      return;
+    }
     sink.emit({ type: "slide_start", at: Date.now(), index, total, id: slide.id, title: slide.title });
     const materials = gatherMaterials(slide, outline, deps.context);
     const onPass = (p: { pass: number; modelMs: number; renderMs: number; overflowPx: number; consoleErrors: number }) =>
@@ -50,7 +57,7 @@ export async function buildDeck(
       const built = await withRetry(
         () => buildSlide(slide, deck, materials, { author: deps.author, renderer: deps.renderer }, onPass),
         {
-          isRetryable: isOverload,
+          isRetryable: isRetryableError,
           sleep: deps.sleep,
           onRetry: (attempt, e) =>
             sink.emit({ type: "slide_retry", at: Date.now(), index, id: slide.id, attempt, reason: (e as Error).message }),

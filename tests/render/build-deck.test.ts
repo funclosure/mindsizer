@@ -108,4 +108,18 @@ describe("buildDeck", () => {
     expect(events.filter((e) => e.type === "slide_done").length).toBe(2);
     expect([...r.sections.keys()].sort()).toEqual(["s_a", "s_b"]);
   });
+
+  it("reuses cached slides without calling the author, authoring the rest", async () => {
+    const authored: string[] = [];
+    const author: SlideAuthor = {
+      async authorSlide(req) { authored.push(req.slide.id); return { html: section(req.slide.id) }; },
+    };
+    const { sink, events } = recordingSink();
+    const reuse = new Map([["s_a", section("s_a")]]);
+    const r = await buildDeck(outline, { author, sink, reuse });
+    expect(authored).toEqual(["s_b"]); // s_a reused, only s_b authored
+    expect(events.some((e) => e.type === "slide_reused" && e.id === "s_a")).toBe(true);
+    expect(events.some((e) => e.type === "slide_start" && e.id === "s_a")).toBe(false); // reused → no slide_start
+    expect([...r.sections.keys()].sort()).toEqual(["s_a", "s_b"]);
+  });
 });
