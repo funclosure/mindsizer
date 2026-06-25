@@ -16,7 +16,7 @@ export function isOverload(e: unknown): boolean {
 }
 
 const USAGE_LIMIT = /(out of\b.*\busage|usage limit|resets \d)/;
-const TRANSIENT = /(socket|econnreset|etimedout|connection reset|connection closed|api error|fetch failed|network)/;
+const TRANSIENT = /(socket|econnreset|etimedout|connection reset|connection closed|api error|fetch failed|network|content-dud)/;
 
 /** Retry overload + transient network/API errors, but NOT a usage-limit (which won't self-heal). */
 export function isRetryableError(e: unknown): boolean {
