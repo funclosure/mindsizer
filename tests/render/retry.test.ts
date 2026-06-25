@@ -82,4 +82,7 @@ describe("isRetryableError", () => {
   it("retries a content-dud so duds self-heal", () => {
     expect(isRetryableError(new Error("content-dud: only 12 chars of content"))).toBe(true);
   });
+  it("retries a timed-out call so a hang self-heals", () => {
+    expect(isRetryableError(new Error("model-call timed out — idle 180s"))).toBe(true);
+  });
 });
