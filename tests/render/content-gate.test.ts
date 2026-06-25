@@ -20,6 +20,10 @@ describe("heuristicDud", () => {
   it("returns null for a real slide", () => {
     expect(heuristicDud(`<section data-slide-id="s">${long}</section>`)).toBeNull();
   });
+  it("does NOT flag legitimate prose that mentions probes / flex / left-right (case-sensitive markers)", () => {
+    const real = `<section data-slide-id="s">A space probe sends readings home; set flex 1 on the container so it grows, then scan left, right, and center for the signal in the noise floor here.</section>`;
+    expect(heuristicDud(real)).toBeNull();
+  });
   it("ignores <script> text when measuring length", () => {
     expect(heuristicDud(`<section data-slide-id="s">Hi<script>${"x".repeat(300)}</script></section>`)).toMatch(/chars/);
   });

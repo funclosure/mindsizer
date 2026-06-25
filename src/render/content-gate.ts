@@ -1,7 +1,10 @@
 import { parse } from "node-html-parser";
 
 export const MIN_SLIDE_CHARS = 60;
-export const PROBE_MARKERS = /\bPROBE\b|JS RAN|if this box|FLEX \d|LEFT\s+RIGHT|lorem ipsum/i;
+// Case-SENSITIVE on purpose: real debug scaffolds shout in caps (PROBE / JS RAN / FLEX 1 /
+// LEFT…RIGHT boxes), so this won't false-flag legitimate prose about "space probes", a "flex 1"
+// CSS tip, or "scan left, right". The lowercase placeholder phrases are matched as-is.
+export const PROBE_MARKERS = /\bPROBE\b|JS RAN|\bFLEX \d|LEFT\s+RIGHT|if this box is|lorem ipsum/;
 export const CONTENT_DUD = "content-dud:";
 
 /** The slide's visible text — tags stripped, <script>/<style> removed, whitespace collapsed. */

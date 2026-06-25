@@ -122,7 +122,7 @@ export async function verifyDeck(html: string): Promise<DeckCheck> {
     const data = await page.evaluate(({ minChars, probeSrc }: { minChars: number; probeSrc: string }) => {
       const deck = document.querySelector(".deck");
       const sectionCount = document.querySelectorAll(".deck section[data-slide-id]").length;
-      const probe = new RegExp(probeSrc, "i");
+      const probe = new RegExp(probeSrc); // case-sensitive, mirrors PROBE_MARKERS
       const looseText: string[] = [];
       const duds: string[] = [];
       if (deck) {
