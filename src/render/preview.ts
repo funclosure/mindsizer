@@ -15,7 +15,7 @@ export function renderPreviewPage(
   fragment: string,
   opts: { cssPath?: string } = {},
 ): string {
-  const cssPath = opts.cssPath ?? join(process.cwd(), "theme", "field.css");
+  const cssPath = opts.cssPath ?? join(process.cwd(), "themes", "field", "theme.css");
   const css = readFileSync(cssPath, "utf8");
   return `<!DOCTYPE html>
 <html lang="en">

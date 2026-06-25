@@ -1,0 +1,2 @@
+## Aesthetic — Paper
+A calm light editorial page: warm off-white paper ground (#faf7f0), near-black ink foreground (#1a1a1a), a single restrained ink-blue accent (#1d4ed8); monochrome otherwise. Fraunces (display serif, italic ink-blue accents), Geist (body), Geist Mono (uppercase wide-tracked micro-labels + numerals). Hairline rules (~14% ink), generous margins, lots of air — a printed page, NOT a dark dashboard. Fonts are already provided — do NOT @import. Avoid AI-slop (no Inter/Roboto/system-ui, no gradients, no rounded-card grids, no clip-art).

@@ -1,24 +1,9 @@
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
 import type { Outline } from "../outline/types";
 import { validateOutline } from "../outline/validate";
 import { renderSlide } from "../render/render-slide";
 import { escapeHtml } from "../render/html";
-import { fontFaceCss } from "./fonts";
 import { DECK_CSS, NAV_JS } from "./deck-runtime";
-
-const THEME_DIR = join(
-  dirname(fileURLToPath(import.meta.url)),
-  "..",
-  "..",
-  "theme",
-);
-
-/** Read the bundled Field theme stylesheet. */
-export function readFieldCss(): string {
-  return readFileSync(join(THEME_DIR, "field.css"), "utf8");
-}
+import { loadTheme, type Theme } from "../theme/load";
 
 /** A minimal valid section for a slide that hasn't been authored yet (partial-deck preview). */
 export function placeholderSection(slide: { id: string; title: string }): string {
@@ -32,7 +17,7 @@ export function placeholderSection(slide: { id: string; title: string }): string
 /** Assemble an Outline into one self-contained, offline deck.html string. */
 export function sealDeck(
   outline: Outline,
-  opts: { sections?: Map<string, string> } = {},
+  opts: { sections?: Map<string, string>; theme?: Theme } = {},
 ): string {
   const issues = validateOutline(outline);
   if (issues.length > 0) {
@@ -47,7 +32,7 @@ export function sealDeck(
   const sections = outline.slides
     .map((s) => opts.sections?.get(s.id) ?? renderSlide(s))
     .join("\n");
-  const fieldCss = readFieldCss();
+  const theme = opts.theme ?? loadTheme("field");
   const title = escapeHtml(outline.meta.title || "deck");
 
   return `<!DOCTYPE html>
@@ -57,8 +42,8 @@ export function sealDeck(
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${title}</title>
 <style>
-${fontFaceCss()}
-${fieldCss}
+${theme.fontFaceCss}
+${theme.css}
 ${DECK_CSS}
 </style>
 </head>

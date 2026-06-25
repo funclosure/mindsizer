@@ -1,0 +1,6 @@
+[
+  { "family": "Fraunces", "file": "fraunces.woff2", "style": "normal" },
+  { "family": "Fraunces", "file": "fraunces-italic.woff2", "style": "italic" },
+  { "family": "Geist", "file": "geist.woff2", "style": "normal" },
+  { "family": "Geist Mono", "file": "geist-mono.woff2", "style": "normal" }
+]

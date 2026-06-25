@@ -65,3 +65,8 @@ examples/out/
 # Build observability output — progress.jsonl / status.json / timing.json / per-slide HTML.
 # `mindsizer build` writes one `<stem>.build/` dir next to the outline; it's regenerated each run.
 *.build/
+
+# Root-level demo source texts, raw-build backups, and findings reports (scratch, never product source)
+/*.txt
+/*.bak.html
+/MINDSIZER_HARNESS_FINDINGS*.md
