@@ -7,6 +7,7 @@ import { renderSlide } from "../render/render-slide";
 import { escapeHtml } from "../render/html";
 import { fontFaceCss } from "./fonts";
 import { DECK_CSS, NAV_JS } from "./deck-runtime";
+import { loadTheme, type Theme } from "../theme/load";
 
 const THEME_DIR = join(
   dirname(fileURLToPath(import.meta.url)),
@@ -32,7 +33,7 @@ export function placeholderSection(slide: { id: string; title: string }): string
 /** Assemble an Outline into one self-contained, offline deck.html string. */
 export function sealDeck(
   outline: Outline,
-  opts: { sections?: Map<string, string> } = {},
+  opts: { sections?: Map<string, string>; theme?: Theme } = {},
 ): string {
   const issues = validateOutline(outline);
   if (issues.length > 0) {
@@ -47,7 +48,7 @@ export function sealDeck(
   const sections = outline.slides
     .map((s) => opts.sections?.get(s.id) ?? renderSlide(s))
     .join("\n");
-  const fieldCss = readFieldCss();
+  const theme = opts.theme ?? loadTheme("field");
   const title = escapeHtml(outline.meta.title || "deck");
 
   return `<!DOCTYPE html>
@@ -57,8 +58,8 @@ export function sealDeck(
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${title}</title>
 <style>
-${fontFaceCss()}
-${fieldCss}
+${theme.fontFaceCss}
+${theme.css}
 ${DECK_CSS}
 </style>
 </head>

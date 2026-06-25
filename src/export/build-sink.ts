@@ -4,6 +4,7 @@ import { join } from "node:path";
 import type { Outline } from "../outline/types";
 import type { ProgressEvent, ProgressSink, SlideTiming } from "../render/progress";
 import { sealDeck, placeholderSection } from "./seal";
+import type { Theme } from "../theme/load";
 import { inputSide, cacheHitRatio, fmtTokens } from "../agent/usage";
 
 function fmtMs(ms: number): string {
@@ -45,7 +46,7 @@ export function formatBreakdown(
  * finished slide, re-seals a partial deck (placeholders for pending slides), and prints an
  * id-prefixed event stream + the end-of-build breakdown. Concurrency-aware: many slides in flight.
  */
-export function fileSink(buildDir: string, outline: Outline, outPath: string): ProgressSink {
+export function fileSink(buildDir: string, outline: Outline, outPath: string, theme?: Theme): ProgressSink {
   mkdirSync(join(buildDir, "slides"), { recursive: true });
   const progressPath = join(buildDir, "progress.jsonl");
   const statusPath = join(buildDir, "status.json");
@@ -63,7 +64,7 @@ export function fileSink(buildDir: string, outline: Outline, outPath: string): P
   let reusedCount = 0;
 
   const reseal = () => {
-    try { writeFileSync(outPath, sealDeck(outline, { sections }), "utf8"); } catch { /* best-effort */ }
+    try { writeFileSync(outPath, sealDeck(outline, { sections, theme }), "utf8"); } catch { /* best-effort */ }
   };
   const writeStatus = (lastEvent: string) => {
     try {
