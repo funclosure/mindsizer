@@ -3,6 +3,7 @@ import { z } from "zod";
 import type { ModelChoice } from "./models";
 import { startWatchdog, IDLE_TIMEOUT_MS } from "./timeout";
 import { fromSdkUsage, ZERO_USAGE, type TokenUsage } from "./usage";
+import { recordUsage } from "./usage-meter";
 
 const MODEL = process.env.MINDSIZER_MODEL || "claude-opus-4-8";
 
@@ -33,6 +34,7 @@ export async function runQuery(systemPrompt: string, userPrompt: string, choice?
   const w = startWatchdog(IDLE_TIMEOUT_MS, () => ac.abort());
   const timeoutMsg = `model-call timed out — idle ${IDLE_TIMEOUT_MS / 1000}s`;
   let text = "";
+  let usage: TokenUsage = ZERO_USAGE;
   try {
     for await (const msg of q as AsyncIterable<SDKMessage>) {
       w.kick();
@@ -44,7 +46,7 @@ export async function runQuery(systemPrompt: string, userPrompt: string, choice?
       ) {
         text += msg.event.delta.text;
       }
-      if (msg.type === "result") break;
+      if (msg.type === "result") { usage = fromSdkUsage((msg as any).usage); break; }
     }
   } catch (e) {
     if (w.fired) throw new Error(timeoutMsg);
@@ -53,6 +55,7 @@ export async function runQuery(systemPrompt: string, userPrompt: string, choice?
     w.stop();
   }
   if (w.fired) throw new Error(timeoutMsg);
+  recordUsage(choice?.model ?? MODEL, usage);
   return text;
 }
 
@@ -152,5 +155,6 @@ export async function runAgentic(
     w.stop();
   }
   if (w.fired) throw new Error(timeoutMsg);
+  recordUsage(choice?.model ?? (process.env.MINDSIZER_MODEL || "claude-opus-4-8"), usage);
   return { text: lastSlideTurn || lastTurn || streamed, usage };
 }
