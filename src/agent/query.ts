@@ -2,6 +2,7 @@ import { query, tool, createSdkMcpServer } from "@anthropic-ai/claude-agent-sdk"
 import { z } from "zod";
 import type { ModelChoice } from "./models";
 import { startWatchdog, IDLE_TIMEOUT_MS } from "./timeout";
+import { fromSdkUsage, ZERO_USAGE, type TokenUsage } from "./usage";
 
 const MODEL = process.env.MINDSIZER_MODEL || "claude-opus-4-8";
 
@@ -71,7 +72,7 @@ export async function runAgentic(
   userPrompt: string,
   tools: AgenticTools,
   choice?: ModelChoice,
-): Promise<string> {
+): Promise<{ text: string; usage: TokenUsage }> {
   const renderTool = tool(
     "render",
     "Render the given slide HTML at 1280x720 and return screenshots. Optionally pass interaction steps to inspect interactive states.",
@@ -123,6 +124,7 @@ export async function runAgentic(
   let lastTurn = "";
   let lastSlideTurn = "";
   let streamed = "";
+  let usage: TokenUsage = ZERO_USAGE;
   try {
     for await (const msg of q as AsyncIterable<any>) {
       w.kick();
@@ -141,7 +143,7 @@ export async function runAgentic(
           if (t.includes("<section")) lastSlideTurn = t;
         }
       }
-      if (msg.type === "result") break;
+      if (msg.type === "result") { usage = fromSdkUsage((msg as any).usage); break; }
     }
   } catch (e) {
     if (w.fired) throw new Error(timeoutMsg);
@@ -150,5 +152,5 @@ export async function runAgentic(
     w.stop();
   }
   if (w.fired) throw new Error(timeoutMsg);
-  return lastSlideTurn || lastTurn || streamed;
+  return { text: lastSlideTurn || lastTurn || streamed, usage };
 }

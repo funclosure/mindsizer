@@ -6,10 +6,12 @@ import type { SlideRenderer } from "./fit-check";
 import type { SlideMaterials } from "./materials";
 import type { PassTiming, SlideTiming } from "./progress";
 import { heuristicDud, CONTENT_DUD } from "./content-gate";
+import type { TokenUsage } from "../agent/usage";
 
 export interface AuthoredSlide {
   html: string;
   timing?: SlideTiming;
+  usage?: TokenUsage;
 }
 
 export interface SlideAuthor {
@@ -29,6 +31,7 @@ export interface BuiltSlide {
   fits: boolean;
   warnings: string[];
   timing?: SlideTiming;
+  usage?: TokenUsage;
 }
 
 /**
@@ -64,5 +67,5 @@ export async function buildSlide(
     if (!r.fits) warnings.push(`overflows the 16:9 frame by ${r.overflowPx}px`);
     for (const e of r.consoleErrors) warnings.push(`console error: ${e}`);
   }
-  return { html, fits, warnings, timing: authored.timing };
+  return { html, fits, warnings, timing: authored.timing, usage: authored.usage };
 }

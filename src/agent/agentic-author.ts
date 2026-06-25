@@ -24,7 +24,7 @@ export function agenticAuthor(renderer: SlideRenderer): SlideAuthor {
       const passes: PassTiming[] = [];
       const candidates: Candidate[] = [];
 
-      const text = await runAgentic(system, user, {
+      const { text, usage } = await runAgentic(system, user, {
         render: async (html, interactions): Promise<RenderToolResult> => {
           const reqAt = Date.now();
           const modelMs = reqAt - lastBoundary;
@@ -57,7 +57,7 @@ export function agenticAuthor(renderer: SlideRenderer): SlideAuthor {
       const raw = best ? best.html : text; // fall back to model's final text only if it never rendered
       const finalHtml = ensureSectionId(extractSlideHtml(raw), req.slide.id);
       const timing = computeSlideTiming(startMs, passes, Date.now());
-      return { html: finalHtml, timing };
+      return { html: finalHtml, timing, usage };
     },
   };
 }
