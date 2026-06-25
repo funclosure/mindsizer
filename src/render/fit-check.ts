@@ -1,6 +1,7 @@
 // src/render/fit-check.ts
 import { chromium, type Browser } from "playwright";
 import { computeOverflow } from "./render-helpers";
+import { MIN_SLIDE_CHARS, PROBE_MARKERS } from "./content-gate";
 
 // `document` exists only inside page.evaluate() (browser context); typed loosely on purpose.
 declare const document: any;
@@ -106,6 +107,7 @@ export interface DeckCheck {
   sectionCount: number;
   consoleErrors: string[];
   looseText: string[]; // non-whitespace text nodes that are direct children of .deck (prose leak)
+  duds: string[];      // sections that are near-empty or look like probe scaffolds
 }
 
 /** Load a sealed deck once headless and report structural problems for the whole-deck gate. */
@@ -117,10 +119,12 @@ export async function verifyDeck(html: string): Promise<DeckCheck> {
     page.on("console", (m) => { if (m.type() === "error") consoleErrors.push(m.text()); });
     page.on("pageerror", (e) => consoleErrors.push(String(e)));
     await page.setContent(html, { waitUntil: "networkidle" });
-    const data = await page.evaluate(() => {
+    const data = await page.evaluate(({ minChars, probeSrc }: { minChars: number; probeSrc: string }) => {
       const deck = document.querySelector(".deck");
       const sectionCount = document.querySelectorAll(".deck section[data-slide-id]").length;
+      const probe = new RegExp(probeSrc, "i");
       const looseText: string[] = [];
+      const duds: string[] = [];
       if (deck) {
         for (const n of Array.from(deck.childNodes) as any[]) {
           if (n.nodeType === 3 && n.textContent && n.textContent.trim()) {
@@ -128,9 +132,15 @@ export async function verifyDeck(html: string): Promise<DeckCheck> {
           }
         }
       }
-      return { sectionCount, looseText };
-    });
-    return { sectionCount: data.sectionCount, consoleErrors, looseText: data.looseText };
+      for (const s of Array.from(document.querySelectorAll(".deck section[data-slide-id]")) as any[]) {
+        const id = s.getAttribute("data-slide-id");
+        const t = (s.innerText || "").replace(/\s+/g, " ").trim();
+        if (t.length < minChars) duds.push(`${id}: only ${t.length} chars`);
+        else if (probe.test(t)) duds.push(`${id}: probe scaffold`);
+      }
+      return { sectionCount, looseText, duds };
+    }, { minChars: MIN_SLIDE_CHARS, probeSrc: PROBE_MARKERS.source });
+    return { sectionCount: data.sectionCount, consoleErrors, looseText: data.looseText, duds: data.duds };
   } finally {
     await browser.close();
   }

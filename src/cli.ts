@@ -4,6 +4,7 @@ import { basename, extname, resolve, dirname, join } from "node:path";
 import { parseOutline, validateOutline } from "./outline/index";
 import { sealDeck, fontFaceCss, readFieldCss, fileSink } from "./export/index";
 import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath, serializeContext } from "./agent/index";
+import { slideJudge } from "./agent/slide-judge";
 import { buildDeck } from "./render/index";
 import { playwrightRenderer, verifyDeck } from "./render/fit-check";
 import { hasUsableSection } from "./outline/inject";
@@ -231,7 +232,7 @@ async function runBuild(args: string[]): Promise<void> {
   let result: Awaited<ReturnType<typeof buildDeck>>;
   try {
     try {
-      result = await buildDeck(outline, { author: agenticAuthor(renderer), renderer, context, sink, concurrency, reuse });
+      result = await buildDeck(outline, { author: agenticAuthor(renderer), renderer, context, sink, concurrency, reuse, judge: slideJudge() });
     } finally {
       await renderer.dispose().catch(() => {});
     }
@@ -252,6 +253,7 @@ async function runBuild(args: string[]): Promise<void> {
     }
     for (const e of check.consoleErrors) problems.push(`console error on load: ${e}`);
     for (const t of check.looseText) problems.push(`loose text outside a slide: "${t}"`);
+    for (const d of check.duds) problems.push(`content dud: ${d}`);
     if (problems.length) {
       process.stderr.write("\n✗ deck check FAILED:\n" + problems.map((p) => `  - ${p}`).join("\n") + "\n");
       process.exitCode = 1; // signal failure but leave the deck on disk for inspection
