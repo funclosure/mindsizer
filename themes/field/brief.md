@@ -1,0 +1,2 @@
+## Aesthetic — Field
+Dark navy ground (#0a1a2f), cream foreground (#f3efe5), a single cyan accent (#4DD9E0); monochrome otherwise. Fraunces (display serif, italic cyan accents), Geist (body), Geist Mono (uppercase wide-tracked micro-labels + numerals). Hairline rules (~16% opacity), faint dot-grid. Fonts are already provided — do NOT @import. Avoid AI-slop (no Inter/Roboto/system-ui, no purple gradients, no rounded-card grids, no clip-art).

@@ -1,0 +1,92 @@
+/* Field theme — density-inverted comprehension slides (PRD §12).
+   Frame is selected by section[data-slide-id] so any rendered slide
+   gets the 16:9 frame; inner content uses .s-* classes. */
+:root {
+  --s-bg: #0a1a2f;
+  --s-fg: #f3efe5;
+  --s-muted: rgba(243, 239, 229, 0.58);
+  --s-dim: rgba(243, 239, 229, 0.34);
+  --s-line: rgba(243, 239, 229, 0.16);
+  --s-cyan: #4DD9E0;
+}
+
+section[data-slide-id] {
+  aspect-ratio: 16 / 9;
+  box-sizing: border-box;
+  background: var(--s-bg);
+  color: var(--s-fg);
+  border-radius: 8px;
+  padding: 44px 52px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  font-family: "Geist", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgba(243, 239, 229, 0.05) 1px,
+    transparent 0
+  );
+  background-size: 22px 22px;
+}
+
+.s-title {
+  font-family: "Fraunces", serif;
+  font-variation-settings: "SOFT" 90, "opsz" 90;
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin: 0 0 28px;
+}
+
+.s-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  flex: 1;
+  align-content: start;
+}
+
+.s-col-label {
+  font-family: "Geist Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--s-dim);
+  margin-bottom: 10px;
+}
+
+.s-body {
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--s-muted);
+  margin: 0;
+}
+.s-body p {
+  margin: 0 0 0.6em;
+}
+.s-body p:last-child {
+  margin-bottom: 0;
+}
+
+.s-analogy {
+  border: 1px solid var(--s-line);
+  border-left: 2px solid var(--s-cyan);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 18px;
+}
+.s-analogy .s-col-label {
+  color: var(--s-cyan);
+}
+.s-analogy .s-body {
+  color: var(--s-fg);
+}
+.s-analogy .s-body strong {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-weight: 500;
+  font-variation-settings: "SOFT" 100;
+  color: var(--s-cyan);
+}
