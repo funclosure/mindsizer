@@ -8,6 +8,8 @@ import { slideJudge } from "./agent/slide-judge";
 import { buildDeck } from "./render/index";
 import { playwrightRenderer, verifyDeck } from "./render/fit-check";
 import { hasUsableSection } from "./outline/inject";
+import { resetUsage, snapshotUsage } from "./agent/usage-meter";
+import { costUsd, fmtUsd } from "./agent/pricing";
 
 function fail(msg: string): never {
   process.stderr.write(`error: ${msg}\n`);
@@ -109,6 +111,7 @@ async function runIngest(args: string[]): Promise<void> {
 
   process.stdout.write("digesting…\n");
   const prompter = angle || yes ? fixedPrompter(angle) : terminalPrompter();
+  resetUsage();
 
   let result: Awaited<ReturnType<typeof ingest>>;
   try {
@@ -147,6 +150,17 @@ async function runIngest(args: string[]): Promise<void> {
   } catch {
     /* sidecar is best-effort; build degrades gracefully without it */
   }
+  printCost();
+}
+
+/** Print a per-model API-equivalent USD cost line from the usage meter (nothing if empty). */
+function printCost(): void {
+  const entries = Object.entries(snapshotUsage());
+  if (!entries.length) return;
+  const label = (m: string) => (m.includes("haiku") ? "judge/Haiku" : m.includes("sonnet") ? "ingest/Sonnet" : "author/Opus");
+  const parts = entries.map(([m, u]) => `${label(m)} ${fmtUsd(costUsd(u, m))}`);
+  const total = entries.reduce((s, [m, u]) => s + costUsd(u, m), 0);
+  process.stdout.write(`  cost (API-equiv · est):  ~${fmtUsd(total)} — ${parts.join(" · ")}\n`);
 }
 
 async function runBuild(args: string[]): Promise<void> {
@@ -197,6 +211,7 @@ async function runBuild(args: string[]): Promise<void> {
     );
   }
   process.stdout.write(`building ${outline.slides.length} slides…\n`);
+  resetUsage();
 
   const fitTheme = fontFaceCss() + "\n" + readFieldCss();
   const renderer = playwrightRenderer(fitTheme);
@@ -263,6 +278,8 @@ async function runBuild(args: string[]): Promise<void> {
   } catch (e) {
     process.stderr.write(`· deck check skipped (${(e as Error).message})\n`);
   }
+
+  printCost();
 
   if (open) {
     const opener =
