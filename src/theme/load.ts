@@ -19,7 +19,8 @@ function faceRule(dir: string, spec: FontSpec): string | null {
   const candidates = [join(dir, "fonts", spec.file), join(THEMES_DIR, "fonts", spec.file)];
   const path = candidates.find((p) => existsSync(p));
   if (!path) return null;
-  const b64 = readFileSync(path).toString("base64");
+  let b64: string;
+  try { b64 = readFileSync(path).toString("base64"); } catch { return null; } // unreadable → degrade to fallback
   return (
     `@font-face{font-family:"${spec.family}";font-style:${spec.style};` +
     `font-weight:100 900;font-display:swap;` +
@@ -29,6 +30,10 @@ function faceRule(dir: string, spec: FontSpec): string | null {
 
 /** Load a theme from themes/<name>/ — { css, fontFaceCss (embedded), brief }. */
 export function loadTheme(name: string): Theme {
+  // a theme name is a single dir under themes/ — reject path separators / traversal
+  if (/[\/\\]|\.\./.test(name)) {
+    throw new Error(`unknown theme '${name}' — available: ${listThemes().join(", ")}`);
+  }
   const dir = join(THEMES_DIR, name);
   if (!existsSync(dir) || !statSync(dir).isDirectory()) {
     throw new Error(`unknown theme '${name}' — available: ${listThemes().join(", ")}`);

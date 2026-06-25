@@ -21,4 +21,8 @@ describe("loadTheme", () => {
   it("throws on unknown theme with the available list", () => {
     expect(() => loadTheme("nope")).toThrow(/unknown theme 'nope'.*field/i);
   });
+  it("rejects path-traversal theme names", () => {
+    expect(() => loadTheme("../secret")).toThrow(/unknown theme/i);
+    expect(() => loadTheme("a/b")).toThrow(/unknown theme/i);
+  });
 });
