@@ -1,6 +1,6 @@
 // tests/render/build-slide.test.ts
 import { describe, it, expect } from "vitest";
-import { buildSlide, type SlideAuthor } from "../../src/render/build-slide";
+import { buildSlide, type SlideAuthor, type SlideJudge } from "../../src/render/build-slide";
 import type { AuthorRequest } from "../../src/render/design-brief";
 import type { RenderResult } from "../../src/render/fit-check";
 import type { SlideMaterials } from "../../src/render/materials";
@@ -9,7 +9,7 @@ import type { PassTiming, SlideTiming } from "../../src/render/progress";
 const slide = { id: "s_x", layout: "bespoke" as const, title: "T", markdown: "b" };
 const deck = { title: "D", slideTitles: ["T"] };
 const materials: SlideMaterials = { digest: ["p"], angle: "a", neighborTitles: [] };
-const ok = `<section data-slide-id="s_x" data-layout="bespoke">ok</section>`;
+const ok = `<section data-slide-id="s_x" data-layout="bespoke">A genuine slide body long enough to pass the content heuristic without trouble at all.</section>`;
 
 function fakeAuthor(html: string) {
   const reqs: AuthorRequest[] = [];
@@ -76,7 +76,41 @@ describe("buildSlide output guard", () => {
   });
 
   it("returns normally when the author returns a valid section", async () => {
-    const author: SlideAuthor = { async authorSlide() { return { html: `<section data-slide-id="s_a" data-layout="bespoke">x</section>` }; } };
+    const author: SlideAuthor = { async authorSlide() { return { html: `<section data-slide-id="s_a" data-layout="bespoke">A genuine slide body long enough to pass the content heuristic without trouble at all.</section>` }; } };
+    const built = await buildSlide(slide, deck, materials, { author });
+    expect(built.html).toContain("s_a");
+  });
+});
+
+describe("buildSlide content gate", () => {
+  const slide = { id: "s_a", layout: "bespoke" as const, title: "A", markdown: "a" };
+  const deck = { title: "D", slideTitles: ["A"] };
+  const materials = { digest: [], angle: "the angle", sourceExcerpt: "", neighborTitles: [] };
+  const good = `<section data-slide-id="s_a" data-layout="bespoke">A genuine on-topic slide body, clearly long enough to pass the content heuristic here.</section>`;
+
+  it("throws content-dud on a near-empty section without calling the judge", async () => {
+    let judged = false;
+    const author: SlideAuthor = { async authorSlide() { return { html: `<section data-slide-id="s_a" data-layout="bespoke">LEFT RIGHT</section>` }; } };
+    const judge: SlideJudge = async () => { judged = true; return { isDud: false, reason: "" }; };
+    await expect(buildSlide(slide, deck, materials, { author, judge })).rejects.toThrow(/content-dud/);
+    expect(judged).toBe(false);
+  });
+
+  it("throws content-dud when the judge marks it a dud", async () => {
+    const author: SlideAuthor = { async authorSlide() { return { html: good }; } };
+    const judge: SlideJudge = async () => ({ isDud: true, reason: "off-topic" });
+    await expect(buildSlide(slide, deck, materials, { author, judge })).rejects.toThrow(/content-dud: off-topic/);
+  });
+
+  it("returns normally when the judge approves", async () => {
+    const author: SlideAuthor = { async authorSlide() { return { html: good }; } };
+    const judge: SlideJudge = async () => ({ isDud: false, reason: "ok" });
+    const built = await buildSlide(slide, deck, materials, { author, judge });
+    expect(built.html).toContain("s_a");
+  });
+
+  it("runs only the heuristic when no judge is provided", async () => {
+    const author: SlideAuthor = { async authorSlide() { return { html: good }; } };
     const built = await buildSlide(slide, deck, materials, { author });
     expect(built.html).toContain("s_a");
   });

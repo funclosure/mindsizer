@@ -7,6 +7,7 @@ import type { SlideAuthor, AuthoredSlide } from "../render/build-slide";
 import type { SlideRenderer } from "../render/fit-check";
 import { computeSlideTiming, type PassTiming } from "../render/progress";
 import { isCleanCandidate, pickBestCandidate, RENDER_PASS_CAP, type Candidate } from "../render/converge";
+import { modelFor } from "./models";
 
 /**
  * Live agentic author. The harness governs the render loop: every pass is scored and kept as a
@@ -50,7 +51,7 @@ export function agenticAuthor(renderer: SlideRenderer): SlideAuthor {
           }
           return { images: r.shots };
         },
-      });
+      }, modelFor("author"));
 
       const best = pickBestCandidate(candidates);
       const raw = best ? best.html : text; // fall back to model's final text only if it never rendered

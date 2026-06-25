@@ -79,4 +79,7 @@ describe("isRetryableError", () => {
   it("does NOT retry unknown errors", () => {
     expect(isRetryableError(new Error("boom"))).toBe(false);
   });
+  it("retries a content-dud so duds self-heal", () => {
+    expect(isRetryableError(new Error("content-dud: only 12 chars of content"))).toBe(true);
+  });
 });

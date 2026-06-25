@@ -12,7 +12,7 @@ const outline: Outline = {
     { id: "s_b", layout: "bespoke", title: "B", markdown: "b" },
   ],
 };
-const section = (id: string) => `<section data-slide-id="${id}" data-layout="bespoke">x</section>`;
+const section = (id: string) => `<section data-slide-id="${id}" data-layout="bespoke">A real slide body with plenty of words, comfortably past the sixty-character content minimum here.</section>`;
 const timing: SlideTiming = { totalMs: 10, passes: [{ pass: 1, modelMs: 6, renderMs: 2, overflowPx: 0, consoleErrors: 0 }], byCategory: { author: 6, revise: 0, render: 2, finalize: 2 } };
 
 function recordingSink() {
@@ -33,7 +33,7 @@ describe("buildDeck", () => {
     // slide id → validateSlideSection emits an advisory warning per slide.
     const author: SlideAuthor = {
       async authorSlide(req) {
-        return { html: `<section data-slide-id="${req.slide.id}" data-layout="bespoke"><script>doStuff()</script></section>` };
+        return { html: `<section data-slide-id="${req.slide.id}" data-layout="bespoke">Enough visible teaching text to clear the sixty-character heuristic comfortably.<script>doStuff()</script></section>` };
       },
     };
     const r = await buildDeck(outline, { author });
@@ -126,6 +126,22 @@ describe("buildDeck", () => {
     expect(authored).toEqual(["s_b"]); // s_a reused, only s_b authored
     expect(events.some((e) => e.type === "slide_reused" && e.id === "s_a")).toBe(true);
     expect(events.some((e) => e.type === "slide_start" && e.id === "s_a")).toBe(false); // reused → no slide_start
+    expect([...r.sections.keys()].sort()).toEqual(["s_a", "s_b"]);
+  });
+
+  it("self-heals a content-dud slide via retry", async () => {
+    const tries: Record<string, number> = {};
+    const author: SlideAuthor = {
+      async authorSlide(req) {
+        tries[req.slide.id] = (tries[req.slide.id] ?? 0) + 1;
+        const dudFirst = req.slide.id === "s_a" && tries.s_a === 1;
+        return { html: dudFirst ? `<section data-slide-id="s_a" data-layout="bespoke">LEFT RIGHT</section>` : section(req.slide.id) };
+      },
+    };
+    const { sink, events } = recordingSink();
+    const r = await buildDeck(outline, { author, sink, sleep: () => Promise.resolve() });
+    expect(events.some((e) => e.type === "slide_retry" && e.id === "s_a")).toBe(true);
+    expect(events.filter((e) => e.type === "slide_done").length).toBe(2);
     expect([...r.sections.keys()].sort()).toEqual(["s_a", "s_b"]);
   });
 });
