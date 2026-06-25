@@ -1,3 +1,5 @@
+import type { TokenUsage } from "../agent/usage";
+
 export type StepCategory = "author" | "revise" | "render" | "finalize";
 
 export interface PassTiming {
@@ -19,12 +21,12 @@ export type ProgressEvent =
   | { type: "render_pass"; at: number; index: number; id: string; pass: number;
       modelMs: number; renderMs: number; overflowPx: number; consoleErrors: number }
   | { type: "slide_done"; at: number; index: number; id: string; html: string;
-      timing: SlideTiming; warnings: string[] }
+      timing: SlideTiming; warnings: string[]; usage?: TokenUsage }
   | { type: "slide_failed"; at: number; index: number; id: string; reason: string }
   | { type: "slide_retry"; at: number; index: number; id: string; attempt: number; reason: string }
   | { type: "slide_reused"; at: number; index: number; id: string; html: string }
   | { type: "deck_done"; at: number; slides: number; totalMs: number;
-      byCategory: Record<StepCategory, number> };
+      byCategory: Record<StepCategory, number>; usage?: TokenUsage };
 
 export interface ProgressSink {
   emit(e: ProgressEvent): void;

@@ -52,7 +52,7 @@ describe("fileSink", () => {
 describe("formatBreakdown", () => {
   it("reports categories relative to model-work and a parallel speedup", () => {
     const out = formatBreakdown(
-      { type: "deck_done", at: 0, slides: 2, totalMs: 100, byCategory: { author: 120, revise: 60, render: 10, finalize: 10 } },
+      { type: "deck_done", at: 0, slides: 2, totalMs: 100, byCategory: { author: 120, revise: 60, render: 10, finalize: 10 }, usage: { input: 1000, output: 100, cacheRead: 9000, cacheCreate: 0 } },
       [],
       { peakInFlight: 4, retries: 1, failedCount: 0, reused: 3 },
     );
@@ -63,6 +63,8 @@ describe("formatBreakdown", () => {
     expect(out).toMatch(/retries: 1/);
     expect(out).toMatch(/reused: 3/);
     expect(out).not.toMatch(/overhead/);
+    expect(out).toMatch(/tokens \(author\)/);
+    expect(out).toMatch(/90%/); // cacheRead 9000 / (1000+9000) = 90%
   });
 });
 

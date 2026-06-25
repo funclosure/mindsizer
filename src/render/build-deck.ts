@@ -4,6 +4,7 @@ import { buildSlide, type SlideAuthor, type BuildSlideDeps, type SlideJudge } fr
 import { gatherMaterials } from "./materials";
 import type { DeckContext } from "../agent/context-sidecar";
 import { NOOP_SINK, ZERO_TIMING, type ProgressSink, type StepCategory } from "./progress";
+import { addUsage, ZERO_USAGE, type TokenUsage } from "../agent/usage";
 import { mapPool } from "./pool";
 import { withRetry, isRetryableError } from "./retry";
 
@@ -39,6 +40,7 @@ export async function buildDeck(
   const total = outline.slides.length;
   const deckStart = Date.now();
   const agg: Record<StepCategory, number> = { author: 0, revise: 0, render: 0, finalize: 0 };
+  let usageTotal: TokenUsage = ZERO_USAGE;
 
   await mapPool(outline.slides, concurrency, async (slide, index) => {
     const cached = deps.reuse?.get(slide.id);
@@ -68,13 +70,14 @@ export async function buildDeck(
       for (const w of built.warnings) warnings.push({ index, text: `${slide.id}: ${w}` });
       const timing = built.timing ?? ZERO_TIMING;
       (Object.keys(agg) as StepCategory[]).forEach((k) => (agg[k] += timing.byCategory[k]));
-      sink.emit({ type: "slide_done", at: Date.now(), index, id: slide.id, html: built.html, timing, warnings: built.warnings });
+      if (built.usage) usageTotal = addUsage(usageTotal, built.usage);
+      sink.emit({ type: "slide_done", at: Date.now(), index, id: slide.id, html: built.html, timing, warnings: built.warnings, usage: built.usage });
     } catch (e) {
       sink.emit({ type: "slide_failed", at: Date.now(), index, id: slide.id, reason: (e as Error).message });
     }
   });
 
   warnings.sort((a, b) => a.index - b.index);
-  sink.emit({ type: "deck_done", at: Date.now(), slides: total, totalMs: Date.now() - deckStart, byCategory: agg });
+  sink.emit({ type: "deck_done", at: Date.now(), slides: total, totalMs: Date.now() - deckStart, byCategory: agg, usage: usageTotal });
   return { sections, warnings: warnings.map((w) => w.text) };
 }

@@ -144,4 +144,16 @@ describe("buildDeck", () => {
     expect(events.filter((e) => e.type === "slide_done").length).toBe(2);
     expect([...r.sections.keys()].sort()).toEqual(["s_a", "s_b"]);
   });
+
+  it("emits per-slide usage and sums it on deck_done", async () => {
+    const author: SlideAuthor = {
+      async authorSlide(req) { return { html: section(req.slide.id), usage: { input: 100, output: 10, cacheRead: 900, cacheCreate: 0 } }; },
+    };
+    const { sink, events } = recordingSink();
+    await buildDeck(outline, { author, sink });
+    const done = events.find((e) => e.type === "slide_done") as Extract<ProgressEvent, { type: "slide_done" }>;
+    expect(done.usage).toEqual({ input: 100, output: 10, cacheRead: 900, cacheCreate: 0 });
+    const deckDone = events.find((e) => e.type === "deck_done") as Extract<ProgressEvent, { type: "deck_done" }>;
+    expect(deckDone.usage).toEqual({ input: 200, output: 20, cacheRead: 1800, cacheCreate: 0 }); // 2 slides summed
+  });
 });

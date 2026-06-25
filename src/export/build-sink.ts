@@ -4,6 +4,7 @@ import { join } from "node:path";
 import type { Outline } from "../outline/types";
 import type { ProgressEvent, ProgressSink, SlideTiming } from "../render/progress";
 import { sealDeck, placeholderSection } from "./seal";
+import { inputSide, cacheHitRatio, fmtTokens } from "../agent/usage";
 
 function fmtMs(ms: number): string {
   const s = Math.round(ms / 1000);
@@ -32,6 +33,9 @@ export function formatBreakdown(
     `build complete — ${done.slides} slides in ${fmtMs(done.totalMs)}  (work ${fmtMs(work)} · ${speedup.toFixed(1)}× parallel)\n` +
     `  by step:  revise ${pct(c.revise)} · author ${pct(c.author)} · render ${pct(c.render)} · finalize ${pct(c.finalize)}\n` +
     `  peak in-flight: ${stats.peakInFlight} · retries: ${stats.retries} · reused: ${stats.reused} · failed: ${stats.failedCount}\n` +
+    (done.usage && inputSide(done.usage)
+      ? `  tokens (author):  ${fmtTokens(inputSide(done.usage))} in (${fmtTokens(done.usage.cacheRead)} cached · ${Math.round(cacheHitRatio(done.usage) * 100)}%) · ${fmtTokens(done.usage.output)} out\n`
+      : "") +
     (slowest ? `  slowest:  ${slowest}\n` : "")
   );
 }
@@ -116,7 +120,7 @@ export function fileSink(buildDir: string, outline: Outline, outPath: string): P
         try {
           writeFileSync(
             join(buildDir, "timing.json"),
-            JSON.stringify({ totalMs: e.totalMs, byCategory: e.byCategory, slides, peakInFlight, retries, reusedCount, failedCount }, null, 2),
+            JSON.stringify({ totalMs: e.totalMs, byCategory: e.byCategory, usage: e.usage, slides, peakInFlight, retries, reusedCount, failedCount }, null, 2),
             "utf8",
           );
         } catch { /* best-effort */ }
