@@ -1,5 +1,6 @@
 import { query, tool, createSdkMcpServer } from "@anthropic-ai/claude-agent-sdk";
 import { z } from "zod";
+import type { ModelChoice } from "./models";
 
 const MODEL = process.env.MINDSIZER_MODEL || "claude-opus-4-8";
 
@@ -8,10 +9,11 @@ type SDKMessage = {
   event?: { type?: string; delta?: { type?: string; text?: string } };
 };
 
-function options(systemPrompt: string) {
+function options(systemPrompt: string, choice?: ModelChoice) {
   return {
     systemPrompt,
-    model: MODEL,
+    model: choice?.model ?? MODEL,
+    ...(choice?.effort ? { effort: choice.effort } : {}),
     permissionMode: "bypassPermissions",
     allowedTools: [],
     disallowedTools: [
@@ -39,8 +41,8 @@ async function drain(q: AsyncIterable<SDKMessage>): Promise<string> {
 }
 
 /** One isolated single-shot text turn → full assistant text. */
-export async function runQuery(systemPrompt: string, userPrompt: string): Promise<string> {
-  const q = query({ prompt: userPrompt as any, options: options(systemPrompt) as any }) as any;
+export async function runQuery(systemPrompt: string, userPrompt: string, choice?: ModelChoice): Promise<string> {
+  const q = query({ prompt: userPrompt as any, options: options(systemPrompt, choice) as any }) as any;
   return drain(q as AsyncIterable<SDKMessage>);
 }
 
@@ -59,6 +61,7 @@ export async function runAgentic(
   systemPrompt: string,
   userPrompt: string,
   tools: AgenticTools,
+  choice?: ModelChoice,
 ): Promise<string> {
   const renderTool = tool(
     "render",
@@ -90,7 +93,8 @@ export async function runAgentic(
     prompt: userPrompt as any,
     options: {
       systemPrompt,
-      model: process.env.MINDSIZER_MODEL || "claude-opus-4-8",
+      model: choice?.model ?? (process.env.MINDSIZER_MODEL || "claude-opus-4-8"),
+      ...(choice?.effort ? { effort: choice.effort } : {}),
       permissionMode: "bypassPermissions",
       mcpServers: { mindsizer: server },
       allowedTools: ["mcp__mindsizer__render"],
