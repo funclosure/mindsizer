@@ -12,7 +12,7 @@ const outline: Outline = {
     { id: "s_b", layout: "bespoke", title: "B", markdown: "b" },
   ],
 };
-const section = (id: string) => `<section data-slide-id="${id}" data-layout="bespoke">x</section>`;
+const section = (id: string) => `<section data-slide-id="${id}" data-layout="bespoke">A real slide body with plenty of words, comfortably past the sixty-character content minimum here.</section>`;
 const timing: SlideTiming = { totalMs: 10, passes: [{ pass: 1, modelMs: 6, renderMs: 2, overflowPx: 0, consoleErrors: 0 }], byCategory: { author: 6, revise: 0, render: 2, finalize: 2 } };
 
 function recordingSink() {
@@ -33,7 +33,7 @@ describe("buildDeck", () => {
     // slide id → validateSlideSection emits an advisory warning per slide.
     const author: SlideAuthor = {
       async authorSlide(req) {
-        return { html: `<section data-slide-id="${req.slide.id}" data-layout="bespoke"><script>doStuff()</script></section>` };
+        return { html: `<section data-slide-id="${req.slide.id}" data-layout="bespoke">Enough visible teaching text to clear the sixty-character heuristic comfortably.<script>doStuff()</script></section>` };
       },
     };
     const r = await buildDeck(outline, { author });

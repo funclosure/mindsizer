@@ -5,6 +5,7 @@ import type { AuthorRequest } from "./design-brief";
 import type { SlideRenderer } from "./fit-check";
 import type { SlideMaterials } from "./materials";
 import type { PassTiming, SlideTiming } from "./progress";
+import { heuristicDud, CONTENT_DUD } from "./content-gate";
 
 export interface AuthoredSlide {
   html: string;
@@ -15,9 +16,12 @@ export interface SlideAuthor {
   authorSlide(req: AuthorRequest, onPass?: (p: PassTiming) => void): Promise<AuthoredSlide>;
 }
 
+export type SlideJudge = (req: { title: string; angle: string; html: string }) => Promise<{ isDud: boolean; reason: string }>;
+
 export interface BuildSlideDeps {
   author: SlideAuthor;
   renderer?: Pick<SlideRenderer, "render">; // optional final fit-check (warn only)
+  judge?: SlideJudge;
 }
 
 export interface BuiltSlide {
@@ -44,6 +48,12 @@ export async function buildSlide(
   if (!hasUsableSection(html, slide.id)) {
     const got = html.slice(0, 140).replace(/\s+/g, " ").trim();
     throw new Error(`slide ${slide.id}: author produced no usable <section> (got: ${got})`);
+  }
+  const dud = heuristicDud(html);
+  if (dud) throw new Error(`${CONTENT_DUD} ${dud}`);
+  if (deps.judge) {
+    const verdict = await deps.judge({ title: slide.title, angle: materials.angle, html });
+    if (verdict.isDud) throw new Error(`${CONTENT_DUD} ${verdict.reason}`);
   }
   const warnings = validateSlideSection(html, slide.id).map((i) => i.message);
 
