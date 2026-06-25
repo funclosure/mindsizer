@@ -1,6 +1,7 @@
 import { query, tool, createSdkMcpServer } from "@anthropic-ai/claude-agent-sdk";
 import { z } from "zod";
 import type { ModelChoice } from "./models";
+import { startWatchdog, IDLE_TIMEOUT_MS } from "./timeout";
 
 const MODEL = process.env.MINDSIZER_MODEL || "claude-opus-4-8";
 
@@ -24,26 +25,34 @@ function options(systemPrompt: string, choice?: ModelChoice) {
   };
 }
 
-async function drain(q: AsyncIterable<SDKMessage>): Promise<string> {
-  let text = "";
-  for await (const msg of q) {
-    if (
-      msg.type === "stream_event" &&
-      msg.event?.type === "content_block_delta" &&
-      msg.event.delta?.type === "text_delta" &&
-      msg.event.delta.text
-    ) {
-      text += msg.event.delta.text;
-    }
-    if (msg.type === "result") break;
-  }
-  return text;
-}
-
-/** One isolated single-shot text turn → full assistant text. */
+/** One isolated single-shot text turn → full assistant text. Aborts on a 180s idle stall. */
 export async function runQuery(systemPrompt: string, userPrompt: string, choice?: ModelChoice): Promise<string> {
-  const q = query({ prompt: userPrompt as any, options: options(systemPrompt, choice) as any }) as any;
-  return drain(q as AsyncIterable<SDKMessage>);
+  const ac = new AbortController();
+  const q = query({ prompt: userPrompt as any, options: { ...options(systemPrompt, choice), abortController: ac } as any }) as any;
+  const w = startWatchdog(IDLE_TIMEOUT_MS, () => ac.abort());
+  const timeoutMsg = `model-call timed out — idle ${IDLE_TIMEOUT_MS / 1000}s`;
+  let text = "";
+  try {
+    for await (const msg of q as AsyncIterable<SDKMessage>) {
+      w.kick();
+      if (
+        msg.type === "stream_event" &&
+        msg.event?.type === "content_block_delta" &&
+        msg.event.delta?.type === "text_delta" &&
+        msg.event.delta.text
+      ) {
+        text += msg.event.delta.text;
+      }
+      if (msg.type === "result") break;
+    }
+  } catch (e) {
+    if (w.fired) throw new Error(timeoutMsg);
+    throw e;
+  } finally {
+    w.stop();
+  }
+  if (w.fired) throw new Error(timeoutMsg);
+  return text;
 }
 
 export type RenderToolResult = { images: Buffer[] } | { text: string };
@@ -89,6 +98,7 @@ export async function runAgentic(
 
   const server = createSdkMcpServer({ name: "mindsizer", version: "1.0.0", tools: [renderTool] });
 
+  const ac = new AbortController();
   const q = query({
     prompt: userPrompt as any,
     options: {
@@ -100,6 +110,7 @@ export async function runAgentic(
       allowedTools: ["mcp__mindsizer__render"],
       disallowedTools: ["Bash", "Read", "Write", "Edit", "Glob", "Grep", "WebFetch", "WebSearch", "NotebookEdit", "Agent"],
       includePartialMessages: true,
+      abortController: ac,
     } as any,
   }) as any;
 
@@ -107,26 +118,37 @@ export async function runAgentic(
   // maybe a trailing "done!"). Prefer the LAST assistant turn that actually contains a
   // slide; fall back to the last assistant turn, then to streamed deltas. extractSlideHtml
   // is the final safety net, but the drain should already pick the right turn.
+  const w = startWatchdog(IDLE_TIMEOUT_MS, () => ac.abort());
+  const timeoutMsg = `model-call timed out — idle ${IDLE_TIMEOUT_MS / 1000}s`;
   let lastTurn = "";
   let lastSlideTurn = "";
   let streamed = "";
-  for await (const msg of q as AsyncIterable<any>) {
-    if (
-      msg.type === "stream_event" &&
-      msg.event?.type === "content_block_delta" &&
-      msg.event.delta?.type === "text_delta" &&
-      msg.event.delta.text
-    ) {
-      streamed += msg.event.delta.text;
-    }
-    if (msg.type === "assistant" && Array.isArray(msg.message?.content)) {
-      const t = msg.message.content.filter((b: any) => b.type === "text").map((b: any) => b.text).join("");
-      if (t) {
-        lastTurn = t;
-        if (t.includes("<section")) lastSlideTurn = t;
+  try {
+    for await (const msg of q as AsyncIterable<any>) {
+      w.kick();
+      if (
+        msg.type === "stream_event" &&
+        msg.event?.type === "content_block_delta" &&
+        msg.event.delta?.type === "text_delta" &&
+        msg.event.delta.text
+      ) {
+        streamed += msg.event.delta.text;
       }
+      if (msg.type === "assistant" && Array.isArray(msg.message?.content)) {
+        const t = msg.message.content.filter((b: any) => b.type === "text").map((b: any) => b.text).join("");
+        if (t) {
+          lastTurn = t;
+          if (t.includes("<section")) lastSlideTurn = t;
+        }
+      }
+      if (msg.type === "result") break;
     }
-    if (msg.type === "result") break;
+  } catch (e) {
+    if (w.fired) throw new Error(timeoutMsg);
+    throw e;
+  } finally {
+    w.stop();
   }
+  if (w.fired) throw new Error(timeoutMsg);
   return lastSlideTurn || lastTurn || streamed;
 }
