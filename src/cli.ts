@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { basename, extname, resolve, dirname, join } from "node:path";
 import { parseOutline, validateOutline } from "./outline/index";
 import { sealDeck, fontFaceCss, readFieldCss, fileSink } from "./export/index";
+import { loadTheme } from "./theme/load";
 import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath, serializeContext } from "./agent/index";
 import { slideJudge } from "./agent/slide-judge";
 import { buildDeck } from "./render/index";
@@ -20,6 +21,7 @@ function runSeal(args: string[]): void {
   let input: string | undefined;
   let out: string | undefined;
   let open = false;
+  let themeName: string | undefined;
 
   for (let k = 0; k < args.length; k++) {
     const a = args[k];
@@ -28,6 +30,9 @@ function runSeal(args: string[]): void {
       if (out === undefined) fail("-o requires a path");
     } else if (a === "--open") {
       open = true;
+    } else if (a === "--theme") {
+      themeName = args[++k];
+      if (!themeName) fail("--theme requires a name");
     } else if (a.startsWith("-")) {
       fail(`unknown option ${a}`);
     } else {
@@ -35,7 +40,7 @@ function runSeal(args: string[]): void {
     }
   }
 
-  if (!input) fail("usage: mindsizer <outline.md> [-o <out.html>] [--open]");
+  if (!input) fail("usage: mindsizer <outline.md> [-o <out.html>] [--open] [--theme <name>]");
 
   let md: string;
   try {
@@ -49,9 +54,16 @@ function runSeal(args: string[]): void {
   const outline = parseOutline(md);
   process.stdout.write(`✓ parsed ${outline.slides.length} slides\n`);
 
+  let theme;
+  try {
+    theme = loadTheme(themeName ?? outline.meta.theme ?? "field");
+  } catch (e) {
+    fail((e as Error).message);
+  }
+
   let html: string;
   try {
-    html = sealDeck(outline);
+    html = sealDeck(outline, { theme });
   } catch (e) {
     fail((e as Error).message);
   }
@@ -168,6 +180,7 @@ async function runBuild(args: string[]): Promise<void> {
   let out: string | undefined;
   let open = false;
   let resume = false;
+  let themeName: string | undefined;
   const envC = Number(process.env.MINDSIZER_CONCURRENCY);
   let concurrency = Number.isFinite(envC) && envC >= 1 ? Math.floor(envC) : 4;
 
@@ -184,6 +197,9 @@ async function runBuild(args: string[]): Promise<void> {
       concurrency = Math.floor(v);
     } else if (a === "--resume") {
       resume = true;
+    } else if (a === "--theme") {
+      themeName = args[++k];
+      if (!themeName) fail("--theme requires a name");
     } else if (a.startsWith("-")) {
       fail(`unknown option ${a}`);
     } else {
@@ -191,7 +207,7 @@ async function runBuild(args: string[]): Promise<void> {
     }
   }
 
-  if (!input) fail("usage: mindsizer build <outline.md> [-o <out.html>] [--open] [--concurrency <n>] [--resume]");
+  if (!input) fail("usage: mindsizer build <outline.md> [-o <out.html>] [--open] [--concurrency <n>] [--resume] [--theme <name>]");
 
   let md: string;
   try {
@@ -213,7 +229,14 @@ async function runBuild(args: string[]): Promise<void> {
   process.stdout.write(`building ${outline.slides.length} slides…\n`);
   resetUsage();
 
-  const fitTheme = fontFaceCss() + "\n" + readFieldCss();
+  let theme;
+  try {
+    theme = loadTheme(themeName ?? outline.meta.theme ?? "field");
+  } catch (e) {
+    fail((e as Error).message);
+  }
+
+  const fitTheme = theme.fontFaceCss + "\n" + theme.css;
   const renderer = playwrightRenderer(fitTheme);
 
   // load the optional context sidecar written by ingest
@@ -231,7 +254,7 @@ async function runBuild(args: string[]): Promise<void> {
   const outPath = out ?? join(baseDir, stem + ".html");
   const buildDir = join(baseDir, stem + ".build");
   // the sink writes progress.jsonl/status.json under buildDir and re-seals outPath incrementally
-  const sink = fileSink(buildDir, outline, outPath);
+  const sink = fileSink(buildDir, outline, outPath, theme);
   process.stdout.write(`· progress → ${join(buildDir, "progress.jsonl")}\n`);
   const reuse = new Map<string, string>();
   if (resume) {
@@ -247,7 +270,7 @@ async function runBuild(args: string[]): Promise<void> {
   let result: Awaited<ReturnType<typeof buildDeck>>;
   try {
     try {
-      result = await buildDeck(outline, { author: agenticAuthor(renderer), renderer, context, sink, concurrency, reuse, judge: slideJudge() });
+      result = await buildDeck(outline, { author: agenticAuthor(renderer, theme.brief), renderer, context, sink, concurrency, reuse, judge: slideJudge() });
     } finally {
       await renderer.dispose().catch(() => {});
     }

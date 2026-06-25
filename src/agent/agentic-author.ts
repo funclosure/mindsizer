@@ -15,10 +15,10 @@ import { modelFor } from "./models";
  * now" signal instead of screenshots; afterward we seal the BEST candidate (not the model's last
  * text), normalized with the section id guaranteed. Times each pass via onPass (unchanged).
  */
-export function agenticAuthor(renderer: SlideRenderer): SlideAuthor {
+export function agenticAuthor(renderer: SlideRenderer, aesthetic?: string): SlideAuthor {
   return {
     async authorSlide(req: AuthorRequest, onPass?: (p: PassTiming) => void): Promise<AuthoredSlide> {
-      const { system, user } = slideAuthorPrompt(req);
+      const { system, user } = slideAuthorPrompt(req, aesthetic);
       const startMs = Date.now();
       let lastBoundary = startMs;
       const passes: PassTiming[] = [];

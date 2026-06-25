@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const b64 = (p: string) => readFileSync(join(ROOT, "theme/fonts", p)).toString("base64");
+const b64 = (p: string) => readFileSync(join(ROOT, "themes/fonts", p)).toString("base64");
 const F = {
   fraunces: b64("fraunces.woff2"),
   frauncesItalic: b64("fraunces-italic.woff2"),
