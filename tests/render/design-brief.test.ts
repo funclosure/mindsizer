@@ -1,6 +1,6 @@
 // tests/render/design-brief.test.ts
 import { describe, it, expect } from "vitest";
-import { slideAuthorPrompt, IDENTITY_BRIEF, type AuthorRequest } from "../../src/render/design-brief";
+import { slideAuthorPrompt, identityBrief, FIELD_AESTHETIC, type AuthorRequest } from "../../src/render/design-brief";
 
 const req: AuthorRequest = {
   slide: { id: "s_x", layout: "bespoke", title: "The lens", markdown: "- a\n- b" },
@@ -13,18 +13,25 @@ const req: AuthorRequest = {
   },
 };
 
-describe("IDENTITY_BRIEF", () => {
-  it("states the instrument-not-landing-page identity, the 16:9 constraint, eyes, and convergence", () => {
-    expect(IDENTITY_BRIEF).toMatch(/landing page/i);
-    expect(IDENTITY_BRIEF).toMatch(/1280|16:9/);
-    expect(IDENTITY_BRIEF).toMatch(/render/i);             // it has eyes
-    expect(IDENTITY_BRIEF).toMatch(/clean/i);              // converge: stop when clean
+describe("identityBrief", () => {
+  it("keeps the universal guidance and injects the given aesthetic", () => {
+    const b = identityBrief("## Aesthetic — Test\nbright orange everything.");
+    expect(b).toMatch(/landing page/i);   // genre (universal)
+    expect(b).toMatch(/1280|16:9/);       // format (universal)
+    expect(b).toMatch(/clean/i);          // EYES/converge (universal)
+    expect(b).toContain("bright orange everything."); // injected aesthetic
+    expect(b).not.toContain("#0a1a2f");   // Field's navy is NOT present
+  });
+  it("defaults to the Field aesthetic", () => {
+    expect(identityBrief()).toContain("#0a1a2f");
+    expect(identityBrief()).toBe(identityBrief(FIELD_AESTHETIC));
   });
 });
 
 describe("slideAuthorPrompt", () => {
-  it("uses IDENTITY_BRIEF as the system prompt", () => {
-    expect(slideAuthorPrompt(req).system).toBe(IDENTITY_BRIEF);
+  it("uses identityBrief(aesthetic) as the system prompt", () => {
+    const aesthetic = "## Aesthetic — Test\nbright orange.";
+    expect(slideAuthorPrompt(req, aesthetic).system).toBe(identityBrief(aesthetic));
   });
   it("feeds the author the idea: title, slide id, angle, digest, source excerpt, neighbours", () => {
     const u = slideAuthorPrompt(req).user;
