@@ -1,6 +1,6 @@
 // src/render/build-deck.ts
 import type { Outline } from "../outline/types";
-import { buildSlide, type SlideAuthor, type BuildSlideDeps } from "./build-slide";
+import { buildSlide, type SlideAuthor, type BuildSlideDeps, type SlideJudge } from "./build-slide";
 import { gatherMaterials } from "./materials";
 import type { DeckContext } from "../agent/context-sidecar";
 import { NOOP_SINK, ZERO_TIMING, type ProgressSink, type StepCategory } from "./progress";
@@ -20,6 +20,7 @@ export interface BuildDeckDeps {
   concurrency?: number;                      // default 4; clamped ≥ 1 (1 = sequential)
   sleep?: (ms: number) => Promise<void>;     // retry-backoff seam (default real setTimeout)
   reuse?: Map<string, string>;               // id → saved valid html (from --resume); skips authoring
+  judge?: SlideJudge;
 }
 
 /** Author every slide concurrently (bounded pool) with overload retry, emitting progress. */
@@ -55,7 +56,7 @@ export async function buildDeck(
       // pass 1 — a retried slide's pass counter visibly resets in the log (the slide_retry event
       // emitted between attempts marks the boundary). Expected: we re-author, not resume.
       const built = await withRetry(
-        () => buildSlide(slide, deck, materials, { author: deps.author, renderer: deps.renderer }, onPass),
+        () => buildSlide(slide, deck, materials, { author: deps.author, renderer: deps.renderer, judge: deps.judge }, onPass),
         {
           isRetryable: isRetryableError,
           sleep: deps.sleep,

@@ -128,4 +128,20 @@ describe("buildDeck", () => {
     expect(events.some((e) => e.type === "slide_start" && e.id === "s_a")).toBe(false); // reused → no slide_start
     expect([...r.sections.keys()].sort()).toEqual(["s_a", "s_b"]);
   });
+
+  it("self-heals a content-dud slide via retry", async () => {
+    const tries: Record<string, number> = {};
+    const author: SlideAuthor = {
+      async authorSlide(req) {
+        tries[req.slide.id] = (tries[req.slide.id] ?? 0) + 1;
+        const dudFirst = req.slide.id === "s_a" && tries.s_a === 1;
+        return { html: dudFirst ? `<section data-slide-id="s_a" data-layout="bespoke">LEFT RIGHT</section>` : section(req.slide.id) };
+      },
+    };
+    const { sink, events } = recordingSink();
+    const r = await buildDeck(outline, { author, sink, sleep: () => Promise.resolve() });
+    expect(events.some((e) => e.type === "slide_retry" && e.id === "s_a")).toBe(true);
+    expect(events.filter((e) => e.type === "slide_done").length).toBe(2);
+    expect([...r.sections.keys()].sort()).toEqual(["s_a", "s_b"]);
+  });
 });
