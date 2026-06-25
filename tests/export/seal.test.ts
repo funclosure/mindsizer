@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { sealDeck, readFieldCss, placeholderSection } from "../../src/export/seal";
+import { sealDeck, placeholderSection } from "../../src/export/seal";
 import { parseOutline } from "../../src/outline/index";
 import type { Outline } from "../../src/outline/types";
 
@@ -59,12 +59,6 @@ describe("sealDeck", () => {
     expect(html).toContain("AUTHORED_MARKER"); // s_a authored section inlined
     expect(html).toContain('data-slide-id="s_b"'); // s_b fell back to renderSlide
     expect(html).toContain("data:font/woff2;base64,"); // still sealed
-  });
-
-  it("exposes readFieldCss returning the theme stylesheet", () => {
-    const css = readFieldCss();
-    expect(css).toContain("--s-cyan");
-    expect(css).toContain("section[data-slide-id]");
   });
 
   it("inlines an authored section that carries a leading id-scoped <style>", () => {

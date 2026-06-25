@@ -1,25 +1,9 @@
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
 import type { Outline } from "../outline/types";
 import { validateOutline } from "../outline/validate";
 import { renderSlide } from "../render/render-slide";
 import { escapeHtml } from "../render/html";
-import { fontFaceCss } from "./fonts";
 import { DECK_CSS, NAV_JS } from "./deck-runtime";
 import { loadTheme, type Theme } from "../theme/load";
-
-const THEME_DIR = join(
-  dirname(fileURLToPath(import.meta.url)),
-  "..",
-  "..",
-  "theme",
-);
-
-/** Read the bundled Field theme stylesheet. */
-export function readFieldCss(): string {
-  return readFileSync(join(THEME_DIR, "field.css"), "utf8");
-}
 
 /** A minimal valid section for a slide that hasn't been authored yet (partial-deck preview). */
 export function placeholderSection(slide: { id: string; title: string }): string {

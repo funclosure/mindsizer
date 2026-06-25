@@ -2,7 +2,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { basename, extname, resolve, dirname, join } from "node:path";
 import { parseOutline, validateOutline } from "./outline/index";
-import { sealDeck, fontFaceCss, readFieldCss, fileSink } from "./export/index";
+import { sealDeck, fileSink } from "./export/index";
 import { loadTheme } from "./theme/load";
 import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath, serializeContext } from "./agent/index";
 import { slideJudge } from "./agent/slide-judge";
