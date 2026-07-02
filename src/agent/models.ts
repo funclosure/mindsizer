@@ -1,4 +1,4 @@
-export type Role = "author" | "ingest" | "judge";
+export type Role = "author" | "ingest" | "judge" | "review";
 export type EffortLevel = "low" | "medium" | "high" | "xhigh" | "max";
 export interface ModelChoice { model: string; effort: EffortLevel; }
 
@@ -6,8 +6,9 @@ const DEFAULTS: Record<Role, ModelChoice> = {
   author: { model: "claude-opus-4-8", effort: "medium" },
   ingest: { model: "claude-sonnet-4-6", effort: "medium" },
   judge: { model: "claude-haiku-4-5-20251001", effort: "low" },
+  review: { model: "claude-opus-4-8", effort: "medium" },
 };
-const ROLE_KEY: Record<Role, string> = { author: "AUTHOR", ingest: "INGEST", judge: "JUDGE" };
+const ROLE_KEY: Record<Role, string> = { author: "AUTHOR", ingest: "INGEST", judge: "JUDGE", review: "REVIEW" };
 const EFFORTS: EffortLevel[] = ["low", "medium", "high", "xhigh", "max"];
 
 /** Resolve (model, effort) for a role: per-role env > legacy MINDSIZER_MODEL > role default. */
