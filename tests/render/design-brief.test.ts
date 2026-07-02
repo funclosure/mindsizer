@@ -26,6 +26,12 @@ describe("identityBrief", () => {
     expect(identityBrief()).toContain("#0a1a2f");
     expect(identityBrief()).toBe(identityBrief(FIELD_AESTHETIC));
   });
+  it("teaches the edits-over-full-html revision habit and the DONE finalize contract", () => {
+    const b = identityBrief();
+    expect(b).toMatch(/prefer `edits`/);
+    expect(b).toMatch(/reply DONE/);
+    expect(b).toMatch(/ONLY if you never called `render`/);
+  });
 });
 
 describe("slideAuthorPrompt", () => {
