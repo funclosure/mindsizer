@@ -76,11 +76,12 @@ export async function runAgentic(
   userPrompt: string,
   tools: AgenticTools,
   choice?: ModelChoice,
+  opts?: { initialHtml?: string },
 ): Promise<{ text: string; usage: TokenUsage }> {
-  let lastHtml: string | undefined;
+  let lastHtml: string | undefined = opts?.initialHtml;
   const renderTool = tool(
     "render",
-    "Render the slide at 1280x720 and return screenshots. Pass full `html` on the FIRST call; for revisions prefer `edits` — exact find/replace patches applied to your last-rendered html (each `old` must appear exactly once). Optionally pass interaction steps to inspect interactive states.",
+    "Render the slide at 1280x720 and return screenshots. Pass full `html` on the FIRST call; for revisions prefer `edits` — exact find/replace patches applied to your last-rendered html (each `old` must appear exactly once) — or call with neither to re-render the current html as-is. Optionally pass interaction steps to inspect interactive states.",
     {
       html: z.string().optional(),
       edits: z.array(z.object({ old: z.string(), new: z.string() })).optional(),
