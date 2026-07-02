@@ -7,6 +7,8 @@ import { NOOP_SINK, ZERO_TIMING, type ProgressSink, type StepCategory } from "./
 import { addUsage, ZERO_USAGE, type TokenUsage } from "../agent/usage";
 import { mapPool } from "./pool";
 import { withRetry, isRetryableError } from "./retry";
+import { ContentDudError } from "./content-gate";
+import type { RepairSeed } from "./design-brief";
 
 export interface BuildDeckResult {
   sections: Map<string, string>;
@@ -54,16 +56,21 @@ export async function buildDeck(
     const onPass = (p: { pass: number; modelMs: number; renderMs: number; overflowPx: number; consoleErrors: number }) =>
       sink.emit({ type: "render_pass", at: Date.now(), index, id: slide.id, ...p });
     try {
-      // On an overload retry the whole buildSlide re-runs, so onPass re-fires render_pass from
-      // pass 1 — a retried slide's pass counter visibly resets in the log (the slide_retry event
-      // emitted between attempts marks the boundary). Expected: we re-author, not resume.
+      // On a retry the whole buildSlide re-runs, so onPass re-fires render_pass from pass 1 —
+      // a retried slide's pass counter visibly resets in the log (the slide_retry event emitted
+      // between attempts marks the boundary). A content-dud retry is SEEDED with the rejected
+      // html + reason so the author repairs instead of redesigning blind; overload/network
+      // retries leave the seed untouched.
+      let repair: RepairSeed | undefined;
       const built = await withRetry(
-        () => buildSlide(slide, deck, materials, { author: deps.author, renderer: deps.renderer, judge: deps.judge }, onPass),
+        () => buildSlide(slide, deck, materials, { author: deps.author, renderer: deps.renderer, judge: deps.judge }, onPass, repair),
         {
           isRetryable: isRetryableError,
           sleep: deps.sleep,
-          onRetry: (attempt, e) =>
-            sink.emit({ type: "slide_retry", at: Date.now(), index, id: slide.id, attempt, reason: (e as Error).message }),
+          onRetry: (attempt, e) => {
+            if (e instanceof ContentDudError) repair = { html: e.html, reason: e.reason };
+            sink.emit({ type: "slide_retry", at: Date.now(), index, id: slide.id, attempt, reason: (e as Error).message });
+          },
         },
       );
       sections.set(slide.id, built.html);
