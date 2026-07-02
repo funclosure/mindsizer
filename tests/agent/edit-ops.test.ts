@@ -57,8 +57,12 @@ describe("resolveRenderInput", () => {
     if (!r.ok) expect(r.error).toMatch(/no previous render/);
   });
 
-  it("neither html nor edits → helpful error", () => {
-    const r = resolveRenderInput("<p>a</p>", {});
+  it("neither html nor edits with a previous render → re-renders it as-is", () => {
+    expect(resolveRenderInput("<p>a</p>", {})).toEqual({ ok: true, html: "<p>a</p>" });
+  });
+
+  it("neither html nor edits and no previous render → helpful error", () => {
+    const r = resolveRenderInput(undefined, {});
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.error).toMatch(/provide `html`.*or `edits`/);
   });

@@ -34,7 +34,7 @@ export function applyEdits(base: string, edits: RenderEdit[]): Resolved {
   return { ok: true, html };
 }
 
-/** Resolve a render call's input: full `html` wins; otherwise `edits` against the last-rendered html. */
+/** Resolve a render call's input: full `html` wins; `edits` patch the last-rendered html; neither re-renders it as-is. */
 export function resolveRenderInput(
   lastHtml: string | undefined,
   args: { html?: string; edits?: RenderEdit[] },
@@ -46,6 +46,7 @@ export function resolveRenderInput(
     }
     return applyEdits(lastHtml, args.edits);
   }
+  if (lastHtml !== undefined) return { ok: true, html: lastHtml };
   return {
     ok: false,
     error: "provide `html` (full slide) or `edits` (find/replace on your last-rendered html)",
