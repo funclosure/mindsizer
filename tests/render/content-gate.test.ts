@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { slideText, heuristicDud, MIN_SLIDE_CHARS, CONTENT_DUD } from "../../src/render/content-gate";
+import { slideText, heuristicDud, MIN_SLIDE_CHARS, CONTENT_DUD, ContentDudError } from "../../src/render/content-gate";
 
 const long = "Real on-topic teaching content about lossy compression and why detail gets dropped. ".repeat(2);
 
@@ -33,5 +33,16 @@ describe("constants", () => {
   it("exports the threshold + the dud marker", () => {
     expect(MIN_SLIDE_CHARS).toBe(60);
     expect(CONTENT_DUD).toBe("content-dud:");
+  });
+});
+
+describe("ContentDudError", () => {
+  it("keeps the content-dud: message prefix and carries reason + html", () => {
+    const e = new ContentDudError("only 10 chars of content", "<section>x</section>");
+    expect(e).toBeInstanceOf(Error);
+    expect(e.message).toBe("content-dud: only 10 chars of content");
+    expect(e.reason).toBe("only 10 chars of content");
+    expect(e.html).toBe("<section>x</section>");
+    expect(e.name).toBe("ContentDudError");
   });
 });

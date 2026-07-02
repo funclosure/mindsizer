@@ -1,11 +1,11 @@
 // src/render/build-slide.ts
 import type { OutlineSlide } from "../outline/types";
 import { validateSlideSection, hasUsableSection } from "../outline/inject";
-import type { AuthorRequest } from "./design-brief";
+import type { AuthorRequest, RepairSeed } from "./design-brief";
 import type { SlideRenderer } from "./fit-check";
 import type { SlideMaterials } from "./materials";
 import type { PassTiming, SlideTiming } from "./progress";
-import { heuristicDud, CONTENT_DUD } from "./content-gate";
+import { heuristicDud, ContentDudError } from "./content-gate";
 import type { TokenUsage } from "../agent/usage";
 
 export interface AuthoredSlide {
@@ -45,18 +45,19 @@ export async function buildSlide(
   materials: SlideMaterials,
   deps: BuildSlideDeps,
   onPass?: (p: PassTiming) => void,
+  repair?: RepairSeed,
 ): Promise<BuiltSlide> {
-  const authored = await deps.author.authorSlide({ slide, deck, materials }, onPass);
+  const authored = await deps.author.authorSlide({ slide, deck, materials, repair }, onPass);
   const html = authored.html;
   if (!hasUsableSection(html, slide.id)) {
     const got = html.slice(0, 140).replace(/\s+/g, " ").trim();
     throw new Error(`slide ${slide.id}: author produced no usable <section> (got: ${got})`);
   }
   const dud = heuristicDud(html);
-  if (dud) throw new Error(`${CONTENT_DUD} ${dud}`);
+  if (dud) throw new ContentDudError(dud, html);
   if (deps.judge) {
     const verdict = await deps.judge({ title: slide.title, angle: materials.angle, html });
-    if (verdict.isDud) throw new Error(`${CONTENT_DUD} ${verdict.reason}`);
+    if (verdict.isDud) throw new ContentDudError(verdict.reason, html);
   }
   const warnings = validateSlideSection(html, slide.id).map((i) => i.message);
 
