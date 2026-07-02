@@ -6,7 +6,7 @@ import { slideAuthorPrompt, type AuthorRequest } from "../render/design-brief";
 import type { SlideAuthor, AuthoredSlide } from "../render/build-slide";
 import type { SlideRenderer } from "../render/fit-check";
 import { computeSlideTiming, type PassTiming } from "../render/progress";
-import { isCleanCandidate, pickBestCandidate, RENDER_PASS_CAP, type Candidate } from "../render/converge";
+import { isCleanCandidate, pickBestCandidate, RENDER_PASS_CAP, FINALIZE_CLEAN, finalizeBudget, type Candidate } from "../render/converge";
 import { modelFor } from "./models";
 
 /**
@@ -44,10 +44,10 @@ export function agenticAuthor(renderer: SlideRenderer, aesthetic?: string): Slid
           candidates.push(cand);
 
           if (isCleanCandidate(cand)) {
-            return { text: "✅ This slide is clean — no overflow, no console errors. Output the FINAL HTML now and do NOT call render again." };
+            return { text: FINALIZE_CLEAN };
           }
           if (candidates.length >= RENDER_PASS_CAP) {
-            return { text: `Render budget reached (${RENDER_PASS_CAP} passes). Output your BEST version now and do NOT call render again.` };
+            return { text: finalizeBudget(RENDER_PASS_CAP) };
           }
           return { images: r.shots };
         },
