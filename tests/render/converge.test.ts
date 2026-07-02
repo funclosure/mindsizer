@@ -1,6 +1,6 @@
 // tests/render/converge.test.ts
 import { describe, it, expect } from "vitest";
-import { isCleanCandidate, pickBestCandidate, RENDER_PASS_CAP, type Candidate } from "../../src/render/converge";
+import { isCleanCandidate, pickBestCandidate, RENDER_PASS_CAP, FINALIZE_CLEAN, finalizeBudget, type Candidate } from "../../src/render/converge";
 
 const c = (html: string, overflowPx: number, consoleErrors: number): Candidate => ({ html, overflowPx, consoleErrors });
 
@@ -30,5 +30,18 @@ describe("pickBestCandidate", () => {
 describe("RENDER_PASS_CAP", () => {
   it("is a small positive backstop", () => {
     expect(RENDER_PASS_CAP).toBe(4);
+  });
+});
+
+describe("finalize messages", () => {
+  it("tell the model to reply DONE, not to re-emit the html, and not to render again", () => {
+    for (const msg of [FINALIZE_CLEAN, finalizeBudget(RENDER_PASS_CAP)]) {
+      expect(msg).toContain("DONE");
+      expect(msg).toMatch(/do NOT output the HTML again/);
+      expect(msg).toMatch(/do NOT call render again/);
+    }
+  });
+  it("the budget message names the pass cap", () => {
+    expect(finalizeBudget(4)).toContain("4 passes");
   });
 });

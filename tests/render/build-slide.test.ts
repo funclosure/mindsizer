@@ -2,6 +2,7 @@
 import { describe, it, expect } from "vitest";
 import { buildSlide, type SlideAuthor, type SlideJudge } from "../../src/render/build-slide";
 import type { AuthorRequest } from "../../src/render/design-brief";
+import { ContentDudError } from "../../src/render/content-gate";
 import type { RenderResult } from "../../src/render/fit-check";
 import type { SlideMaterials } from "../../src/render/materials";
 import type { PassTiming, SlideTiming } from "../../src/render/progress";
@@ -63,6 +64,19 @@ describe("buildSlide", () => {
     expect(r.timing).toEqual(timing);
     expect(seen).toEqual([pass]);
   });
+
+  it("forwards a repair seed to the author's request", async () => {
+    const a = fakeAuthor(ok);
+    const repair = { html: "<section>old dud</section>", reason: "only 14 chars of content" };
+    await buildSlide(slide, deck, materials, { author: a.author }, undefined, repair);
+    expect(a.reqs[0].repair).toEqual(repair);
+  });
+
+  it("passes no repair seed by default", async () => {
+    const a = fakeAuthor(ok);
+    await buildSlide(slide, deck, materials, { author: a.author });
+    expect(a.reqs[0].repair).toBeUndefined();
+  });
 });
 
 describe("buildSlide output guard", () => {
@@ -113,5 +127,22 @@ describe("buildSlide content gate", () => {
     const author: SlideAuthor = { async authorSlide() { return { html: good }; } };
     const built = await buildSlide(slide, deck, materials, { author });
     expect(built.html).toContain("s_a");
+  });
+
+  it("throws ContentDudError carrying the rejected html (heuristic)", async () => {
+    const dudHtml = `<section data-slide-id="s_a" data-layout="bespoke">LEFT RIGHT</section>`;
+    const author: SlideAuthor = { async authorSlide() { return { html: dudHtml }; } };
+    const err: unknown = await buildSlide(slide, deck, materials, { author }).then(() => null, (e) => e);
+    expect(err).toBeInstanceOf(ContentDudError);
+    expect((err as ContentDudError).html).toBe(dudHtml);
+  });
+
+  it("throws ContentDudError carrying the rejected html (judge)", async () => {
+    const author: SlideAuthor = { async authorSlide() { return { html: good }; } };
+    const judge: SlideJudge = async () => ({ isDud: true, reason: "off-topic" });
+    const err: unknown = await buildSlide(slide, deck, materials, { author, judge }).then(() => null, (e) => e);
+    expect(err).toBeInstanceOf(ContentDudError);
+    expect((err as ContentDudError).reason).toBe("off-topic");
+    expect((err as ContentDudError).html).toBe(good);
   });
 });

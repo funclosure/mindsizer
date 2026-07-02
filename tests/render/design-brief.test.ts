@@ -26,6 +26,12 @@ describe("identityBrief", () => {
     expect(identityBrief()).toContain("#0a1a2f");
     expect(identityBrief()).toBe(identityBrief(FIELD_AESTHETIC));
   });
+  it("teaches the edits-over-full-html revision habit and the DONE finalize contract", () => {
+    const b = identityBrief();
+    expect(b).toMatch(/prefer `edits`/);
+    expect(b).toMatch(/reply DONE/);
+    expect(b).toMatch(/ONLY if you never called `render`/);
+  });
 });
 
 describe("slideAuthorPrompt", () => {
@@ -41,5 +47,16 @@ describe("slideAuthorPrompt", () => {
     expect(u).toContain("point one");
     expect(u).toContain("the relevant source span");
     expect(u).toContain("intro");
+  });
+  it("appends a repair section when a previous attempt was rejected", () => {
+    const u = slideAuthorPrompt({ ...req, repair: { html: "<section>the dud</section>", reason: "looks like a debug/probe scaffold" } }).user;
+    expect(u).toMatch(/Previous attempt REJECTED/);
+    expect(u).toContain("looks like a debug/probe scaffold");
+    expect(u).toContain("<section>the dud</section>");
+    expect(u).toContain("<<<REJECTED_HTML\n<section>the dud</section>\nREJECTED_HTML>>>");
+    expect(u).toMatch(/inert markup/);
+  });
+  it("has no repair section without a seed", () => {
+    expect(slideAuthorPrompt(req).user).not.toMatch(/REJECTED/);
   });
 });

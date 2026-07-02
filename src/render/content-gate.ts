@@ -21,3 +21,15 @@ export function heuristicDud(html: string): string | null {
   if (PROBE_MARKERS.test(t)) return "looks like a debug/probe scaffold";
   return null;
 }
+
+/** Thrown by the content gate. Carries the rejected html so a retry can REPAIR instead of redesign blind. */
+export class ContentDudError extends Error {
+  readonly reason: string;
+  readonly html: string;
+  constructor(reason: string, html: string) {
+    super(`${CONTENT_DUD} ${reason}`);
+    this.name = "ContentDudError";
+    this.reason = reason;
+    this.html = html;
+  }
+}

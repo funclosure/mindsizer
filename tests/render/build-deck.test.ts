@@ -4,6 +4,7 @@ import { buildDeck } from "../../src/render/build-deck";
 import type { SlideAuthor } from "../../src/render/build-slide";
 import type { Outline } from "../../src/outline/types";
 import type { ProgressEvent, SlideTiming } from "../../src/render/progress";
+import type { RepairSeed } from "../../src/render/design-brief";
 
 const outline: Outline = {
   meta: { title: "D", purpose: "teach", theme: "field" },
@@ -155,5 +156,52 @@ describe("buildDeck", () => {
     expect(done.usage).toEqual({ input: 100, output: 10, cacheRead: 900, cacheCreate: 0 });
     const deckDone = events.find((e) => e.type === "deck_done") as Extract<ProgressEvent, { type: "deck_done" }>;
     expect(deckDone.usage).toEqual({ input: 200, output: 20, cacheRead: 1800, cacheCreate: 0 }); // 2 slides summed
+  });
+
+  it("seeds the retry with the rejected html + reason after a content dud", async () => {
+    const dud = `<section data-slide-id="s_a" data-layout="bespoke">LEFT RIGHT</section>`;
+    const seen: (RepairSeed | undefined)[] = [];
+    const author: SlideAuthor = {
+      async authorSlide(req) {
+        if (req.slide.id !== "s_a") return { html: section(req.slide.id) };
+        seen.push(req.repair);
+        return { html: seen.length === 1 ? dud : section("s_a") };
+      },
+    };
+    const r = await buildDeck(outline, { author, sleep: () => Promise.resolve() });
+    expect(seen[0]).toBeUndefined();
+    expect(seen[1]).toEqual({ html: dud, reason: "only 10 chars of content" });
+    expect([...r.sections.keys()].sort()).toEqual(["s_a", "s_b"]);
+  });
+
+  it("does not seed repair after an overload retry", async () => {
+    const seen: (RepairSeed | undefined)[] = [];
+    const author: SlideAuthor = {
+      async authorSlide(req) {
+        if (req.slide.id !== "s_a") return { html: section(req.slide.id) };
+        seen.push(req.repair);
+        if (seen.length === 1) throw new Error("529 overloaded");
+        return { html: section("s_a") };
+      },
+    };
+    await buildDeck(outline, { author, sleep: () => Promise.resolve() });
+    expect(seen).toEqual([undefined, undefined]);
+  });
+
+  it("a dud seed survives a subsequent overload retry", async () => {
+    const dud = `<section data-slide-id="s_a" data-layout="bespoke">LEFT RIGHT</section>`;
+    const seen: (RepairSeed | undefined)[] = [];
+    const author: SlideAuthor = {
+      async authorSlide(req) {
+        if (req.slide.id !== "s_a") return { html: section(req.slide.id) };
+        seen.push(req.repair);
+        if (seen.length === 1) return { html: dud };           // attempt 1: dud → seeds repair
+        if (seen.length === 2) throw new Error("529 overloaded"); // attempt 2: overload, seed must persist
+        return { html: section("s_a") };
+      },
+    };
+    await buildDeck(outline, { author, sleep: () => Promise.resolve() });
+    expect(seen[1]).toEqual({ html: dud, reason: "only 10 chars of content" });
+    expect(seen[2]).toEqual({ html: dud, reason: "only 10 chars of content" });
   });
 });

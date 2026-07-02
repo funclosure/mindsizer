@@ -4,6 +4,7 @@ import type { ModelChoice } from "./models";
 import { startWatchdog, IDLE_TIMEOUT_MS } from "./timeout";
 import { fromSdkUsage, ZERO_USAGE, type TokenUsage } from "./usage";
 import { recordUsage } from "./usage-meter";
+import { resolveRenderInput, type RenderEdit } from "./edit-ops";
 
 const MODEL = process.env.MINDSIZER_MODEL || "claude-opus-4-8";
 
@@ -76,17 +77,24 @@ export async function runAgentic(
   tools: AgenticTools,
   choice?: ModelChoice,
 ): Promise<{ text: string; usage: TokenUsage }> {
+  let lastHtml: string | undefined;
   const renderTool = tool(
     "render",
-    "Render the given slide HTML at 1280x720 and return screenshots. Optionally pass interaction steps to inspect interactive states.",
+    "Render the slide at 1280x720 and return screenshots. Pass full `html` on the FIRST call; for revisions prefer `edits` — exact find/replace patches applied to your last-rendered html (each `old` must appear exactly once). Optionally pass interaction steps to inspect interactive states.",
     {
-      html: z.string(),
+      html: z.string().optional(),
+      edits: z.array(z.object({ old: z.string(), new: z.string() })).optional(),
       interactions: z
         .array(z.object({ click: z.string().optional(), press: z.string().optional(), wait: z.number().optional() }))
         .optional(),
     },
-    async (args: { html: string; interactions?: { click?: string; press?: string; wait?: number }[] }) => {
-      const out = await tools.render(args.html, args.interactions);
+    async (args: { html?: string; edits?: RenderEdit[]; interactions?: { click?: string; press?: string; wait?: number }[] }) => {
+      const resolved = resolveRenderInput(lastHtml, args);
+      if (!resolved.ok) {
+        return { content: [{ type: "text" as const, text: `⚠ ${resolved.error}` }] };
+      }
+      lastHtml = resolved.html;
+      const out = await tools.render(resolved.html, args.interactions);
       if ("text" in out) {
         return { content: [{ type: "text" as const, text: out.text }] };
       }

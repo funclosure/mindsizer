@@ -30,3 +30,11 @@ export function pickBestCandidate(cands: Candidate[]): Candidate | undefined {
   }
   return best;
 }
+
+/** Render-tool reply once a candidate is clean: the harness seals it; the model must not re-emit HTML. */
+export const FINALIZE_CLEAN =
+  "✅ This slide is clean — no overflow, no console errors. The harness has captured this render as the final slide. Reply with the single word DONE — do NOT output the HTML again and do NOT call render again.";
+
+/** Render-tool reply when the pass budget is exhausted: the harness seals the best candidate. */
+export const finalizeBudget = (cap: number): string =>
+  `Render budget reached (${cap} passes). The harness will seal your best render. Reply with the single word DONE — do NOT output the HTML again and do NOT call render again.`;
