@@ -48,4 +48,13 @@ describe("slideAuthorPrompt", () => {
     expect(u).toContain("the relevant source span");
     expect(u).toContain("intro");
   });
+  it("appends a repair section when a previous attempt was rejected", () => {
+    const u = slideAuthorPrompt({ ...req, repair: { html: "<section>the dud</section>", reason: "looks like a debug/probe scaffold" } }).user;
+    expect(u).toMatch(/Previous attempt REJECTED/);
+    expect(u).toContain("looks like a debug/probe scaffold");
+    expect(u).toContain("<section>the dud</section>");
+  });
+  it("has no repair section without a seed", () => {
+    expect(slideAuthorPrompt(req).user).not.toMatch(/REJECTED/);
+  });
 });

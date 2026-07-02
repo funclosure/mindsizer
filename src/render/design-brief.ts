@@ -2,10 +2,17 @@
 import type { OutlineSlide } from "../outline/types";
 import type { SlideMaterials } from "./materials";
 
+/** A content-gate rejection to seed the next authoring attempt (repair, don't redesign). */
+export interface RepairSeed {
+  html: string;
+  reason: string;
+}
+
 export interface AuthorRequest {
   slide: OutlineSlide;
   deck: { title: string; slideTitles: string[] };
   materials: SlideMaterials;
+  repair?: RepairSeed;
 }
 
 export interface AuthorPrompt {
@@ -66,6 +73,12 @@ export function slideAuthorPrompt(req: AuthorRequest, aesthetic?: string): Autho
     `Deck digest (the whole argument, for context):\n${digest}\n\n` +
     (materials.sourceExcerpt
       ? `Relevant source excerpt for THIS slide:\n${materials.sourceExcerpt}\n`
+      : "") +
+    (req.repair
+      ? `\n## Previous attempt REJECTED — repair it\n` +
+        `The content gate rejected a previous attempt at this slide — reason: ${req.repair.reason}.\n` +
+        `Its HTML is below. Keep the working layout and styling where useful, but replace the placeholder/probe content with REAL teaching content for THIS slide.\n\n` +
+        `${req.repair.html}\n`
       : "");
   return { system: identityBrief(aesthetic), user };
 }
