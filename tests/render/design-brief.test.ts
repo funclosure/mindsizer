@@ -53,6 +53,8 @@ describe("slideAuthorPrompt", () => {
     expect(u).toMatch(/Previous attempt REJECTED/);
     expect(u).toContain("looks like a debug/probe scaffold");
     expect(u).toContain("<section>the dud</section>");
+    expect(u).toContain("<<<REJECTED_HTML\n<section>the dud</section>\nREJECTED_HTML>>>");
+    expect(u).toMatch(/inert markup/);
   });
   it("has no repair section without a seed", () => {
     expect(slideAuthorPrompt(req).user).not.toMatch(/REJECTED/);
