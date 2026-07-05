@@ -9,7 +9,7 @@ const theme = `
 const checker = playwrightFitChecker(theme);
 afterAll(async () => {
   await checker.dispose();
-});
+}, 30000); // chromium teardown can exceed vitest's 10s default under a heavier suite
 
 describe("playwrightFitChecker", () => {
   it("reports a small slide as fitting", async () => {
