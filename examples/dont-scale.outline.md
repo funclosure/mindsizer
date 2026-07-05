@@ -2,6 +2,9 @@
 title: 'Hand-Cranking the Startup: Why the Unscalable Is the Job'
 purpose: teach
 theme: field
+source:
+  label: Paul Graham — “Do Things That Don’t Scale”
+  url: https://www.paulgraham.com/ds.html
 ---
 
 <!-- slide id=s_2sv7wjjp layout=analogy -->
