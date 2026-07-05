@@ -162,7 +162,7 @@ async function runIngest(args: string[]): Promise<void> {
     const sc = sidecarPath(outPath);
     writeFileSync(
       sc,
-      serializeContext({ sourcePath: resolve(input), digest: result.digest, angle: result.angle.label }),
+      serializeContext({ sourcePath: resolve(input), digest: result.digest, angle: result.angle.label, direction: result.direction }),
       "utf8",
     );
     process.stdout.write(`✓ wrote ${sc}\n`);
