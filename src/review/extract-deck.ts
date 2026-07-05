@@ -9,6 +9,11 @@ export interface DeckSlide { id: string; fragment: string }
  * Grouping rule over `.deck`'s child elements: a <style> starts a new group when the current
  * group already has its <section>; the deck-level nav script lives OUTSIDE `.deck`, so it is
  * never visited. Non-element noise (text, comments) between slides is ignored.
+ *
+ * Correct attribution relies on no fragment beginning with a bare <script>: only <style>/<section>
+ * open groups, so a leading <script> would attach to the PRIOR slide. This holds because every
+ * sealed fragment is normalized by extractSlideHtml (src/agent/extract-slide.ts), which slices from
+ * the first <style>/<section> and drops anything before it. Preserve that invariant if either changes.
  */
 export function extractSlides(deckHtml: string): DeckSlide[] {
   const root = parse(deckHtml);
