@@ -22,3 +22,16 @@ describe("modelFor", () => {
     expect(modelFor("judge", { MINDSIZER_JUDGE_EFFORT: "ultra" }).effort).toBe("low");
   });
 });
+
+describe("review role", () => {
+  it("defaults to the author-tier model at medium effort", () => {
+    expect(modelFor("review", {})).toEqual({ model: "claude-opus-4-8", effort: "medium" });
+  });
+  it("honors MINDSIZER_REVIEW_MODEL and MINDSIZER_REVIEW_EFFORT", () => {
+    expect(modelFor("review", { MINDSIZER_REVIEW_MODEL: "claude-sonnet-5", MINDSIZER_REVIEW_EFFORT: "low" }))
+      .toEqual({ model: "claude-sonnet-5", effort: "low" });
+  });
+  it("falls back to legacy MINDSIZER_MODEL", () => {
+    expect(modelFor("review", { MINDSIZER_MODEL: "claude-fable-5" }).model).toBe("claude-fable-5");
+  });
+});

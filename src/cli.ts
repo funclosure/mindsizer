@@ -11,6 +11,13 @@ import { playwrightRenderer, verifyDeck } from "./render/fit-check";
 import { hasUsableSection } from "./outline/inject";
 import { resetUsage, snapshotUsage } from "./agent/usage-meter";
 import { costUsd, fmtUsd } from "./agent/pricing";
+import { extractSlides } from "./review/extract-deck";
+import { slideReviewer, type SlideReviewRequest } from "./review/slide-review";
+import { reviewDeckCoherence } from "./review/deck-review";
+import { terminalReport, markdownReport, jsonReport, hasHigh, type ReviewRun, type SlideReviewResult } from "./review/report";
+import { slideText } from "./render/content-gate";
+import { mapPool } from "./render/pool";
+import { modelFor } from "./agent/models";
 
 function fail(msg: string): never {
   process.stderr.write(`error: ${msg}\n`);
@@ -169,7 +176,7 @@ async function runIngest(args: string[]): Promise<void> {
 function printCost(): void {
   const entries = Object.entries(snapshotUsage());
   if (!entries.length) return;
-  const label = (m: string) => (m.includes("haiku") ? "judge/Haiku" : m.includes("sonnet") ? "ingest/Sonnet" : "author/Opus");
+  const label = (m: string) => (m.includes("haiku") ? "Haiku" : m.includes("sonnet") ? "Sonnet" : m.includes("fable") || m.includes("mythos") ? "Fable" : "Opus");
   const parts = entries.map(([m, u]) => `${label(m)} ${fmtUsd(costUsd(u, m))}`);
   const total = entries.reduce((s, [m, u]) => s + costUsd(u, m), 0);
   process.stdout.write(`  cost (API-equiv · est):  ~${fmtUsd(total)} — ${parts.join(" · ")}\n`);
@@ -313,6 +320,154 @@ async function runBuild(args: string[]): Promise<void> {
   }
 }
 
+const SOURCE_CAP = 12_000; // chars of source text fed to each fidelity check
+
+async function runReview(args: string[]): Promise<void> {
+  let input: string | undefined;
+  let deckPath: string | undefined;
+  let json = false;
+  const envC = Number(process.env.MINDSIZER_CONCURRENCY);
+  let concurrency = Number.isFinite(envC) && envC >= 1 ? Math.floor(envC) : 4;
+
+  for (let k = 0; k < args.length; k++) {
+    const a = args[k];
+    if (a === "--deck") {
+      deckPath = args[++k];
+      if (!deckPath) fail("--deck requires a path");
+    } else if (a === "--json") {
+      json = true;
+    } else if (a === "--concurrency" || a === "-c") {
+      const v = Number(args[++k]);
+      if (!Number.isFinite(v) || v < 1) fail("--concurrency requires an integer ≥ 1");
+      concurrency = Math.floor(v);
+    } else if (a.startsWith("-")) {
+      fail(`unknown option ${a}`);
+    } else {
+      input ??= a;
+    }
+  }
+  if (!input) fail("usage: mindsizer review <outline.md> [--deck <deck.html>] [--json] [--concurrency <n>]");
+
+  let md: string;
+  try {
+    md = readFileSync(resolve(input), "utf8");
+  } catch {
+    fail(`cannot read ${input}`);
+  }
+  const outline = parseOutline(md);
+  const issues = validateOutline(outline);
+  if (issues.length > 0) {
+    fail(
+      "invalid outline:\n" +
+        issues
+          .map((i) => `  - ${i.slideId ? i.slideId + ": " : ""}${i.message}`)
+          .join("\n"),
+    );
+  }
+
+  let theme;
+  try {
+    theme = loadTheme(outline.meta.theme ?? "field");
+  } catch (e) {
+    fail((e as Error).message);
+  }
+
+  const baseDir = dirname(resolve(input));
+  const stem = basename(input, extname(input));
+  const deck = deckPath ? resolve(deckPath) : join(baseDir, stem + ".html");
+  let deckHtml: string;
+  try {
+    deckHtml = readFileSync(deck, "utf8");
+  } catch {
+    fail(`cannot read deck ${deck} — build it first or pass --deck`);
+  }
+  const fragments = extractSlides(deckHtml);
+  if (fragments.length === 0) fail(`no slides found in ${deck}`);
+
+  // sidecar → digest/angle/source; each rung degrades with a notice
+  let digest: string[] = [];
+  let angle = "";
+  let sourceExcerpt: string | undefined;
+  let sourcePath: string | null = null;
+  try {
+    const ctx = parseContext(readFileSync(sidecarPath(resolve(input)), "utf8"));
+    if (ctx) {
+      digest = ctx.digest;
+      angle = ctx.angle;
+      if (ctx.sourcePath) {
+        try {
+          const full = readFileSync(ctx.sourcePath, "utf8");
+          sourcePath = ctx.sourcePath;
+          sourceExcerpt = full.length > SOURCE_CAP ? full.slice(0, SOURCE_CAP) + "\n[…source truncated…]" : full;
+        } catch {
+          process.stdout.write("· source file unreadable — fidelity checks fall back to the digest\n");
+        }
+      }
+    }
+  } catch {
+    process.stdout.write("· no context sidecar — reviewing visuals + interactions + coherence only\n");
+  }
+
+  process.stdout.write(`reviewing ${outline.slides.length} slides… (model: ${modelFor("review").model})\n`);
+  resetUsage();
+  const renderer = playwrightRenderer(theme.fontFaceCss + "\n" + theme.css);
+  const byId = new Map(fragments.map((f) => [f.id, f.fragment]));
+  const review = slideReviewer(renderer);
+
+  let slideResults: SlideReviewResult[];
+  let deckFindings: Awaited<ReturnType<typeof reviewDeckCoherence>>;
+  try {
+    const slidesP = mapPool(outline.slides, concurrency, async (s): Promise<SlideReviewResult> => {
+      const fragment = byId.get(s.id);
+      if (!fragment) {
+        return { id: s.id, title: s.title, findings: [{ check: "visual", severity: "high", summary: "slide missing from deck", detail: `no <section data-slide-id="${s.id}"> in ${deck}`, suggestion: "rebuild the deck" }] };
+      }
+      const reqData: SlideReviewRequest = { id: s.id, title: s.title, angle, digest, sourceExcerpt, fragment };
+      process.stdout.write(`[${s.id}] reviewing…\n`);
+      return { id: s.id, title: s.title, findings: await review(reqData) };
+    });
+    const coherenceP = reviewDeckCoherence(
+      outline.meta.title,
+      angle,
+      fragments.map((f) => ({ id: f.id, title: outline.slides.find((s) => s.id === f.id)?.title ?? f.id, text: slideText(f.fragment) })),
+    );
+    const [pool, coherence] = await Promise.all([slidesP, coherenceP]);
+    deckFindings = coherence;
+    slideResults = pool.map((r, i) =>
+      r.ok
+        ? r.value
+        : { id: outline.slides[i].id, title: outline.slides[i].title, findings: [{ check: "visual" as const, severity: "high" as const, summary: "review failed", detail: String((r.error as Error)?.message ?? r.error), suggestion: "re-run review" }] },
+    );
+  } finally {
+    await renderer.dispose().catch(() => {});
+  }
+
+  // sections present in the deck but absent from the outline are a structural mismatch
+  const outlineIds = new Set(outline.slides.map((s) => s.id));
+  for (const f of fragments) {
+    if (!outlineIds.has(f.id)) {
+      deckFindings.push({ slideId: f.id, check: "coherence", severity: "high", summary: "deck section not in outline", detail: `<section data-slide-id="${f.id}"> has no outline slide`, suggestion: "rebuild the deck from this outline, or review against the right outline" });
+    }
+  }
+
+  const run: ReviewRun = {
+    meta: { deck, source: sourcePath, model: modelFor("review").model, date: new Date().toISOString() },
+    slides: slideResults,
+    deck: deckFindings,
+  };
+
+  const reportBase = deck.replace(/\.html$/i, "");
+  writeFileSync(reportBase + ".review.md", markdownReport(run), "utf8");
+  process.stdout.write(`✓ wrote ${reportBase}.review.md\n`);
+  if (json) {
+    writeFileSync(reportBase + ".review.json", jsonReport(run), "utf8");
+    process.stdout.write(`✓ wrote ${reportBase}.review.json\n`);
+  }
+  process.stdout.write("\n" + terminalReport(run) + "\n");
+  printCost();
+  if (hasHigh(run)) process.exitCode = 1;
+}
+
 function main(argv: string[]): void {
   const args = argv.slice(2);
   if (args[0] === "ingest") {
@@ -321,6 +476,10 @@ function main(argv: string[]): void {
   }
   if (args[0] === "build") {
     void runBuild(args.slice(1));
+    return;
+  }
+  if (args[0] === "review") {
+    void runReview(args.slice(1));
     return;
   }
   runSeal(args);
