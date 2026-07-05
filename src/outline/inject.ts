@@ -50,6 +50,17 @@ export function ensureSectionId(html: string, expectedId: string): string {
   return html.replace(tag, fixed);
 }
 
+/**
+ * Replace the brief's literal placeholder token `SLIDE_ID` with the real slide id. Authors
+ * occasionally emit `data-slide-id="SLIDE_ID"` / `#SLIDE_ID` verbatim instead of substituting it,
+ * which leaves the section with no matching id → `hasUsableSection` rejects it and the slide
+ * hard-fails (the error isn't retryable). The match is whole-token and all-caps, so it can't touch
+ * the lowercase `slide-id` in `data-slide-id` or any real slide text (which never contains the token).
+ */
+export function substituteSlideId(html: string, id: string): string {
+  return html.replace(/\bSLIDE_ID\b/g, id);
+}
+
 /** True iff html has exactly one <section data-slide-id> whose id === expectedId. */
 export function hasUsableSection(html: string, expectedId: string): boolean {
   const sections = parseHtml(html).querySelectorAll("section[data-slide-id]");

@@ -4,6 +4,7 @@ import {
   updateBoundRegions,
   validateSlideSection,
   ensureSectionId,
+  substituteSlideId,
   hasUsableSection,
 } from "../../src/outline/inject";
 
@@ -110,6 +111,31 @@ describe("ensureSectionId", () => {
   it("still injects id when another *-id attribute is present (not a real id)", () => {
     const out = ensureSectionId(`<section data-id="foo" data-slide-id="s_x" data-layout="bespoke">x</section>`, "s_x");
     expect(out).toContain('<section id="s_x" data-id="foo" data-slide-id="s_x"');
+  });
+});
+
+describe("substituteSlideId", () => {
+  it("replaces the literal placeholder token in data-slide-id and #selectors", () => {
+    const html = `<style>#SLIDE_ID .x{color:red}</style><section data-slide-id="SLIDE_ID" id="SLIDE_ID">hi</section>`;
+    expect(substituteSlideId(html, "s_x")).toBe(
+      `<style>#s_x .x{color:red}</style><section data-slide-id="s_x" id="s_x">hi</section>`,
+    );
+  });
+  it("makes a placeholder section usable for the real id (the failure it fixes)", () => {
+    const html = `<section data-slide-id="SLIDE_ID" data-layout="bespoke">real body text here that is long enough</section>`;
+    expect(hasUsableSection(html, "s_x")).toBe(false);
+    expect(hasUsableSection(substituteSlideId(html, "s_x"), "s_x")).toBe(true);
+  });
+  it("leaves a correctly-substituted slide untouched (idempotent) and spares lowercase data-slide-id", () => {
+    const good = `<section data-slide-id="s_x" data-layout="bespoke">ok</section>`;
+    expect(substituteSlideId(good, "s_x")).toBe(good); // no all-caps token present
+  });
+  it("does not touch real content that isn't the exact all-caps token", () => {
+    const html = `<section data-slide-id="SLIDE_ID">A slide about slide-ids and SLIDE_IDENTITY</section>`;
+    const out = substituteSlideId(html, "s_x");
+    expect(out).toContain(`data-slide-id="s_x"`);
+    expect(out).toContain("slide-ids");        // lowercase untouched
+    expect(out).toContain("SLIDE_IDENTITY");   // longer token untouched (\b boundary)
   });
 });
 

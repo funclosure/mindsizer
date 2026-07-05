@@ -1,7 +1,7 @@
 // src/agent/agentic-author.ts
 import { runAgentic, type RenderToolResult } from "./query";
 import { extractSlideHtml } from "./extract-slide";
-import { ensureSectionId } from "../outline/inject";
+import { ensureSectionId, substituteSlideId } from "../outline/inject";
 import { slideAuthorPrompt, type AuthorRequest } from "../render/design-brief";
 import type { SlideAuthor, AuthoredSlide } from "../render/build-slide";
 import type { SlideRenderer } from "../render/fit-check";
@@ -55,7 +55,7 @@ export function agenticAuthor(renderer: SlideRenderer, aesthetic?: string): Slid
 
       const best = pickBestCandidate(candidates);
       const raw = best ? best.html : text; // fall back to model's final text only if it never rendered
-      const finalHtml = ensureSectionId(extractSlideHtml(raw), req.slide.id);
+      const finalHtml = ensureSectionId(substituteSlideId(extractSlideHtml(raw), req.slide.id), req.slide.id);
       const timing = computeSlideTiming(startMs, passes, Date.now());
       return { html: finalHtml, timing, usage };
     },
