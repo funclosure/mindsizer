@@ -74,6 +74,13 @@ export function slideAuthorPrompt(req: AuthorRequest, aesthetic?: string): Autho
     (materials.sourceExcerpt
       ? `Relevant source excerpt for THIS slide:\n${materials.sourceExcerpt}\n`
       : "") +
+    (materials.conceit ? `\nControlling metaphor for the deck (art direction — advisory): ${materials.conceit}\n` : "") +
+    (materials.motif ? `Shared visual motif: ${materials.motif}\n` : "") +
+    (materials.role ? `This slide's job in the deck (don't duplicate other slides): ${materials.role}\n` : "") +
+    (materials.instrument && materials.instrument !== "none"
+      ? `Suggested interaction: a ${materials.instrument}` +
+        (materials.otherInstruments?.length ? ` — vary from instruments already used elsewhere (${materials.otherInstruments.join(", ")})` : "") + `\n`
+      : "") +
     (req.repair
       ? `\n## Previous attempt REJECTED — repair it\n` +
         `The content gate rejected a previous attempt at this slide — reason: ${req.repair.reason}.\n` +

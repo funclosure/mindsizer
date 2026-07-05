@@ -60,3 +60,20 @@ describe("slideAuthorPrompt", () => {
     expect(slideAuthorPrompt(req).user).not.toMatch(/REJECTED/);
   });
 });
+
+describe("slideAuthorPrompt — art direction", () => {
+  it("adds advisory art-direction lines when present, and varies instruments", () => {
+    const u = slideAuthorPrompt({
+      ...req,
+      materials: { ...req.materials, conceit: "a ledger", motif: "ruled lines", role: "introduce the tension", instrument: "toggle", otherInstruments: ["slider", "chart"] },
+    }).user;
+    expect(u).toMatch(/controlling metaphor/i);
+    expect(u).toContain("a ledger");
+    expect(u).toContain("introduce the tension");
+    expect(u).toContain("a toggle");
+    expect(u).toContain("slider, chart"); // vary-from list
+  });
+  it("omits the art-direction lines when absent", () => {
+    expect(slideAuthorPrompt(req).user).not.toMatch(/controlling metaphor/i);
+  });
+});
