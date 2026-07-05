@@ -33,6 +33,41 @@ describe("parseOutline", () => {
     });
   });
 
+  describe("source attribution", () => {
+    const wrap = (fm: string) =>
+      `---\ntitle: T\npurpose: teach\ntheme: field\n${fm}---\n\n<!-- slide id=s_a layout=plain -->\n# H\n\n- x\n`;
+
+    it("parses the object form into meta.source", () => {
+      const o = parseOutline(
+        wrap(
+          'source:\n  label: "PG — Do Things That Don’t Scale"\n  url: https://www.paulgraham.com/ds.html\n',
+        ),
+      );
+      expect(o.meta.source).toEqual({
+        label: "PG — Do Things That Don’t Scale",
+        url: "https://www.paulgraham.com/ds.html",
+      });
+    });
+
+    it("accepts the plain-string shorthand as a url", () => {
+      const o = parseOutline(wrap("source: https://example.com/post\n"));
+      expect(o.meta.source).toEqual({ url: "https://example.com/post" });
+    });
+
+    it("keeps a label-only source", () => {
+      const o = parseOutline(wrap("source:\n  label: Internal memo\n"));
+      expect(o.meta.source).toEqual({ label: "Internal memo" });
+    });
+
+    it("treats absent or blank source as undefined", () => {
+      expect(parseOutline(wrap("")).meta.source).toBeUndefined();
+      expect(parseOutline(wrap('source: ""\n')).meta.source).toBeUndefined();
+      expect(
+        parseOutline(wrap('source:\n  label: ""\n  url: "  "\n')).meta.source,
+      ).toBeUndefined();
+    });
+  });
+
   it("parses each slide's id, layout, and title", () => {
     const o = parseOutline(SAMPLE);
     expect(o.slides.map((s) => s.id)).toEqual(["s_intro", "s_tradeoff"]);

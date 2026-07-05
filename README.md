@@ -76,7 +76,7 @@ Navigate with **→ / ← / Space**. On interactive slides, click or drag the co
 
 | Command | What it does |
 | --- | --- |
-| `mindsizer ingest <text-file> [--yes] [-o out.md]` | Digest text → propose teaching angles (pick interactively, or `--yes` to take the first) → write a canonical `outline.md` + a `*.context.json` sidecar (digest + chosen angle). |
+| `mindsizer ingest <text-file> [--yes] [-o out.md] [--source <url>] [--source-label <text>]` | Digest text → propose teaching angles (pick interactively, or `--yes` to take the first) → write a canonical `outline.md` + a `*.context.json` sidecar (digest + chosen angle). `--source`/`--source-label` record where the text came from (also editable later as `source:` front-matter — label + url); the sealed deck renders it as a bottom-left attribution link. |
 | `mindsizer build <outline.md> [-o out.html] [--open] [--concurrency <n>]` | The rich path: an agentic author writes a bespoke (often interactive) slide per outline entry, renders + critiques its own work, then seals everything into one offline deck. Slides author **in parallel** (a bounded pool, default 4). |
 | `mindsizer <outline.md> [-o out.html] [--open]` | The fast, no-LLM path: mechanically render + seal the outline (for `analogy` / `plain` layouts). |
 

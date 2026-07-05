@@ -35,6 +35,15 @@ export function sealDeck(
   const theme = opts.theme ?? loadTheme("field");
   const title = escapeHtml(outline.meta.title || "deck");
 
+  const src = outline.meta.source;
+  const sourceHtml = src
+    ? `<div class="deck-source">Source: ` +
+      (src.url
+        ? `<a href="${escapeHtml(src.url)}" target="_blank" rel="noopener">${escapeHtml(src.label ?? src.url)}</a>`
+        : escapeHtml(src.label ?? "")) +
+      `</div>\n`
+    : "";
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,7 +60,7 @@ ${DECK_CSS}
 <div class="deck">
 ${sections}
 </div>
-<div class="deck-counter"></div>
+${sourceHtml}<div class="deck-counter"></div>
 <div class="deck-progress"></div>
 <script>
 ${NAV_JS}

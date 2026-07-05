@@ -55,3 +55,46 @@ describe("serializeOutline — robustness", () => {
     expect(parseOutline(md)).toEqual(o);
   });
 });
+
+describe("serializeOutline — source attribution", () => {
+  const SLIDES = [
+    { id: "s_a", layout: "plain", title: "H", markdown: "body" },
+  ];
+
+  it("round-trips a full source attribution", () => {
+    const o: Outline = {
+      meta: {
+        title: "T",
+        purpose: "teach",
+        theme: "field",
+        source: {
+          label: "Phil Chen (@philhchen) on X",
+          url: "https://x.com/philhchen/status/2072793818945167475",
+        },
+      },
+      slides: SLIDES,
+    };
+    const md = serializeOutline(o);
+    expect(md).toContain("source:");
+    expect(parseOutline(md)).toEqual(o);
+  });
+
+  it("round-trips a url-only source without writing a label key", () => {
+    const o: Outline = {
+      meta: {
+        title: "T",
+        purpose: "teach",
+        theme: "field",
+        source: { url: "https://example.com/post" },
+      },
+      slides: SLIDES,
+    };
+    const md = serializeOutline(o);
+    expect(md).not.toContain("label");
+    expect(parseOutline(md)).toEqual(o);
+  });
+
+  it("omits the source key entirely when unset", () => {
+    expect(serializeOutline(OUTLINE)).not.toContain("source:");
+  });
+});

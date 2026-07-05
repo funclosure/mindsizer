@@ -8,6 +8,12 @@ describe("deck runtime", () => {
     expect(DECK_CSS).toContain(".deck-progress");
   });
 
+  it("DECK_CSS styles the source-attribution chrome from theme vars", () => {
+    expect(DECK_CSS).toContain(".deck-source");
+    expect(DECK_CSS).toContain(".deck-source a:hover");
+    expect(DECK_CSS).toContain("var(--s-fg");
+  });
+
   it("hides non-active slides with !important so bespoke inline styles can't override", () => {
     expect(DECK_CSS).toContain("display: none !important");
     expect(DECK_CSS).toContain("display: flex !important");

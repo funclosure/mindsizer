@@ -1,6 +1,6 @@
 /** Viewer chrome CSS for the sealed deck: one slide at a time, a fixed 1280x720 stage scaled to fit.
-    Chrome colors derive from the embedded theme's :root vars (--s-bg/--s-dim/--s-cyan) so the
-    letterbox, counter, and progress bar match any theme; fallbacks are the Field palette. */
+    Chrome colors derive from the embedded theme's :root vars (--s-bg/--s-dim/--s-fg/--s-cyan) so the
+    letterbox, counter, source link, and progress bar match any theme; fallbacks are the Field palette. */
 export const DECK_CSS = `
   html, body { margin: 0; height: 100%; background: color-mix(in srgb, var(--s-bg, #0a1a2f) 60%, black); overflow: hidden; }
   body { font-family: "Geist", system-ui, sans-serif; }
@@ -31,6 +31,13 @@ export const DECK_CSS = `
     position: fixed; left: 0; bottom: 0; height: 2px;
     background: var(--s-cyan, #4DD9E0); width: 0; transition: width 0.2s ease;
   }
+  .deck-source {
+    position: fixed; left: 18px; bottom: 14px; z-index: 40;
+    font-family: "Geist Mono", monospace; font-size: 11px;
+    letter-spacing: 0.16em; color: var(--s-dim, rgba(243, 239, 229, 0.5));
+  }
+  .deck-source a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 1px; }
+  .deck-source a:hover { color: var(--s-fg, #f3efe5); }
 `;
 
 /** Inline keyboard-nav runtime carried by the sealed deck (no server at view time). */

@@ -3,6 +3,8 @@ export interface DeckMeta {
   title: string;
   purpose: "teach"; // v1 fixed; widens with the reflow roadmap
   theme: string; // v1: "field"
+  /** Attribution for the source text, rendered as deck chrome. At least one key set when present. */
+  source?: { label?: string; url?: string };
 }
 
 /** One slide's canonical content. `markdown` is render-agnostic. */

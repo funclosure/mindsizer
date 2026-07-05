@@ -20,9 +20,16 @@ export function serializeOutline(o: Outline): string {
 
   // matter.stringify YAML-escapes values (e.g. a title containing a colon),
   // keeping parse and serialize symmetric.
+  const src = o.meta.source;
   return matter.stringify(`\n${body}\n`, {
     title: o.meta.title,
     purpose: o.meta.purpose,
     theme: o.meta.theme,
+    ...(src && {
+      source: {
+        ...(src.label && { label: src.label }),
+        ...(src.url && { url: src.url }),
+      },
+    }),
   });
 }

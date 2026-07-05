@@ -90,6 +90,46 @@ describe("sealDeck", () => {
   });
 });
 
+describe("sealDeck — source attribution", () => {
+  const withSource = (fm: string) =>
+    `---\ntitle: T\npurpose: teach\ntheme: field\n${fm}---\n\n<!-- slide id=s_a layout=plain -->\n# H\n\n- x\n`;
+
+  it("renders a deck-source link with escaped label and url", () => {
+    const html = sealDeck(
+      parseOutline(
+        withSource(
+          'source:\n  label: A & B "quoted"\n  url: https://x.com/a?b=1&c=2\n',
+        ),
+      ),
+    );
+    expect(html).toContain('<div class="deck-source">Source: ');
+    expect(html).toContain(
+      '<a href="https://x.com/a?b=1&amp;c=2" target="_blank" rel="noopener">',
+    );
+    expect(html).toContain("A &amp; B &quot;quoted&quot;</a>");
+  });
+
+  it("uses the url as the link text when no label is given", () => {
+    const html = sealDeck(
+      parseOutline(withSource("source: https://example.com/post\n")),
+    );
+    expect(html).toContain(">https://example.com/post</a>");
+  });
+
+  it("renders a label-only source as plain text, no anchor", () => {
+    const html = sealDeck(
+      parseOutline(withSource("source:\n  label: Internal memo\n")),
+    );
+    expect(html).toContain('<div class="deck-source">Source: Internal memo</div>');
+    expect(html).not.toContain("<a href");
+  });
+
+  it("emits no deck-source div when the outline has no source", () => {
+    const html = sealDeck(parseOutline(MD));
+    expect(html).not.toContain('<div class="deck-source">');
+  });
+});
+
 describe("placeholderSection + partial deck", () => {
   it("placeholderSection is one valid section carrying id and data-slide-id", () => {
     const s = placeholderSection({ id: "s_z", title: "Zed" });

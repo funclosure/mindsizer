@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 import { readFileSync, writeFileSync } from "node:fs";
 import { basename, extname, resolve, dirname, join } from "node:path";
-import { parseOutline, validateOutline } from "./outline/index";
+import { parseOutline, serializeOutline, validateOutline } from "./outline/index";
 import { sealDeck, fileSink } from "./export/index";
 import { loadTheme } from "./theme/load";
 import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath, serializeContext } from "./agent/index";
@@ -100,6 +100,8 @@ async function runIngest(args: string[]): Promise<void> {
   let out: string | undefined;
   let angle: string | undefined;
   let yes = false;
+  let sourceUrl: string | undefined;
+  let sourceLabel: string | undefined;
 
   for (let k = 0; k < args.length; k++) {
     const a = args[k];
@@ -109,6 +111,12 @@ async function runIngest(args: string[]): Promise<void> {
     } else if (a === "--angle") {
       angle = args[++k];
       if (angle === undefined) fail("--angle requires an id");
+    } else if (a === "--source") {
+      sourceUrl = args[++k];
+      if (sourceUrl === undefined) fail("--source requires a url");
+    } else if (a === "--source-label") {
+      sourceLabel = args[++k];
+      if (sourceLabel === undefined) fail("--source-label requires text");
     } else if (a === "--yes") {
       yes = true;
     } else if (a.startsWith("-")) {
@@ -119,7 +127,7 @@ async function runIngest(args: string[]): Promise<void> {
   }
 
   if (!input)
-    fail("usage: mindsizer ingest <text-file> [--angle <id>] [-o <out.md>] [--yes]");
+    fail("usage: mindsizer ingest <text-file> [--angle <id>] [-o <out.md>] [--yes] [--source <url>] [--source-label <text>]");
 
   let text: string;
   try {
@@ -144,6 +152,17 @@ async function runIngest(args: string[]): Promise<void> {
     fail((e as Error).message);
   }
 
+  // the agent never sees the attribution flags — inject them into the finished outline
+  let outlineMarkdown = result.outlineMarkdown;
+  if (sourceUrl || sourceLabel) {
+    const o = parseOutline(outlineMarkdown);
+    o.meta.source = {
+      ...(sourceLabel && { label: sourceLabel }),
+      ...(sourceUrl && { url: sourceUrl }),
+    };
+    outlineMarkdown = serializeOutline(o);
+  }
+
   const outPath =
     out ??
     join(
@@ -151,7 +170,7 @@ async function runIngest(args: string[]): Promise<void> {
       basename(input, extname(input)) + ".outline.md",
     );
   try {
-    writeFileSync(outPath, result.outlineMarkdown, "utf8");
+    writeFileSync(outPath, outlineMarkdown, "utf8");
   } catch {
     fail(`cannot write ${outPath}`);
   }

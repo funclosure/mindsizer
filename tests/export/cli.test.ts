@@ -37,6 +37,26 @@ afterEach(() => {
 });
 
 describe("mindsizer CLI", () => {
+  it("seals a source attribution from front-matter into the deck chrome", () => {
+    dir = mkdtempSync(join(tmpdir(), "mindsizer-cli-"));
+    const mdPath = join(dir, "deck.md");
+    writeFileSync(
+      mdPath,
+      SAMPLE.replace(
+        "theme: field",
+        "theme: field\nsource:\n  label: Paul Graham\n  url: https://www.paulgraham.com/ds.html",
+      ),
+    );
+    const outPath = join(dir, "deck.html");
+    execFileSync("bun", ["run", "src/cli.ts", mdPath, "-o", outPath], {
+      cwd: process.cwd(),
+    });
+    const html = readFileSync(outPath, "utf8");
+    expect(html).toContain('<div class="deck-source">Source: ');
+    expect(html).toContain('href="https://www.paulgraham.com/ds.html"');
+    expect(html).toContain(">Paul Graham</a>");
+  });
+
   it("seals a deck file end-to-end", () => {
     dir = mkdtempSync(join(tmpdir(), "mindsizer-cli-"));
     const mdPath = join(dir, "deck.md");

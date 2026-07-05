@@ -13,13 +13,31 @@ function parseAttrs(s: string): Record<string, string> {
   return out;
 }
 
+/** Normalize the frontmatter `source` value: `url` string shorthand or {label, url} object. */
+function parseSource(raw: unknown): DeckMeta["source"] {
+  if (typeof raw === "string") {
+    const url = raw.trim();
+    return url ? { url } : undefined;
+  }
+  if (raw && typeof raw === "object") {
+    const pick = (v: unknown) =>
+      typeof v === "string" && v.trim() ? v.trim() : undefined;
+    const label = pick((raw as Record<string, unknown>).label);
+    const url = pick((raw as Record<string, unknown>).url);
+    if (label || url) return { ...(label && { label }), ...(url && { url }) };
+  }
+  return undefined;
+}
+
 /** Parse a Marp-style outline.md into the canonical Outline model. */
 export function parseOutline(md: string): Outline {
   const { data, content } = matter(md);
+  const source = parseSource(data.source);
   const meta: DeckMeta = {
     title: String(data.title ?? ""),
     purpose: "teach",
     theme: String(data.theme ?? "field"),
+    ...(source && { source }),
   };
 
   // gray-matter has stripped the leading frontmatter, so remaining
