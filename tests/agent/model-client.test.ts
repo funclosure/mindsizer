@@ -3,6 +3,8 @@ import {
   DigestSchema,
   DirectionsSchema,
   DraftDeckSchema,
+  ArtDirectionSchema,
+  INSTRUMENTS,
 } from "../../src/agent/model-client";
 
 describe("agent schemas", () => {
@@ -32,5 +34,17 @@ describe("agent schemas", () => {
         slides: [{ title: "A", layout: "carousel", markdown: "b" }],
       }),
     ).toThrow();
+  });
+
+  it("accepts a valid art direction and rejects an off-palette instrument", () => {
+    const v = ArtDirectionSchema.parse({
+      conceit: "a ledger", motif: "ruled lines",
+      slides: [{ role: "intro", instrument: "toggle" }, { role: "formalize", instrument: "slider" }],
+    });
+    expect(v.slides).toHaveLength(2);
+    expect(() =>
+      ArtDirectionSchema.parse({ conceit: "x", motif: "y", slides: [{ role: "r", instrument: "hologram" }] }),
+    ).toThrow();
+    expect(INSTRUMENTS).toContain("none");
   });
 });

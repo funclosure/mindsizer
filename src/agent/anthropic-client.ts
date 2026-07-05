@@ -4,8 +4,9 @@ import {
   DigestSchema,
   DirectionsSchema,
   DraftDeckSchema,
+  ArtDirectionSchema,
 } from "./model-client";
-import { digestPrompt, directionPrompt, outlinePrompt } from "./prompts";
+import { digestPrompt, directionPrompt, outlinePrompt, artDirectionPrompt } from "./prompts";
 import { parseValidated } from "./json";
 import { runQuery } from "./query";
 import { modelFor, type ModelChoice } from "./models";
@@ -48,6 +49,10 @@ export function anthropicClient(choice: ModelChoice = modelFor("ingest")): Model
     async generateOutline(digest, angle) {
       const p = outlinePrompt(digest, angle);
       return ask(p.system, p.user, DraftDeckSchema, "outline", choice);
+    },
+    async directArt(digest, angle, titles) {
+      const p = artDirectionPrompt(digest, angle, titles);
+      return ask(p.system, p.user, ArtDirectionSchema, "art-direction", choice);
     },
   };
 }

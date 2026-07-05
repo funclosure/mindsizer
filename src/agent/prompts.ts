@@ -37,6 +37,18 @@ export function outlinePrompt(digest: DigestResult, angle: Direction): Prompt {
   };
 }
 
+export function artDirectionPrompt(digest: DigestResult, angle: Direction, titles: string[]): Prompt {
+  return {
+    system: [
+      "You are mindsizer's ART-DIRECTION stage. Give the WHOLE deck one coherent identity so its slides read as one authored piece, not a pile of good slides.",
+      "Choose: (1) conceit — a single controlling metaphor the whole deck can lean on (e.g. 'a ledger', 'a courtroom', 'a flight checklist'); (2) motif — a shared visual through-line; and per slide: (3) role — its distinct job so no two slides repeat the same point ('introduce the tension', 'formalize it', 'the counter-case'); (4) instrument — one interaction from the fixed palette, VARIED across slides.",
+      'Instrument palette (use these exact strings): "slider","toggle","stepper","chart","dial","reveal","map","none".',
+      'Respond with JSON only: {"conceit": string, "motif": string, "slides": [{"role": string, "instrument": <palette>}]} — the slides array MUST be the same length and order as the titles given.',
+    ].join("\n"),
+    user: `Angle: ${angle.label} — ${angle.description}\n\n${digestText(digest)}\n\nSlide titles (in order):\n${titles.map((t, i) => `${i + 1}. ${t}`).join("\n")}`,
+  };
+}
+
 function digestText(d: DigestResult): string {
   return (
     `Digest:\ntitle: ${d.title}\ncharacter: ${d.sourceCharacter}\nkey points:\n` +

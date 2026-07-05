@@ -135,3 +135,29 @@ describe("ingest digest passthrough", () => {
     expect(r.digest).toEqual(["k1", "k2", "k3"]);
   });
 });
+
+describe("ingest art direction", () => {
+  const base = {
+    digest: async () => digest,
+    proposeDirections: async () => directions,
+    generateOutline: async () => draft,
+  };
+  it("zips + dedups art-direction onto slide ids", async () => {
+    const model: ModelClient = {
+      ...base,
+      directArt: async () => ({
+        conceit: "a ledger", motif: "rules",
+        slides: [{ role: "intro", instrument: "toggle" as const }, { role: "again", instrument: "toggle" as const }],
+      }),
+    };
+    const r = await ingest("src", { model, prompter: fixedPrompter() });
+    expect(r.direction?.conceit).toBe("a ledger");
+    const insts = Object.values(r.direction!.instrumentById);
+    expect(new Set(insts).size).toBe(insts.length); // duplicate 'toggle' was deduped
+  });
+  it("degrades to no direction when directArt throws", async () => {
+    const model: ModelClient = { ...base, directArt: async () => { throw new Error("boom"); } };
+    const r = await ingest("src", { model, prompter: fixedPrompter() });
+    expect(r.direction).toBeUndefined();
+  });
+});

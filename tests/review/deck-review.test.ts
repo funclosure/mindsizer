@@ -39,3 +39,19 @@ describe("reviewDeckCoherence", () => {
     expect(await reviewDeckCoherence("D", "a", slides)).toEqual([]);
   });
 });
+
+describe("reviewDeckCoherence — controlling metaphor", () => {
+  it("threads the conceit + motif into the coherence prompt when a direction is given", async () => {
+    reply = JSON.stringify({ findings: [] });
+    await reviewDeckCoherence("D", "a", slides, { conceit: "a ledger", motif: "ruled lines" });
+    const last = seen[seen.length - 1];
+    expect(last.user).toContain("a ledger");
+    expect(last.user).toContain("ruled lines");
+    expect(last.user).toMatch(/one controlling metaphor/i);
+  });
+  it("omits the metaphor line when no direction is given", async () => {
+    reply = JSON.stringify({ findings: [] });
+    await reviewDeckCoherence("D", "a", slides);
+    expect(seen[seen.length - 1].user).not.toMatch(/one controlling metaphor/i);
+  });
+});

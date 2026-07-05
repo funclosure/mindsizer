@@ -30,3 +30,25 @@ describe("gatherMaterials", () => {
     expect(m.neighborTitles).toEqual(["B"]);
   });
 });
+
+describe("gatherMaterials — art direction", () => {
+  it("carries direction fields and computes otherInstruments minus self", () => {
+    const ctx: DeckContext = {
+      digest: [], angle: "",
+      direction: { conceit: "a ledger", motif: "ruled lines",
+        roleById: { s_a: "intro", s_b: "formalize" },
+        instrumentById: { s_a: "toggle", s_b: "slider", s_c: "none" } },
+    };
+    const m = gatherMaterials(outline.slides[0], outline, ctx);
+    expect(m.conceit).toBe("a ledger");
+    expect(m.motif).toBe("ruled lines");
+    expect(m.role).toBe("intro");
+    expect(m.instrument).toBe("toggle");
+    expect(m.otherInstruments).toEqual(["slider"]); // s_b's slider; s_c 'none' excluded; self excluded
+  });
+  it("leaves direction fields undefined when the context has none", () => {
+    const m = gatherMaterials(outline.slides[0], outline, { digest: [], angle: "" });
+    expect(m.conceit).toBeUndefined();
+    expect(m.otherInstruments).toBeUndefined();
+  });
+});

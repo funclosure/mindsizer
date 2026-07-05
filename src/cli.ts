@@ -162,7 +162,7 @@ async function runIngest(args: string[]): Promise<void> {
     const sc = sidecarPath(outPath);
     writeFileSync(
       sc,
-      serializeContext({ sourcePath: resolve(input), digest: result.digest, angle: result.angle.label }),
+      serializeContext({ sourcePath: resolve(input), digest: result.digest, angle: result.angle.label, direction: result.direction }),
       "utf8",
     );
     process.stdout.write(`✓ wrote ${sc}\n`);
@@ -389,11 +389,13 @@ async function runReview(args: string[]): Promise<void> {
   let angle = "";
   let sourceExcerpt: string | undefined;
   let sourcePath: string | null = null;
+  let direction: { conceit: string; motif: string } | undefined;
   try {
     const ctx = parseContext(readFileSync(sidecarPath(resolve(input)), "utf8"));
     if (ctx) {
       digest = ctx.digest;
       angle = ctx.angle;
+      if (ctx.direction) direction = { conceit: ctx.direction.conceit, motif: ctx.direction.motif };
       if (ctx.sourcePath) {
         try {
           const full = readFileSync(ctx.sourcePath, "utf8");
@@ -430,6 +432,7 @@ async function runReview(args: string[]): Promise<void> {
       outline.meta.title,
       angle,
       fragments.map((f) => ({ id: f.id, title: outline.slides.find((s) => s.id === f.id)?.title ?? f.id, text: slideText(f.fragment) })),
+      direction,
     );
     const [pool, coherence] = await Promise.all([slidesP, coherenceP]);
     deckFindings = coherence;
