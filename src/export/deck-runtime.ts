@@ -1,6 +1,8 @@
-/** Viewer chrome CSS for the sealed deck: one slide at a time, a fixed 1280x720 stage scaled to fit. */
+/** Viewer chrome CSS for the sealed deck: one slide at a time, a fixed 1280x720 stage scaled to fit.
+    Chrome colors derive from the embedded theme's :root vars (--s-bg/--s-dim/--s-cyan) so the
+    letterbox, counter, and progress bar match any theme; fallbacks are the Field palette. */
 export const DECK_CSS = `
-  html, body { margin: 0; height: 100%; background: #070d16; overflow: hidden; }
+  html, body { margin: 0; height: 100%; background: color-mix(in srgb, var(--s-bg, #0a1a2f) 60%, black); overflow: hidden; }
   body { font-family: "Geist", system-ui, sans-serif; }
   .deck { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
   /* Every slide is a FIXED 1280x720 stage — the exact authoring/render canvas — scaled uniformly
@@ -23,11 +25,11 @@ export const DECK_CSS = `
   .deck-counter {
     position: fixed; right: 18px; bottom: 14px;
     font-family: "Geist Mono", monospace; font-size: 11px;
-    letter-spacing: 0.16em; color: rgba(243, 239, 229, 0.5);
+    letter-spacing: 0.16em; color: var(--s-dim, rgba(243, 239, 229, 0.5));
   }
   .deck-progress {
     position: fixed; left: 0; bottom: 0; height: 2px;
-    background: #4DD9E0; width: 0; transition: width 0.2s ease;
+    background: var(--s-cyan, #4DD9E0); width: 0; transition: width 0.2s ease;
   }
 `;
 
