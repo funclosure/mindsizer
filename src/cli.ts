@@ -355,6 +355,15 @@ async function runReview(args: string[]): Promise<void> {
     fail(`cannot read ${input}`);
   }
   const outline = parseOutline(md);
+  const issues = validateOutline(outline);
+  if (issues.length > 0) {
+    fail(
+      "invalid outline:\n" +
+        issues
+          .map((i) => `  - ${i.slideId ? i.slideId + ": " : ""}${i.message}`)
+          .join("\n"),
+    );
+  }
 
   let theme;
   try {
