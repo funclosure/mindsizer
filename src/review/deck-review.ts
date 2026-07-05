@@ -23,7 +23,10 @@ export async function reviewDeckCoherence(deckTitle: string, angle: string, slid
     slides.map((s, i) => `## Slide ${i + 1} — ${s.title} (${s.id})\n${s.text}`).join("\n\n");
   try {
     return parseValidated(await runQuery(SYSTEM, user, modelFor("review")), CoherenceFindingsSchema).findings;
-  } catch {
+  } catch (e) {
+    // Fail-open so a flaky coherence call never blocks the run — but leave a breadcrumb so a
+    // silent failure is distinguishable from a genuinely coherent deck (which returns [] too).
+    process.stderr.write(`· coherence pass skipped (${(e as Error).message})\n`);
     return [];
   }
 }
