@@ -1,4 +1,4 @@
-import type { ModelClient, DigestResult, Direction } from "./model-client";
+import { INSTRUMENTS, type ModelClient, type DigestResult, type Direction } from "./model-client";
 import type { Prompter } from "./prompter";
 import type { Outline } from "../outline/types";
 import { mintSlideId } from "../outline/id";
@@ -16,6 +16,12 @@ export interface IngestResult {
   pointCount: number;
   angle: Direction;
   digest: string[];
+  direction?: {
+    conceit: string;
+    motif: string;
+    roleById: Record<string, string>;
+    instrumentById: Record<string, string>;
+  };
 }
 
 /** text → digest → direction → outline.md (markdown string). No IO of its own. */
@@ -52,10 +58,38 @@ export async function ingest(
     );
   }
 
+  // Whole-deck art direction — best-effort and GUARDED: a missing method (old clients/fakes) or a
+  // transient failure must NEVER discard the already-validated outline.
+  let direction: IngestResult["direction"];
+  if (deps.model.directArt) {
+    try {
+      const art = await deps.model.directArt(digest, angle, outline.slides.map((s) => s.title));
+      const pool = INSTRUMENTS.filter((x) => x !== "none");
+      const used = new Set<string>();
+      const roleById: Record<string, string> = {};
+      const instrumentById: Record<string, string> = {};
+      outline.slides.forEach((s, i) => {
+        const a = art.slides[i];
+        roleById[s.id] = a?.role ?? "";
+        let inst: string = a?.instrument ?? "none";
+        if (inst !== "none" && used.has(inst)) {
+          const free = pool.find((x) => !used.has(x));
+          if (free) inst = free; // else palette exhausted → accept the repeat
+        }
+        if (inst !== "none") used.add(inst);
+        instrumentById[s.id] = inst;
+      });
+      direction = { conceit: art.conceit, motif: art.motif, roleById, instrumentById };
+    } catch {
+      /* art direction is best-effort — never fatal */
+    }
+  }
+
   return {
     outlineMarkdown: serializeOutline(outline),
     pointCount: digest.keyPoints.length,
     angle,
     digest: digest.keyPoints,
+    direction,
   };
 }
