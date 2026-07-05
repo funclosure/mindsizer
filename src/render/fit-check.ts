@@ -1,6 +1,6 @@
 // src/render/fit-check.ts
 import { chromium, type Browser } from "playwright";
-import { computeOverflow } from "./render-helpers";
+import { horizontalOverflow, resolveOverflow, OVERFLOW_TOLERANCE_PX } from "./render-helpers";
 import { MIN_SLIDE_CHARS, PROBE_MARKERS } from "./content-gate";
 
 // `document` exists only inside page.evaluate() (browser context); typed loosely on purpose.
@@ -64,20 +64,27 @@ export function playwrightRenderer(themeCss: string): SlideRenderer {
     page.on("pageerror", (e) => consoleErrors.push(String(e)));
     try {
       await page.setContent(pageHtml(themeCss, html), { waitUntil: "networkidle" });
+      const measure = () => page.evaluate(() => {
+        const s = document.querySelector("section[data-slide-id]");
+        if (!s) return null;
+        return { sh: s.scrollHeight, ch: s.clientHeight, sw: s.scrollWidth, cw: s.clientWidth };
+      });
+      const resting = await measure(); // authoritative frame, BEFORE any interaction
       const shots: Buffer[] = [await page.screenshot({ type: "png" })];
+      const expandedHoriz: number[] = [];
+      const expandedBeyondFrame: number[] = [];
       for (const step of interactions) {
         if (step.click) await page.click(step.click, { timeout: 2000 }).catch(() => {});
         if (step.press) await page.keyboard.press(step.press).catch(() => {});
         if (step.wait) await page.waitForTimeout(step.wait);
         shots.push(await page.screenshot({ type: "png" }));
+        const em = await measure();
+        if (em) { expandedHoriz.push(horizontalOverflow(em)); expandedBeyondFrame.push(Math.max(0, em.sh - H)); }
       }
-      const m = await page.evaluate(() => {
-        const s = document.querySelector("section[data-slide-id]");
-        if (!s) return null;
-        return { sh: s.scrollHeight, ch: s.clientHeight, sw: s.scrollWidth, cw: s.clientWidth };
-      });
-      const overflowPx = m ? computeOverflow(m) : 0;
-      return { shots, overflowPx, fits: overflowPx <= 2, consoleErrors };
+      const o = resting
+        ? resolveOverflow({ resting, expandedHoriz, expandedBeyondFrame })
+        : { overflowPx: 0, axis: "none" as const, detail: "no slide section found" };
+      return { shots, overflowPx: o.overflowPx, fits: o.overflowPx <= OVERFLOW_TOLERANCE_PX, consoleErrors };
     } finally {
       await page.close();
     }

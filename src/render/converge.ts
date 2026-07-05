@@ -1,4 +1,6 @@
 // src/render/converge.ts
+import { OVERFLOW_TOLERANCE_PX } from "./render-helpers";
+
 export interface Candidate {
   html: string;       // the HTML the model passed to the render tool this pass
   overflowPx: number;
@@ -10,7 +12,7 @@ export const RENDER_PASS_CAP = 4;
 
 /** A render with no overflow (≤2px tolerance) and no console errors is fit-complete. */
 export function isCleanCandidate(c: Candidate): boolean {
-  return c.overflowPx <= 2 && c.consoleErrors === 0;
+  return c.overflowPx <= OVERFLOW_TOLERANCE_PX && c.consoleErrors === 0;
 }
 
 /**
