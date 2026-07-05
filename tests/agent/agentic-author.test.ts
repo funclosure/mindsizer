@@ -58,4 +58,25 @@ describe("agenticAuthor sealing", () => {
     const slide = await author.authorSlide(req);
     expect(slide.html).toContain("typed, never rendered");
   });
+
+  it("short-circuits post-seal renders — renderer runs once, post-seal replies are finalize text", async () => {
+    const renderSpy = vi.fn(async (): Promise<RenderResult> =>
+      ({ shots: [Buffer.from("png")], overflowPx: 0, fits: true, consoleErrors: [] }));
+    const renderer: SlideRenderer = {
+      render: renderSpy,
+      check: async () => ({ fits: true, overflowPx: 0, detail: "fits" }),
+      dispose: async () => {},
+    };
+    script = async (tools) => {
+      const first = await tools.render(CLEAN_HTML); // pass 1 → clean → seals
+      const a = await tools.render(CLEAN_HTML);      // post-seal → short-circuit, no render
+      const b = await tools.render(CLEAN_HTML);      // post-seal → short-circuit, no render
+      expect(first).toEqual({ text: FINALIZE_CLEAN });
+      expect("text" in a && "text" in b).toBe(true);
+      return "DONE";
+    };
+    const slide = await agenticAuthor(renderer).authorSlide(req);
+    expect(renderSpy).toHaveBeenCalledTimes(1); // only the pre-seal render actually ran
+    expect(slide.html).toContain("real content"); // sealed = the first clean candidate
+  });
 });
