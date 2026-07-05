@@ -60,12 +60,14 @@ export function slideReviewer(renderer: Pick<SlideRenderer, "render">): (req: Sl
     const runOnce = async (): Promise<SlideFinding[]> => {
       let renders = 0;
       const tools: AgenticTools = {
-        render: async (html, interactions): Promise<RenderToolResult> => {
+        // Always render the SEALED fragment — never whatever html the model may pass. The brief tells
+        // it to send no html, but this makes "review the shipped slide, not a rewrite" a guarantee, not a hope.
+        render: async (_html, interactions): Promise<RenderToolResult> => {
           if (renders >= REVIEW_RENDER_CAP) {
             return { text: `Render budget reached (${REVIEW_RENDER_CAP}) — write your findings JSON now and do NOT call render again.` };
           }
           renders++;
-          const r = await renderer.render(html, interactions);
+          const r = await renderer.render(req.fragment, interactions);
           return { images: r.shots };
         },
       };
@@ -74,8 +76,12 @@ export function slideReviewer(renderer: Pick<SlideRenderer, "render">): (req: Sl
     };
     try {
       return await runOnce();
-    } catch {
-      return await runOnce(); // one full retry on parse/transport failure; second failure propagates
+    } catch (e1) {
+      try {
+        return await runOnce(); // one full retry on parse/transport failure
+      } catch (e2) {
+        throw new Error(`slide review failed twice — first: ${(e1 as Error).message}; second: ${(e2 as Error).message}`);
+      }
     }
   };
 }

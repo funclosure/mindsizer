@@ -37,6 +37,18 @@ describe("slideReviewer", () => {
     expect(calls[0].user).toContain("the source");
     expect(findings).toHaveLength(1);
     expect(findings[0].check).toBe("visual");
+    expect(renderer.render).toHaveBeenCalledWith(FRAGMENT, [{ click: "#btn" }]);
+  });
+
+  it("renders the sealed fragment even if the model sends different html", async () => {
+    const rc = { render: vi.fn(async () => shot) };
+    script = async (tools) => {
+      await tools.render("<section>a rewrite</section>");
+      return JSON.stringify({ findings: [] });
+    };
+    await slideReviewer(rc)(req);
+    expect(rc.render).toHaveBeenCalledWith(req.fragment, undefined);
+    expect(rc.render).not.toHaveBeenCalledWith("<section>a rewrite</section>", undefined);
   });
 
   it("returns [] for an empty findings payload", async () => {
@@ -64,5 +76,10 @@ describe("slideReviewer", () => {
     script = async () => (++attempt === 1 ? "sorry, here are my thoughts…" : JSON.stringify({ findings: [] }));
     expect(await slideReviewer(renderer)(req)).toEqual([]);
     expect(attempt).toBe(2);
+  });
+
+  it("throws a combined error when both attempts fail", async () => {
+    script = async () => "not json at all";
+    await expect(slideReviewer(renderer)(req)).rejects.toThrow(/failed twice/);
   });
 });
