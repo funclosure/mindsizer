@@ -4,7 +4,7 @@ import { basename, extname, resolve, dirname, join } from "node:path";
 import { parseOutline, serializeOutline, validateOutline } from "./outline/index";
 import { sealDeck, fileSink } from "./export/index";
 import { loadTheme } from "./theme/load";
-import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath, serializeContext } from "./agent/index";
+import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath, serializeContext, PlanParseError } from "./agent/index";
 import { slideJudge } from "./agent/slide-judge";
 import { buildDeck } from "./render/index";
 import { playwrightRenderer, verifyDeck } from "./render/fit-check";
@@ -95,7 +95,7 @@ function runSeal(args: string[]): void {
   }
 }
 
-async function runIngest(args: string[]): Promise<void> {
+async function runIngestLike(args: string[], mode: "ingest" | "plan"): Promise<void> {
   let input: string | undefined;
   let out: string | undefined;
   let angle: string | undefined;
@@ -127,7 +127,7 @@ async function runIngest(args: string[]): Promise<void> {
   }
 
   if (!input)
-    fail("usage: mindsizer ingest <text-file> [--angle <id>] [-o <out.md>] [--yes] [--source <url>] [--source-label <text>]");
+    fail(`usage: mindsizer ${mode} <text-file> [--angle <id>] [-o <out.md>] [--yes] [--source <url>] [--source-label <text>]`);
 
   let text: string;
   try {
@@ -136,19 +136,34 @@ async function runIngest(args: string[]): Promise<void> {
     fail(`cannot read ${input}`);
   }
 
-  process.stdout.write("digesting…\n");
+  process.stdout.write(mode === "plan" ? "digesting + planning…\n" : "digesting…\n");
   const prompter = angle || yes ? fixedPrompter(angle) : terminalPrompter();
   resetUsage();
 
+  const outPath =
+    out ??
+    join(
+      dirname(resolve(input)),
+      basename(input, extname(input)) + (mode === "plan" ? ".plan.md" : ".outline.md"),
+    );
+
   let result: Awaited<ReturnType<typeof ingest>>;
   try {
-    result = await ingest(text, {
-      model: anthropicClient(),
-      prompter,
-      onDigest: (d) =>
-        process.stdout.write(`✓ digested (${d.keyPoints.length} points)\n`),
-    });
+    result = await ingest(
+      text,
+      {
+        model: anthropicClient(),
+        prompter,
+        onDigest: (d) => process.stdout.write(`✓ digested (${d.keyPoints.length} points)\n`),
+      },
+      { plan: mode === "plan" },
+    );
   } catch (e) {
+    if (e instanceof PlanParseError) {
+      const rawPath = outPath.replace(/\.md$/i, "") + ".raw.json";
+      try { writeFileSync(rawPath, JSON.stringify({ raw: e.raw }, null, 2), "utf8"); } catch { /* best effort */ }
+      fail(`${e.message}\n  raw planner reply saved → ${rawPath}`);
+    }
     fail((e as Error).message);
   }
 
@@ -163,12 +178,6 @@ async function runIngest(args: string[]): Promise<void> {
     outlineMarkdown = serializeOutline(o);
   }
 
-  const outPath =
-    out ??
-    join(
-      dirname(resolve(input)),
-      basename(input, extname(input)) + ".outline.md",
-    );
   try {
     writeFileSync(outPath, outlineMarkdown, "utf8");
   } catch {
@@ -189,6 +198,14 @@ async function runIngest(args: string[]): Promise<void> {
     /* sidecar is best-effort; build degrades gracefully without it */
   }
   printCost();
+}
+
+async function runIngest(args: string[]): Promise<void> {
+  return runIngestLike(args, "ingest");
+}
+
+async function runPlan(args: string[]): Promise<void> {
+  return runIngestLike(args, "plan");
 }
 
 /** Print a per-model API-equivalent USD cost line from the usage meter (nothing if empty). */
@@ -494,6 +511,10 @@ function main(argv: string[]): void {
   const args = argv.slice(2);
   if (args[0] === "ingest") {
     void runIngest(args.slice(1));
+    return;
+  }
+  if (args[0] === "plan") {
+    void runPlan(args.slice(1));
     return;
   }
   if (args[0] === "build") {
