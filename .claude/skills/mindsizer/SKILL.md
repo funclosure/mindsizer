@@ -59,7 +59,19 @@ examples/dont-scale.deck.html` (zero setup), or `bun run example` to rebuild it.
 If the user pasted the text or it came from a URL, write it to a `.txt` file (a temp path is
 fine). If they already have a file, use it. mindsizer works on the raw text.
 
-## 2. Ingest → outline
+## 2. Ingest → outline (or `plan` → a richer plan.md)
+
+Two entry points. **Prefer `plan`** — it runs the same digest/angle pipeline on the strongest
+model and additionally writes, per slide, the claim, the mechanism, the comprehension device
+(what the reader operates and what changes), the resting state, and a source anchor:
+
+```bash
+mindsizer plan <source.txt> --yes -o <name>.plan.md
+```
+
+The resulting `plan.md` is the hand-editable contract between planning and visual design. You
+can then EITHER hand it to the harness (`mindsizer build <name>.plan.md`) OR author the slides
+yourself with the `mindsizer-author` skill. The classic `ingest` still exists for the old flow:
 
 `ingest` digests the text, proposes a few teaching *angles* (how to frame the idea), and writes
 a canonical `outline.md` plus a `*.context.json` sidecar (the digest + chosen angle, which the
@@ -98,6 +110,10 @@ slider, a toggle, a dial) when that makes the idea land. Budget **a few minutes 
 Because it's long-running, **run it in the background** and let the user know it's working, rather
 than blocking. When it finishes it writes one self-contained file (`<name>.outline.html` by
 default, or wherever `-o` points) and `--open` opens it.
+
+The same command works unchanged on a `<name>.plan.md`: `mindsizer build <name>.plan.md --open`.
+Add `--resume` to reuse any slides already hand-authored via the `mindsizer-author` skill —
+it fills in only the slides still missing.
 
 ## 4. Hand it back
 

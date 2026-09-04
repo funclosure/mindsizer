@@ -77,7 +77,10 @@ Navigate with **→ / ← / Space**. On interactive slides, click or drag the co
 | Command | What it does |
 | --- | --- |
 | `mindsizer ingest <text-file> [--yes] [-o out.md] [--source <url>] [--source-label <text>]` | Digest text → propose teaching angles (pick interactively, or `--yes` to take the first) → write a canonical `outline.md` + a `*.context.json` sidecar (digest + chosen angle). `--source`/`--source-label` record where the text came from (also editable later as `source:` front-matter — label + url); the sealed deck renders it as a bottom-left attribution link. |
-| `mindsizer build <outline.md> [-o out.html] [--open] [--concurrency <n>]` | The rich path: an agentic author writes a bespoke (often interactive) slide per outline entry, renders + critiques its own work, then seals everything into one offline deck. Slides author **in parallel** (a bounded pool, default 4). |
+| `mindsizer plan <text-file> [--yes] [-o out.plan.md] [--source <url>] [--source-label <text>]` | **Layer 1.** Everything `ingest` does, plus a whole-deck planning pass on the strongest model that writes each slide's *claim · mechanism · device (kind, operate, changes, resting) · aha · data · source* as a ```plan fence, and the deck's `direction` (conceit/motif/arc) in front-matter. The resulting `*.plan.md` is a hand-editable contract any visual layer can implement — the harness (`build`) or a Claude Code session (`mindsizer-author` skill). |
+| `mindsizer brief [--theme <name>]` | Print the author identity brief (genre, 16:9 format, theme aesthetic, output contract) — the shared brief for any Layer 2. |
+| `mindsizer fit <slide.html> [--shot <png>] [--steps <json>] [--theme <name>]` | Render one saved slide section at 1280×720; write the screenshot(s); report overflow + console errors. Exit 0 when clean. |
+| `mindsizer build <outline.md \| plan.md> [-o out.html] [--open] [--concurrency <n>] [--resume] [--theme <name>]` | The rich path: an agentic author writes a bespoke (often interactive) slide per entry, renders + critiques its own work, then seals everything into one offline deck. Slides author **in parallel** (a bounded pool, default 4). Works the same on a `plan.md`; `--resume` reuses any slide already saved under `<stem>.build/slides/<id>.html` (hand-authored or from a prior run) and authors only what's missing. |
 | `mindsizer <outline.md> [-o out.html] [--open]` | The fast, no-LLM path: mechanically render + seal the outline (for `analogy` / `plain` layouts). |
 
 `MINDSIZER_MODEL` overrides the model (default `claude-opus-4-8`). `MINDSIZER_CONCURRENCY` sets how many slides author at once (default 4; `--concurrency`/`-c` overrides it; `1` = sequential).
@@ -85,6 +88,11 @@ Navigate with **→ / ← / Space**. On interactive slides, click or drag the co
 ---
 
 ## How it works
+
+mindsizer is two layers with one file between them:
+
+- **Layer 1 — planning** (`plan`, Fable 5.1): digest → angle → outline → art direction → per-slide plan. Owns the *claim*, the *mechanism*, the *comprehension device*, the *resting state*, the *data*, the *source anchor*. Output: `x.plan.md`.
+- **Layer 2 — visual design + implementation**: composition, hierarchy, how the figure is drawn, how a control looks, render-and-fix. Either the built-in harness (`build`) or a Claude Code session (the `mindsizer-author` skill, using `brief` for identity and `fit` for eyes) — both seal through the same `build --resume`.
 
 ```
 text ──▶ ingest ──▶ outline.md  +  *.context.json
