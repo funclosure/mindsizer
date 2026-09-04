@@ -43,7 +43,7 @@ export function gatherMaterials(
     neighborTitles,
     conceit: fm?.conceit || dir?.conceit,
     motif: fm?.motif || dir?.motif,
-    arc: fm?.arc || undefined,
+    arc: fm?.arc,
     role: dir?.roleById?.[slide.id],
     instrument: dir?.instrumentById?.[slide.id],
     otherInstruments,

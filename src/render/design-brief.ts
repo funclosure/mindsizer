@@ -93,7 +93,7 @@ export function slideAuthorPrompt(req: AuthorRequest, aesthetic?: string): Autho
     (materials.sourceExcerpt
       ? `Relevant source excerpt for THIS slide:\n${materials.sourceExcerpt}\n`
       : "") +
-    (materials.conceit ? `\nControlling metaphor for the deck (art direction — advisory): ${materials.conceit}\n` : "") +
+    (materials.conceit ? `\nControlling metaphor for the deck: ${materials.conceit}\n` : "") +
     (materials.motif ? `Shared visual motif: ${materials.motif}\n` : "") +
     (materials.arc ? `Deck argument arc (how the whole piece moves): ${materials.arc}\n` : "") +
     // Per-slide art direction is ADVISORY and pre-plan: when a plan is present the plan governs

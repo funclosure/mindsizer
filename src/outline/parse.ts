@@ -34,7 +34,11 @@ function parseSource(raw: unknown): DeckMeta["source"] {
 /** A ```plan fence at the very end of a slide body (CRLF-tolerant). */
 const PLAN_FENCE_RE = /\n*```plan[ \t]*\r?\n([\s\S]*?)\r?\n```[ \t]*\r?$/;
 
-/** A ```plan fence opener anywhere in the body — used to catch one the trailing rule missed. */
+/**
+ * A ```plan fence opener anywhere in the body — used to catch one the trailing rule missed.
+ * Deliberately over-triggers: a fence merely QUOTED in prose (or nested in a wider fence) also
+ * raises planError. Losing a real plan silently is the worse failure, so we accept the noise.
+ */
 const ANY_PLAN_FENCE_RE = /(?:^|\n)[ \t]*```plan[ \t]*\r?$/m;
 
 /** Front-matter `direction` → PlanDirection, or undefined when absent/incomplete. */
