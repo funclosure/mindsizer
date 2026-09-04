@@ -161,8 +161,15 @@ async function runIngestLike(args: string[], mode: "ingest" | "plan"): Promise<v
   } catch (e) {
     if (e instanceof PlanParseError) {
       const rawPath = outPath.replace(/\.md$/i, "") + ".raw.json";
-      try { writeFileSync(rawPath, JSON.stringify({ raw: e.raw }, null, 2), "utf8"); } catch { /* best effort */ }
-      fail(`${e.message}\n  raw planner reply saved → ${rawPath}`);
+      let saved = false;
+      try {
+        writeFileSync(rawPath, JSON.stringify({ raw: e.raw }, null, 2), "utf8");
+        saved = true;
+      } catch { /* best effort — the planner error below is what matters */ }
+      fail(
+        `${e.message}\n  ` +
+          (saved ? `raw planner reply saved → ${rawPath}` : `could not save the raw planner reply to ${rawPath}`),
+      );
     }
     fail((e as Error).message);
   }
