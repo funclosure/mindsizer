@@ -99,4 +99,19 @@ describe("slideAuthorPrompt — slide plan", () => {
   it("has no plan block without a plan", () => {
     expect(slideAuthorPrompt(req).user).not.toContain("## Slide plan");
   });
+  it("renders a minimal figure device cleanly without optional fields", () => {
+    const minimalPlan = {
+      claim: "Figures illustrate the idea.",
+      mechanism: "illustration = visual clarity",
+      device: { kind: "figure" as const, resting: "a diagram" },
+    };
+    const u = slideAuthorPrompt({ ...req, materials: { ...req.materials, plan: minimalPlan } }).user;
+    expect(u).toContain("## Slide plan");
+    expect(u).toContain("Device: figure");
+    expect(u).not.toContain("Device: figure —"); // no trailing dash
+    expect(u).not.toContain("undefined");
+    expect(u).not.toContain("Aha:");
+    expect(u).not.toContain("Data (draw from this");
+    expect(u).not.toContain("Source anchor:");
+  });
 });

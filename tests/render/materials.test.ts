@@ -70,4 +70,11 @@ describe("gatherMaterials — plan", () => {
     const ctx: DeckContext = { digest: [], angle: "", direction: { conceit: "sc", motif: "sc", roleById: {}, instrumentById: {} } };
     expect(gatherMaterials(o.slides[0], o, ctx).conceit).toBe("sc");
   });
+  it("falls back to front-matter when sidecar has empty-string conceit/motif", () => {
+    const o: Outline = { ...outline, meta: { ...outline.meta, direction: { conceit: "fm-conceit", motif: "fm-motif", arc: "x" } } };
+    const ctx: DeckContext = { digest: [], angle: "", direction: { conceit: "", motif: "", roleById: {}, instrumentById: {} } };
+    const m = gatherMaterials(o.slides[0], o, ctx);
+    expect(m.conceit).toBe("fm-conceit");
+    expect(m.motif).toBe("fm-motif");
+  });
 });
