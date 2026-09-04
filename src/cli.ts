@@ -6,7 +6,7 @@ import { sealDeck, fileSink } from "./export/index";
 import { loadTheme } from "./theme/load";
 import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath, serializeContext, PlanParseError } from "./agent/index";
 import { slideJudge } from "./agent/slide-judge";
-import { buildDeck } from "./render/index";
+import { buildDeck, identityBrief } from "./render/index";
 import { playwrightRenderer, verifyDeck } from "./render/fit-check";
 import { hasUsableSection } from "./outline/inject";
 import { resetUsage, snapshotUsage } from "./agent/usage-meter";
@@ -223,6 +223,27 @@ function printCost(): void {
   const parts = entries.map(([m, u]) => `${label(m)} ${fmtUsd(costUsd(u, m))}`);
   const total = entries.reduce((s, [m, u]) => s + costUsd(u, m), 0);
   process.stdout.write(`  cost (API-equiv · est):  ~${fmtUsd(total)} — ${parts.join(" · ")}\n`);
+}
+
+/** Print the author system prompt (genre + format + theme aesthetic + contract) — the shared identity for any Layer 2. */
+function runBrief(args: string[]): void {
+  let themeName = "field";
+  for (let k = 0; k < args.length; k++) {
+    const a = args[k];
+    if (a === "--theme") {
+      themeName = args[++k];
+      if (!themeName) fail("--theme requires a name");
+    } else {
+      fail(`unknown option ${a}`);
+    }
+  }
+  let theme;
+  try {
+    theme = loadTheme(themeName);
+  } catch (e) {
+    fail((e as Error).message);
+  }
+  process.stdout.write(identityBrief(theme.brief) + "\n");
 }
 
 async function runBuild(args: string[]): Promise<void> {
@@ -530,6 +551,10 @@ function main(argv: string[]): void {
   }
   if (args[0] === "review") {
     void runReview(args.slice(1));
+    return;
+  }
+  if (args[0] === "brief") {
+    runBrief(args.slice(1));
     return;
   }
   runSeal(args);
