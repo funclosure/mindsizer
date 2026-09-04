@@ -1,5 +1,7 @@
 import matter from "gray-matter";
-import type { DeckMeta, Outline, OutlineSlide } from "./types";
+import * as yaml from "js-yaml";
+import type { DeckMeta, Outline, OutlineSlide, SlidePlan } from "./types";
+import { PlanDirectionSchema } from "./plan";
 
 const SLIDE_META_RE = /<!--\s*slide\s+([^>]*?)\s*-->/;
 const HEADING_RE = /^#\s+(.+?)\s*$/m;
@@ -29,15 +31,46 @@ function parseSource(raw: unknown): DeckMeta["source"] {
   return undefined;
 }
 
+/** A ```plan fence at the very end of a slide body. */
+const PLAN_FENCE_RE = /\n*```plan[ \t]*\n([\s\S]*?)\n```[ \t]*$/;
+
+/** Front-matter `direction` → PlanDirection, or undefined when absent/incomplete. */
+function parseDirection(raw: unknown): DeckMeta["direction"] {
+  const r = PlanDirectionSchema.safeParse(raw);
+  return r.success ? r.data : undefined;
+}
+
+/**
+ * Lift a trailing ```plan fence out of a slide body. Returns the body without the fence and
+ * the parsed plan — or, when the fence isn't valid YAML / not a mapping, the ORIGINAL body
+ * (fence kept, so serialize round-trips) plus a planError. Shape validation is validate.ts's job.
+ */
+function liftPlan(body: string): { markdown: string; plan?: SlidePlan; planError?: string } {
+  const m = body.match(PLAN_FENCE_RE);
+  if (!m) return { markdown: body };
+  let value: unknown;
+  try {
+    value = yaml.load(m[1]);
+  } catch (e) {
+    return { markdown: body, planError: `plan fence is not valid YAML: ${(e as Error).message.split("\n")[0]}` };
+  }
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return { markdown: body, planError: "plan fence must be a YAML mapping" };
+  }
+  return { markdown: body.slice(0, m.index).trim(), plan: value as SlidePlan };
+}
+
 /** Parse a Marp-style outline.md into the canonical Outline model. */
 export function parseOutline(md: string): Outline {
   const { data, content } = matter(md);
   const source = parseSource(data.source);
+  const direction = parseDirection(data.direction);
   const meta: DeckMeta = {
     title: String(data.title ?? ""),
     purpose: "teach",
     theme: String(data.theme ?? "field"),
     ...(source && { source }),
+    ...(direction && { direction }),
   };
 
   // gray-matter has stripped the leading frontmatter, so remaining
@@ -64,7 +97,15 @@ export function parseOutline(md: string): Outline {
       ? afterMeta.slice(headingMatch.index! + headingMatch[0].length)
       : afterMeta;
 
-    return { id, layout, title, markdown: body.trim() };
+    const lifted = liftPlan(body.trim());
+    return {
+      id,
+      layout,
+      title,
+      markdown: lifted.markdown,
+      ...(lifted.plan && { plan: lifted.plan }),
+      ...(lifted.planError && { planError: lifted.planError }),
+    };
   });
 
   return { meta, slides };
