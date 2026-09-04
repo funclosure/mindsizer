@@ -76,9 +76,12 @@ Rules that matter:
   read 0 at load time (`getBoundingClientRect`/`offsetWidth` return 0 for a hidden slide) —
   never measure on load; compute inside event handlers, or use fixed SVG `viewBox` coordinates
   instead of measuring the DOM.
-- Any `<script>` must reference the slide's own id somewhere in its source (the harness rejects
-  a script that doesn't) — scope every DOM query under `#s_xxxxxxxx` so it can never touch
-  another slide.
+- Any `<script>` must reference the slide's own id somewhere in its source, and every DOM query
+  must be scoped under `#s_xxxxxxxx`. **Nothing will catch this for you:** the harness only
+  *warns* about an unscoped script when it authors a slide itself, and a slide you hand-wrote and
+  sealed with `--resume` skips that check entirely. So an unscoped selector passes `fit`, passes
+  `--resume`, and ships — then silently rewires or breaks the other slides in the deck, which all
+  live in the same document.
 - Figures: inline `<svg>` with `viewBox`, labelled arrows, `currentColor`; draw the mechanism.
 - Quantitative? Use the plan's `data` verbatim. No invented numbers.
 - No external images/fonts/@import; fonts are provided by the theme.
@@ -94,8 +97,9 @@ mindsizer fit … --steps '[{"click":"#s_x .crank","wait":300}]'                
 Pass `--theme <name>` matching the deck's theme (`field` is the default and needs no flag) —
 `fit` renders against a single theme's CSS, so checking against the wrong theme can hide real
 overflow or show fake overflow. It writes a PNG next to the file (`--shot <path>` to redirect)
-and prints `overflow: Npx · console errors: N · CLEAN|NOT CLEAN`, exiting 0 when clean and 1
-when not. Read the PNG. Fix overflow, dead space, weak hierarchy, off-brand styling; re-run.
+and prints `overflow: Npx · console errors: N · CLEAN|NOT CLEAN`. Exit codes: **0** clean, **1**
+overflow or console errors, **2** the file has no usable `<section data-slide-id="…">` (the id
+must match the filename stem — a 2 means fix the file, not the design). Read the PNG. Fix overflow, dead space, weak hierarchy, off-brand styling; re-run.
 Stop the moment it's CLEAN — extra passes tend to make slides worse.
 
 ## 4. Seal

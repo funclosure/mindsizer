@@ -4,7 +4,7 @@ import { modelFor } from "../../src/agent/models";
 describe("modelFor", () => {
   it("returns judgment-matched defaults per role", () => {
     expect(modelFor("author", {})).toEqual({ model: "claude-opus-4-8", effort: "medium" });
-    expect(modelFor("ingest", {})).toEqual({ model: "claude-fable-5-1", effort: "high" });
+    expect(modelFor("ingest", {})).toEqual({ model: "claude-opus-4-8", effort: "high" });
     expect(modelFor("judge", {})).toEqual({ model: "claude-haiku-4-5-20251001", effort: "low" });
   });
   it("per-role env overrides model + effort", () => {

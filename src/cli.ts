@@ -473,6 +473,13 @@ async function runReview(args: string[]): Promise<void> {
   } catch {
     process.stdout.write("· no context sidecar — reviewing visuals + interactions + coherence only\n");
   }
+  // Same precedence as gatherMaterials: plan.md front-matter `direction` WINS over the sidecar's
+  // art direction for conceit/motif, so a hand-written or sidecar-less plan.md still reviews
+  // against its stated controlling metaphor.
+  const fmDir = outline.meta.direction;
+  const conceit = fmDir?.conceit || direction?.conceit;
+  const motif = fmDir?.motif || direction?.motif;
+  direction = conceit && motif ? { conceit, motif } : direction;
 
   process.stdout.write(`reviewing ${outline.slides.length} slides… (model: ${modelFor("review").model})\n`);
   resetUsage();

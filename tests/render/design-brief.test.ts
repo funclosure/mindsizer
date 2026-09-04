@@ -76,6 +76,31 @@ describe("slideAuthorPrompt — art direction", () => {
   it("omits the art-direction lines when absent", () => {
     expect(slideAuthorPrompt(req).user).not.toMatch(/controlling metaphor/i);
   });
+  it("drops the per-slide art direction when a plan governs the slide", () => {
+    const u = slideAuthorPrompt({
+      ...req,
+      materials: {
+        ...req.materials,
+        conceit: "a ledger", motif: "ruled lines",
+        role: "introduce the tension", instrument: "toggle", otherInstruments: ["slider"],
+        plan: { claim: "c", mechanism: "m", device: { kind: "figure" as const, resting: "r" } },
+      },
+    }).user;
+    expect(u).not.toContain("Suggested interaction");
+    expect(u).not.toContain("introduce the tension");
+    expect(u).toContain("a ledger");      // deck-level direction still rides along
+    expect(u).toContain("ruled lines");
+  });
+});
+
+describe("slideAuthorPrompt — deck arc", () => {
+  it("adds one deck-level arc line when present", () => {
+    const u = slideAuthorPrompt({ ...req, materials: { ...req.materials, arc: "tension → mechanism → payoff" } }).user;
+    expect(u).toContain("Deck argument arc (how the whole piece moves): tension → mechanism → payoff");
+  });
+  it("omits the arc line when absent", () => {
+    expect(slideAuthorPrompt(req).user).not.toContain("Deck argument arc");
+  });
 });
 
 describe("slideAuthorPrompt — slide plan", () => {

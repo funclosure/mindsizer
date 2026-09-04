@@ -61,13 +61,18 @@ fine). If they already have a file, use it. mindsizer works on the raw text.
 
 ## 2. Ingest → outline (or `plan` → a richer plan.md)
 
-Two entry points. **Prefer `plan`** — it runs the same digest/angle pipeline on the strongest
-model and additionally writes, per slide, the claim, the mechanism, the comprehension device
+Two entry points. **Prefer `plan`** — it runs the same digest/angle pipeline at high effort
+and additionally writes, per slide, the claim, the mechanism, the comprehension device
 (what the reader operates and what changes), the resting state, and a source anchor:
 
 ```bash
 mindsizer plan <source.txt> --yes -o <name>.plan.md
 ```
+
+Planning (the `INGEST` role, shared by `plan` and `ingest`) defaults to `claude-opus-4-8` at
+`high` effort. To run it on the strongest model instead — only where that model is available to
+the session — prefix the command with `MINDSIZER_INGEST_MODEL=claude-fable-5-1`. If it isn't
+available, mindsizer stops with a clear error naming the model rather than writing an empty plan.
 
 The resulting `plan.md` is the hand-editable contract between planning and visual design. You
 can then EITHER hand it to the harness (`mindsizer build <name>.plan.md`) OR author the slides

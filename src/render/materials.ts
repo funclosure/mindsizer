@@ -6,8 +6,9 @@ export interface SlideMaterials {
   angle: string;
   sourceExcerpt?: string;
   neighborTitles: string[];
-  conceit?: string;         // whole-deck controlling metaphor (art direction)
-  motif?: string;           // shared visual motif
+  conceit?: string;         // whole-deck controlling metaphor (plan front-matter wins, art direction falls back)
+  motif?: string;           // shared visual motif (same precedence)
+  arc?: string;             // deck-level argument arc (plan front-matter only — art direction has no equivalent)
   role?: string;            // this slide's job in the deck
   instrument?: string;      // assigned interaction from the palette
   otherInstruments?: string[]; // instruments already claimed by other slides (vary from these)
@@ -25,7 +26,11 @@ export function gatherMaterials(
     .filter((_, i) => i === idx - 1 || i === idx + 1)
     .map((s) => s.title);
   const dir = ctx?.direction;
-  const fm = outline.meta.direction; // plan.md front-matter — fallback when the sidecar has none
+  // Precedence: plan.md front-matter WINS over the sidecar's art direction for conceit/motif —
+  // the planning call runs later and sees more, and plan.md is the hand-editable contract, so an
+  // edited `direction:` must take effect. `role`/`instrument` have no front-matter equivalent and
+  // always come from the sidecar.
+  const fm = outline.meta.direction;
   const otherInstruments = dir
     ? Object.entries(dir.instrumentById)
         .filter(([id, v]) => id !== slide.id && v && v !== "none")
@@ -36,8 +41,9 @@ export function gatherMaterials(
     angle: ctx?.angle ?? "",
     sourceExcerpt: ctx?.perSlideExcerpt?.[slide.id],
     neighborTitles,
-    conceit: dir?.conceit || fm?.conceit,
-    motif: dir?.motif || fm?.motif,
+    conceit: fm?.conceit || dir?.conceit,
+    motif: fm?.motif || dir?.motif,
+    arc: fm?.arc || undefined,
     role: dir?.roleById?.[slide.id],
     instrument: dir?.instrumentById?.[slide.id],
     otherInstruments,

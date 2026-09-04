@@ -13,7 +13,8 @@ export class EmptyReplyError extends Error {
   constructor(public readonly model: string) {
     super(
       `model "${model}" returned no output — is that model available to your session? ` +
-        `Check the id, or override it (e.g. MINDSIZER_INGEST_MODEL=claude-opus-4-8).`,
+        `Check the id, or override it for the failing role with MINDSIZER_<ROLE>_MODEL ` +
+        `(ROLE = INGEST | AUTHOR | JUDGE | REVIEW), e.g. MINDSIZER_INGEST_MODEL=claude-opus-4-8.`,
     );
     this.name = "EmptyReplyError";
   }

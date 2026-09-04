@@ -67,6 +67,36 @@ describe("parseOutline — plan fence + direction", () => {
     expect(s.plan).toBeUndefined();
     expect(s.planError).toMatch(/mapping/i);
   });
+  it("flags a plan fence that is not the last block instead of dropping it silently", () => {
+    const trailing = PLAN_MD.replace(
+      "aha: release early → zero\n```\n",
+      "aha: release early → zero\n```\n\nNote to self: tighten this later.\n",
+    );
+    const s = parseOutline(trailing).slides[0];
+    expect(s.plan).toBeUndefined();
+    expect(s.planError).toMatch(/last block/i);
+    expect(s.markdown).toContain("```plan"); // fence preserved so serialize round-trips
+  });
+  it("flags an unterminated plan fence rather than parsing plan-less", () => {
+    const s = parseOutline("<!-- slide id=s_a -->\n# T\n\nbody\n\n```plan\nclaim: x\n").slides[0];
+    expect(s.plan).toBeUndefined();
+    expect(s.planError).toMatch(/last block/i);
+  });
+  it("lifts a plan fence from a CRLF-line-ending file", () => {
+    const o = parseOutline(PLAN_MD.replace(/\n/g, "\r\n"));
+    expect(o.meta.direction?.conceit).toBe("hand-cranking an engine");
+    expect(o.slides).toHaveLength(2);
+    const s = o.slides[0];
+    expect(s.planError).toBeUndefined();
+    expect(s.plan?.claim).toBe("Founders supply the momentum by hand.");
+    expect(s.plan?.device.operate).toBe("drag a crank");
+    expect(s.markdown).not.toContain("```plan");
+  });
+  it("stays plan-less and error-free for a plain outline with no fence at all", () => {
+    const s = parseOutline("<!-- slide id=s_a -->\n# T\n\n- a bullet\n").slides[0];
+    expect(s.plan).toBeUndefined();
+    expect(s.planError).toBeUndefined();
+  });
   it("does not parse direction without conceit + motif + arc", () => {
     const o = parseOutline(PLAN_MD.replace("  arc: force → resist → catch\n", ""));
     expect(o.meta.direction).toBeUndefined();

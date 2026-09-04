@@ -31,8 +31,11 @@ function parseSource(raw: unknown): DeckMeta["source"] {
   return undefined;
 }
 
-/** A ```plan fence at the very end of a slide body. */
-const PLAN_FENCE_RE = /\n*```plan[ \t]*\n([\s\S]*?)\n```[ \t]*$/;
+/** A ```plan fence at the very end of a slide body (CRLF-tolerant). */
+const PLAN_FENCE_RE = /\n*```plan[ \t]*\r?\n([\s\S]*?)\r?\n```[ \t]*\r?$/;
+
+/** A ```plan fence opener anywhere in the body — used to catch one the trailing rule missed. */
+const ANY_PLAN_FENCE_RE = /(?:^|\n)[ \t]*```plan[ \t]*\r?$/m;
 
 /** Front-matter `direction` → PlanDirection, or undefined when absent/incomplete. */
 function parseDirection(raw: unknown): DeckMeta["direction"] {
@@ -47,10 +50,16 @@ function parseDirection(raw: unknown): DeckMeta["direction"] {
  */
 function liftPlan(body: string): { markdown: string; plan?: SlidePlan; planError?: string } {
   const m = body.match(PLAN_FENCE_RE);
-  if (!m) return { markdown: body };
+  if (!m) {
+    // A fence that isn't the LAST block would otherwise vanish silently — indistinguishable from
+    // "there was never a plan". Say so instead; validateOutline surfaces it, naming the slide.
+    return ANY_PLAN_FENCE_RE.test(body)
+      ? { markdown: body, planError: "plan fence must be the last block in the slide" }
+      : { markdown: body };
+  }
   let value: unknown;
   try {
-    value = yaml.load(m[1]);
+    value = yaml.load(m[1].replace(/\r\n?/g, "\n"));
   } catch (e) {
     return { markdown: body, planError: `plan fence is not valid YAML: ${(e as Error).message.split("\n")[0]}` };
   }
@@ -77,7 +86,7 @@ export function parseOutline(md: string): Outline {
   // `---` lines are slide separators — but only when immediately followed
   // by a slide comment. A `---` thematic break inside a body is preserved.
   const blocks = content
-    .split(/\n[ \t]*-{3,}[ \t]*\n(?=\s*<!--\s*slide\b)/)
+    .split(/\r?\n[ \t]*-{3,}[ \t]*\r?\n(?=\s*<!--\s*slide\b)/)
     .map((b) => b.trim())
     .filter((b) => b.length > 0);
 

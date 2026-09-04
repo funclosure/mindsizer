@@ -95,11 +95,16 @@ export function slideAuthorPrompt(req: AuthorRequest, aesthetic?: string): Autho
       : "") +
     (materials.conceit ? `\nControlling metaphor for the deck (art direction — advisory): ${materials.conceit}\n` : "") +
     (materials.motif ? `Shared visual motif: ${materials.motif}\n` : "") +
-    (materials.role ? `This slide's job in the deck (don't duplicate other slides): ${materials.role}\n` : "") +
-    (materials.instrument && materials.instrument !== "none"
-      ? `Suggested interaction: a ${materials.instrument}` +
-        (materials.otherInstruments?.length ? ` — vary from instruments already used elsewhere (${materials.otherInstruments.join(", ")})` : "") + `\n`
-      : "") +
+    (materials.arc ? `Deck argument arc (how the whole piece moves): ${materials.arc}\n` : "") +
+    // Per-slide art direction is ADVISORY and pre-plan: when a plan is present the plan governs
+    // this slide's role and device, so suggesting a different interaction would contradict it.
+    (materials.plan
+      ? ""
+      : (materials.role ? `This slide's job in the deck (don't duplicate other slides): ${materials.role}\n` : "") +
+        (materials.instrument && materials.instrument !== "none"
+          ? `Suggested interaction: a ${materials.instrument}` +
+            (materials.otherInstruments?.length ? ` — vary from instruments already used elsewhere (${materials.otherInstruments.join(", ")})` : "") + `\n`
+          : "")) +
     (req.repair
       ? `\n## Previous attempt REJECTED — repair it\n` +
         `The content gate rejected a previous attempt at this slide — reason: ${req.repair.reason}.\n` +
