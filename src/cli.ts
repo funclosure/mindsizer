@@ -7,7 +7,7 @@ import { loadTheme } from "./theme/load";
 import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath, serializeContext, PlanParseError } from "./agent/index";
 import { slideJudge } from "./agent/slide-judge";
 import { buildDeck, identityBrief } from "./render/index";
-import { playwrightRenderer, verifyDeck } from "./render/fit-check";
+import { playwrightRenderer, verifyDeck, type Interaction } from "./render/fit-check";
 import { hasUsableSection } from "./outline/inject";
 import { resetUsage, snapshotUsage } from "./agent/usage-meter";
 import { costUsd, fmtUsd } from "./agent/pricing";
@@ -535,6 +535,80 @@ async function runReview(args: string[]): Promise<void> {
   if (hasHigh(run)) process.exitCode = 1;
 }
 
+/** Layer-2 eyes: render one saved slide section at 1280×720 and report overflow + console errors. */
+async function runFit(args: string[]): Promise<void> {
+  let input: string | undefined;
+  let shot: string | undefined;
+  let stepsRaw: string | undefined;
+  let themeName = "field";
+  for (let k = 0; k < args.length; k++) {
+    const a = args[k];
+    if (a === "--shot") {
+      shot = args[++k];
+      if (!shot) fail("--shot requires a path");
+    } else if (a === "--steps") {
+      stepsRaw = args[++k];
+      if (stepsRaw === undefined) fail("--steps requires a JSON array");
+    } else if (a === "--theme") {
+      themeName = args[++k];
+      if (!themeName) fail("--theme requires a name");
+    } else if (a.startsWith("-")) {
+      fail(`unknown option ${a}`);
+    } else {
+      input ??= a;
+    }
+  }
+  if (!input) fail("usage: mindsizer fit <slide.html> [--shot <png>] [--steps '<json array>'] [--theme <name>]");
+
+  let html: string;
+  try {
+    html = readFileSync(resolve(input), "utf8");
+  } catch {
+    fail(`cannot read ${input}`);
+  }
+  // the section id is the file stem by convention (<stem>.build/slides/<id>.html)
+  const id = basename(input, extname(input));
+  if (!hasUsableSection(html, id)) {
+    process.stderr.write(`error: no <section data-slide-id="${id}"> in ${input} (exactly one is required)\n`);
+    process.exit(2);
+  }
+
+  let steps: Interaction[] = [];
+  if (stepsRaw !== undefined) {
+    try {
+      const v = JSON.parse(stepsRaw);
+      if (!Array.isArray(v)) throw new Error();
+      steps = v as Interaction[];
+    } catch {
+      fail("--steps must be a JSON array of {click?, press?, wait?}");
+    }
+  }
+
+  let theme;
+  try {
+    theme = loadTheme(themeName);
+  } catch (e) {
+    fail((e as Error).message);
+  }
+
+  const shotPath = shot ?? resolve(input).replace(/\.html$/i, "") + ".png";
+  const renderer = playwrightRenderer(theme.fontFaceCss + "\n" + theme.css);
+  try {
+    const r = await renderer.render(html, steps);
+    r.shots.forEach((png, i) => {
+      const p = i === 0 ? shotPath : shotPath.replace(/\.png$/i, "") + `-${i}.png`;
+      writeFileSync(p, png);
+      process.stdout.write(`${i === 0 ? "resting" : `after step ${i}`} → ${p}\n`);
+    });
+    const clean = r.fits && r.consoleErrors.length === 0;
+    process.stdout.write(`overflow: ${r.overflowPx}px · console errors: ${r.consoleErrors.length} · ${clean ? "CLEAN" : "NOT CLEAN"}\n`);
+    for (const e of r.consoleErrors) process.stdout.write(`  ! ${e}\n`);
+    if (!clean) process.exitCode = 1;
+  } finally {
+    await renderer.dispose().catch(() => {});
+  }
+}
+
 function main(argv: string[]): void {
   const args = argv.slice(2);
   if (args[0] === "ingest") {
@@ -555,6 +629,10 @@ function main(argv: string[]): void {
   }
   if (args[0] === "brief") {
     runBrief(args.slice(1));
+    return;
+  }
+  if (args[0] === "fit") {
+    void runFit(args.slice(1));
     return;
   }
   runSeal(args);
