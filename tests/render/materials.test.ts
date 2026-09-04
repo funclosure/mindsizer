@@ -52,3 +52,22 @@ describe("gatherMaterials — art direction", () => {
     expect(m.otherInstruments).toBeUndefined();
   });
 });
+
+describe("gatherMaterials — plan", () => {
+  const plan = { claim: "c", mechanism: "m", device: { kind: "figure" as const, resting: "r" } };
+  it("forwards slide.plan", () => {
+    const o: Outline = { ...outline, slides: [{ ...outline.slides[0], plan }, outline.slides[1], outline.slides[2]] };
+    expect(gatherMaterials(o.slides[0], o, undefined).plan).toEqual(plan);
+  });
+  it("falls back to front-matter direction for conceit/motif when the sidecar has none", () => {
+    const o: Outline = { ...outline, meta: { ...outline.meta, direction: { conceit: "fm-conceit", motif: "fm-motif", arc: "x" } } };
+    const m = gatherMaterials(o.slides[0], o, { digest: [], angle: "" });
+    expect(m.conceit).toBe("fm-conceit");
+    expect(m.motif).toBe("fm-motif");
+  });
+  it("prefers sidecar direction over front-matter", () => {
+    const o: Outline = { ...outline, meta: { ...outline.meta, direction: { conceit: "fm", motif: "fm", arc: "x" } } };
+    const ctx: DeckContext = { digest: [], angle: "", direction: { conceit: "sc", motif: "sc", roleById: {}, instrumentById: {} } };
+    expect(gatherMaterials(o.slides[0], o, ctx).conceit).toBe("sc");
+  });
+});

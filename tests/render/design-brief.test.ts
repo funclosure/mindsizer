@@ -77,3 +77,26 @@ describe("slideAuthorPrompt — art direction", () => {
     expect(slideAuthorPrompt(req).user).not.toMatch(/controlling metaphor/i);
   });
 });
+
+describe("slideAuthorPrompt — slide plan", () => {
+  const plan = {
+    claim: "Founders supply momentum by hand.",
+    mechanism: "growth = push + momentum",
+    device: { kind: "instrument" as const, operate: "drag a crank", changes: "curve splits", resting: "crank at 40%" },
+    aha: "release early → zero",
+    data: "m(t)=m(t-1)*(1+r)",
+    source: "you have to go out and get them",
+  };
+  it("renders every plan field and tells the author to implement, not re-plan", () => {
+    const p = slideAuthorPrompt({ ...req, materials: { ...req.materials, plan } });
+    expect(p.user).toContain("## Slide plan");
+    for (const s of ["Founders supply momentum", "growth = push", "instrument", "drag a crank", "curve splits", "crank at 40%", "release early", "m(t)=", "go out and get them"]) {
+      expect(p.user).toContain(s);
+    }
+    expect(p.user).toMatch(/implement this plan/i);
+    expect(p.user.indexOf("## Slide plan")).toBeLessThan(p.user.indexOf("Slide content (markdown)"));
+  });
+  it("has no plan block without a plan", () => {
+    expect(slideAuthorPrompt(req).user).not.toContain("## Slide plan");
+  });
+});

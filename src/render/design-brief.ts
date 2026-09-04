@@ -1,5 +1,5 @@
 // src/render/design-brief.ts
-import type { OutlineSlide } from "../outline/types";
+import type { OutlineSlide, SlidePlan } from "../outline/types";
 import type { SlideMaterials } from "./materials";
 
 /** A content-gate rejection to seed the next authoring attempt (repair, don't redesign). */
@@ -56,6 +56,24 @@ export function identityBrief(aesthetic: string = FIELD_AESTHETIC): string {
   ].join("\n");
 }
 
+/** The Layer-1 plan, rendered for the author. Present only for plan.md builds. */
+function planBlock(p: SlidePlan): string {
+  const d = p.device;
+  return [
+    "## Slide plan (from the planning layer — IMPLEMENT THIS PLAN, do not re-plan)",
+    `Claim: ${p.claim}`,
+    `Mechanism: ${p.mechanism}`,
+    `Device: ${d.kind}` +
+      (d.operate ? ` — the reader operates: ${d.operate}` : "") +
+      (d.changes ? ` — what visibly changes: ${d.changes}` : ""),
+    `Resting state (must read alone): ${d.resting}`,
+    ...(p.aha ? [`Aha: ${p.aha}`] : []),
+    ...(p.data ? [`Data (draw from this, never invent): ${p.data}`] : []),
+    ...(p.source ? [`Source anchor: ${p.source}`] : []),
+    "",
+  ].join("\n");
+}
+
 export function slideAuthorPrompt(req: AuthorRequest, aesthetic?: string): AuthorPrompt {
   const { slide, deck, materials } = req;
   const digest = materials.digest.length
@@ -69,6 +87,7 @@ export function slideAuthorPrompt(req: AuthorRequest, aesthetic?: string): Autho
     `SLIDE_ID: ${slide.id}\n` +
     `Slide title: ${slide.title}\n` +
     `Suggested layout: ${slide.layout}\n` +
+    (materials.plan ? "\n" + planBlock(materials.plan) + "\n" : "") +
     `Slide content (markdown):\n${slide.markdown}\n\n` +
     `Deck digest (the whole argument, for context):\n${digest}\n\n` +
     (materials.sourceExcerpt
