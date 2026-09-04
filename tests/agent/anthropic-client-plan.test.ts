@@ -1,9 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const runQuery = vi.fn();
-vi.mock("../../src/agent/query", () => ({ runQuery: (...a: unknown[]) => runQuery(...a) }));
+vi.mock("../../src/agent/query", () => ({
+  runQuery: (...a: unknown[]) => runQuery(...a),
+  EmptyReplyError: class EmptyReplyError extends Error {
+    constructor(public readonly model: string) {
+      super(`model "${model}" returned no output`);
+      this.name = "EmptyReplyError";
+    }
+  },
+}));
 
 import { anthropicClient, PlanParseError } from "../../src/agent/anthropic-client";
+import { EmptyReplyError } from "../../src/agent/query";
 
 const input = {
   sourceText: "src",
@@ -39,5 +48,15 @@ describe("anthropicClient.planDeck", () => {
     const err = await anthropicClient({ model: "m", effort: "low" }).planDeck!(input).catch((e) => e);
     expect(err).toBeInstanceOf(PlanParseError);
     expect((err as PlanParseError).raw).toBe("still not json");
+  });
+
+  it("propagates EmptyReplyError without retrying or wrapping in PlanParseError", async () => {
+    const emptyErr = new EmptyReplyError("claude-fable-5-1");
+    runQuery.mockRejectedValueOnce(emptyErr);
+    const err = await anthropicClient({ model: "m", effort: "low" }).planDeck!(input).catch((e) => e);
+    expect(runQuery).toHaveBeenCalledTimes(1);
+    expect(err).toBe(emptyErr);
+    expect(err).toBeInstanceOf(EmptyReplyError);
+    expect(err).not.toBeInstanceOf(PlanParseError);
   });
 });

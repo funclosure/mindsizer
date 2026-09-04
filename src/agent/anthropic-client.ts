@@ -11,7 +11,7 @@ import {
 } from "./model-client";
 import { digestPrompt, directionPrompt, outlinePrompt, artDirectionPrompt, planPrompt } from "./prompts";
 import { parseValidated } from "./json";
-import { runQuery } from "./query";
+import { runQuery, EmptyReplyError } from "./query";
 import { modelFor, type ModelChoice } from "./models";
 
 /** Run a prompt, parse+validate; on a parse failure, retry once, then throw. */
@@ -24,7 +24,8 @@ async function ask<T>(
 ): Promise<T> {
   try {
     return parseValidated(await runQuery(system, user, choice), schema);
-  } catch {
+  } catch (e) {
+    if (e instanceof EmptyReplyError) throw e;
     const retry = await runQuery(
       system,
       user + "\n\nReturn valid JSON only — no prose, no code fence.",
@@ -59,6 +60,7 @@ async function askPlan(input: PlanInput, choice: ModelChoice): Promise<DeckPlan>
   try {
     return parseValidated(first, schema);
   } catch (e) {
+    if (e instanceof EmptyReplyError) throw e;
     const retry = await runQuery(
       p.system,
       p.user + `\n\nYour previous reply was rejected: ${issueText(e)}. Return valid JSON only — no prose, no code fence.`,

@@ -8,6 +8,17 @@ import { resolveRenderInput, type RenderEdit } from "./edit-ops";
 
 const MODEL = process.env.MINDSIZER_MODEL || "claude-opus-4-8";
 
+/** The model produced no assistant text at all — usually an unavailable/misspelled model id. */
+export class EmptyReplyError extends Error {
+  constructor(public readonly model: string) {
+    super(
+      `model "${model}" returned no output — is that model available to your session? ` +
+        `Check the id, or override it (e.g. MINDSIZER_INGEST_MODEL=claude-opus-4-8).`,
+    );
+    this.name = "EmptyReplyError";
+  }
+}
+
 type SDKMessage = {
   type: string;
   event?: { type?: string; delta?: { type?: string; text?: string } };
@@ -57,6 +68,7 @@ export async function runQuery(systemPrompt: string, userPrompt: string, choice?
   }
   if (w.fired) throw new Error(timeoutMsg);
   recordUsage(choice?.model ?? MODEL, usage);
+  if (!text.trim()) throw new EmptyReplyError(choice?.model ?? MODEL);
   return text;
 }
 
