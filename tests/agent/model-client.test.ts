@@ -5,6 +5,8 @@ import {
   DraftDeckSchema,
   ArtDirectionSchema,
   INSTRUMENTS,
+  DeckPlanSchema,
+  deckPlanSchema,
 } from "../../src/agent/model-client";
 
 describe("agent schemas", () => {
@@ -46,5 +48,19 @@ describe("agent schemas", () => {
       ArtDirectionSchema.parse({ conceit: "x", motif: "y", slides: [{ role: "r", instrument: "hologram" }] }),
     ).toThrow();
     expect(INSTRUMENTS).toContain("none");
+  });
+});
+
+describe("DeckPlanSchema", () => {
+  const slide = { claim: "c", mechanism: "m", device: { kind: "static", resting: "r" } };
+  const plan = { direction: { conceit: "a", motif: "b", arc: "c" }, slides: [slide, slide] };
+  it("accepts direction + a slide array", () => {
+    expect(DeckPlanSchema.safeParse(plan).success).toBe(true);
+  });
+  it("deckPlanSchema(n) rejects a wrong slide count", () => {
+    expect(deckPlanSchema(2).safeParse(plan).success).toBe(true);
+    const r = deckPlanSchema(3).safeParse(plan);
+    expect(r.success).toBe(false);
+    if (!r.success) expect(r.error.issues[0].message).toMatch(/3 slides/);
   });
 });
