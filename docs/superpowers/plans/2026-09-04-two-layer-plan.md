@@ -22,7 +22,7 @@
   Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
   Claude-Session: https://claude.ai/code/session_01JQXiqY3qTrCwDfnDoLGQy1
   ```
-- Run `bun test` and `bunx tsc --noEmit` before every commit; both must be clean.
+- Run `bunx vitest run` and `bunx tsc --noEmit` before every commit; both must be clean.
 
 ---
 
@@ -117,7 +117,7 @@ describe("PlanDirectionSchema", () => {
 
 - [ ] **Step 3: Run it to verify it fails**
 
-Run: `bun test tests/outline/plan.test.ts`
+Run: `bunx vitest run tests/outline/plan.test.ts`
 Expected: FAIL — cannot resolve `../../src/outline/plan`.
 
 - [ ] **Step 4: Create `src/outline/plan.ts`**
@@ -199,7 +199,7 @@ export interface OutlineSlide {
 
 - [ ] **Step 6: Run tests + typecheck**
 
-Run: `bun test tests/outline/plan.test.ts && bunx tsc --noEmit`
+Run: `bunx vitest run tests/outline/plan.test.ts && bunx tsc --noEmit`
 Expected: PASS, no type errors.
 
 - [ ] **Step 7: Commit**
@@ -330,7 +330,7 @@ describe("serializeOutline — plan fence + direction", () => {
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `bun test tests/outline/plan-roundtrip.test.ts`
+Run: `bunx vitest run tests/outline/plan-roundtrip.test.ts`
 Expected: FAIL (direction undefined, plan undefined).
 
 - [ ] **Step 3: Update `src/outline/parse.ts`**
@@ -458,7 +458,7 @@ export { PLAN_KINDS, SlidePlanSchema, PlanDirectionSchema } from "./plan";
 
 - [ ] **Step 6: Run the full outline suite + typecheck**
 
-Run: `bun test tests/outline && bunx tsc --noEmit`
+Run: `bunx vitest run tests/outline && bunx tsc --noEmit`
 Expected: all PASS (existing parse/serialize/integration tests untouched and green).
 
 - [ ] **Step 7: Commit**
@@ -509,7 +509,7 @@ describe("validateOutline — plans", () => {
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `bun test tests/outline/validate.test.ts`
+Run: `bunx vitest run tests/outline/validate.test.ts`
 Expected: the three new tests FAIL.
 
 - [ ] **Step 3: Implement**
@@ -536,7 +536,7 @@ Inside the `for (const s of o.slides)` loop, after the layout check:
 
 - [ ] **Step 4: Run + typecheck**
 
-Run: `bun test tests/outline && bunx tsc --noEmit`
+Run: `bunx vitest run tests/outline && bunx tsc --noEmit`
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
@@ -581,7 +581,7 @@ Append to `tests/agent/pricing.test.ts` inside `describe("costUsd")`:
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `bun test tests/agent/models.test.ts tests/agent/pricing.test.ts`
+Run: `bunx vitest run tests/agent/models.test.ts tests/agent/pricing.test.ts`
 Expected: FAIL (ingest default is sonnet; fable priced as opus).
 
 - [ ] **Step 3: Implement**
@@ -611,7 +611,7 @@ and in `family()` add before the haiku check:
 
 - [ ] **Step 4: Run + typecheck**
 
-Run: `bun test tests/agent && bunx tsc --noEmit`
+Run: `bunx vitest run tests/agent && bunx tsc --noEmit`
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
@@ -707,7 +707,7 @@ describe("planPrompt", () => {
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `bun test tests/agent/model-client.test.ts tests/agent/prompts.test.ts`
+Run: `bunx vitest run tests/agent/model-client.test.ts tests/agent/prompts.test.ts`
 Expected: FAIL (missing exports).
 
 - [ ] **Step 3: Extend `src/agent/model-client.ts`**
@@ -787,7 +787,7 @@ export function planPrompt(input: PlanInput): Prompt {
 
 - [ ] **Step 5: Run + typecheck**
 
-Run: `bun test tests/agent && bunx tsc --noEmit`
+Run: `bunx vitest run tests/agent && bunx tsc --noEmit`
 Expected: PASS.
 
 - [ ] **Step 6: Commit**
@@ -921,7 +921,7 @@ describe("anthropicClient.planDeck", () => {
 
 - [ ] **Step 3: Run to verify failure**
 
-Run: `bun test tests/agent/ingest.test.ts tests/agent/anthropic-client-plan.test.ts`
+Run: `bunx vitest run tests/agent/ingest.test.ts tests/agent/anthropic-client-plan.test.ts`
 Expected: FAIL (no `planDeck`, no `PlanParseError`, ingest ignores opts).
 
 - [ ] **Step 4: Implement `planDeck` in `src/agent/anthropic-client.ts`**
@@ -1017,7 +1017,7 @@ export { anthropicClient, PlanParseError } from "./anthropic-client";
 
 - [ ] **Step 7: Run + typecheck**
 
-Run: `bun test tests/agent && bunx tsc --noEmit`
+Run: `bunx vitest run tests/agent && bunx tsc --noEmit`
 Expected: PASS.
 
 - [ ] **Step 8: Commit**
@@ -1073,7 +1073,7 @@ describe("mindsizer plan CLI (pre-LLM paths)", () => {
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `bun test tests/agent/cli-plan.test.ts`
+Run: `bunx vitest run tests/agent/cli-plan.test.ts`
 Expected: FAIL — `plan` falls through to `runSeal`, which prints `cannot read plan`.
 
 - [ ] **Step 3: Refactor `runIngest` in `src/cli.ts`**
@@ -1133,7 +1133,7 @@ In `main`, after the `ingest` branch:
 
 - [ ] **Step 4: Run the CLI suites + typecheck**
 
-Run: `bun test tests/agent/cli-plan.test.ts tests/agent/cli-ingest.test.ts && bunx tsc --noEmit`
+Run: `bunx vitest run tests/agent/cli-plan.test.ts tests/agent/cli-ingest.test.ts && bunx tsc --noEmit`
 Expected: PASS (ingest's messages are unchanged).
 
 - [ ] **Step 5: Commit**
@@ -1209,7 +1209,7 @@ describe("slideAuthorPrompt — slide plan", () => {
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `bun test tests/render/materials.test.ts tests/render/design-brief.test.ts`
+Run: `bunx vitest run tests/render/materials.test.ts tests/render/design-brief.test.ts`
 Expected: FAIL.
 
 - [ ] **Step 3: Implement in `src/render/materials.ts`**
@@ -1299,7 +1299,7 @@ In `slideAuthorPrompt`, insert the block between `Suggested layout` and `Slide c
 
 - [ ] **Step 5: Run + typecheck**
 
-Run: `bun test tests/render && bunx tsc --noEmit`
+Run: `bunx vitest run tests/render && bunx tsc --noEmit`
 Expected: PASS.
 
 - [ ] **Step 6: Commit**
@@ -1357,7 +1357,7 @@ describe("mindsizer brief", () => {
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `bun test tests/export/cli-brief.test.ts`
+Run: `bunx vitest run tests/export/cli-brief.test.ts`
 Expected: FAIL (`brief` falls through to `runSeal`).
 
 - [ ] **Step 3: Implement**
@@ -1398,7 +1398,7 @@ Dispatch in `main`:
 
 - [ ] **Step 4: Run + typecheck**
 
-Run: `bun test tests/export/cli-brief.test.ts && bunx tsc --noEmit`
+Run: `bunx vitest run tests/export/cli-brief.test.ts && bunx tsc --noEmit`
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
@@ -1472,7 +1472,7 @@ describe("mindsizer fit (pre-browser paths)", () => {
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `bun test tests/render/cli-fit.test.ts`
+Run: `bunx vitest run tests/render/cli-fit.test.ts`
 Expected: FAIL.
 
 - [ ] **Step 3: Implement**
@@ -1566,7 +1566,7 @@ Dispatch in `main`:
 
 - [ ] **Step 4: Run + typecheck, then a live smoke**
 
-Run: `bun test tests/render/cli-fit.test.ts && bunx tsc --noEmit`
+Run: `bunx vitest run tests/render/cli-fit.test.ts && bunx tsc --noEmit`
 Expected: PASS.
 
 Live smoke (needs chromium):
@@ -1728,7 +1728,7 @@ mindsizer is two layers with one file between them:
 
 - [ ] **Step 4: Full suite + typecheck**
 
-Run: `bun test && bunx tsc --noEmit`
+Run: `bunx vitest run && bunx tsc --noEmit`
 Expected: all PASS.
 
 - [ ] **Step 5: Commit**
