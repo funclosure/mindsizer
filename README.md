@@ -123,7 +123,7 @@ Key ideas:
 
 ## Design language
 
-**Field** — a calm, instrument-panel aesthetic: dark navy ground, cream text, a single cyan accent; Fraunces (display serif), Geist (body), Geist Mono (micro-labels and numerals); hairline rules and a faint dot-grid. Fonts are vendored under `theme/fonts/` and embedded into every sealed deck. The target genre is the _explorable explanation / instrument_ — never marketing-landing-page gloss.
+**Field** — a calm, instrument-panel aesthetic: dark navy ground, cream text, a single cyan accent; Fraunces (display serif), Geist (body), Geist Mono (micro-labels and numerals); hairline rules and a faint dot-grid. Fonts are vendored under `themes/fonts/` and embedded into every sealed deck. The target genre is the _explorable explanation / instrument_ — never marketing-landing-page gloss.
 
 ---
 
@@ -138,7 +138,7 @@ src/
              the headless-chromium renderer ("eyes"), static layouts
   export/    seal an outline + authored sections into one self-contained offline HTML deck
   cli.ts     the `mindsizer` command (ingest / build / seal)
-theme/       the Field stylesheet + vendored woff2 fonts
+themes/      the Field stylesheet + vendored woff2 fonts (plus paper / ember / blueprint)
 docs/        product spec + design/implementation docs
 prd.md       the product requirements document
 ```
@@ -148,7 +148,7 @@ prd.md       the product requirements document
 ## Development
 
 ```bash
-bun test            # run the unit suite (Vitest)
+bun run test        # run the unit suite (Vitest) — bare `bun test` hangs on a vitest-mock test
 bun run test:watch  # watch mode
 bunx tsc --noEmit   # typecheck
 ```
