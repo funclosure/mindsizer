@@ -594,18 +594,22 @@ async function runFit(args: string[]): Promise<void> {
   const shotPath = shot ?? resolve(input).replace(/\.html$/i, "") + ".png";
   const renderer = playwrightRenderer(theme.fontFaceCss + "\n" + theme.css);
   try {
-    const r = await renderer.render(html, steps);
-    r.shots.forEach((png, i) => {
-      const p = i === 0 ? shotPath : shotPath.replace(/\.png$/i, "") + `-${i}.png`;
-      writeFileSync(p, png);
-      process.stdout.write(`${i === 0 ? "resting" : `after step ${i}`} → ${p}\n`);
-    });
-    const clean = r.fits && r.consoleErrors.length === 0;
-    process.stdout.write(`overflow: ${r.overflowPx}px · console errors: ${r.consoleErrors.length} · ${clean ? "CLEAN" : "NOT CLEAN"}\n`);
-    for (const e of r.consoleErrors) process.stdout.write(`  ! ${e}\n`);
-    if (!clean) process.exitCode = 1;
-  } finally {
-    await renderer.dispose().catch(() => {});
+    try {
+      const r = await renderer.render(html, steps);
+      r.shots.forEach((png, i) => {
+        const p = i === 0 ? shotPath : shotPath.replace(/\.png$/i, "") + `-${i}.png`;
+        writeFileSync(p, png);
+        process.stdout.write(`${i === 0 ? "resting" : `after step ${i}`} → ${p}\n`);
+      });
+      const clean = r.fits && r.consoleErrors.length === 0;
+      process.stdout.write(`overflow: ${r.overflowPx}px · console errors: ${r.consoleErrors.length} · ${clean ? "CLEAN" : "NOT CLEAN"}\n`);
+      for (const e of r.consoleErrors) process.stdout.write(`  ! ${e}\n`);
+      if (!clean) process.exitCode = 1;
+    } finally {
+      await renderer.dispose().catch(() => {});
+    }
+  } catch (e) {
+    fail((e as Error).message);
   }
 }
 
