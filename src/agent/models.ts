@@ -4,7 +4,7 @@ export interface ModelChoice { model: string; effort: EffortLevel; }
 
 const DEFAULTS: Record<Role, ModelChoice> = {
   author: { model: "claude-opus-4-8", effort: "medium" },
-  ingest: { model: "claude-sonnet-4-6", effort: "medium" },
+  ingest: { model: "claude-fable-5-1", effort: "high" },
   judge: { model: "claude-haiku-4-5-20251001", effort: "low" },
   review: { model: "claude-opus-4-8", effort: "medium" },
 };

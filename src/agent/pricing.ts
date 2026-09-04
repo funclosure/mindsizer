@@ -2,7 +2,8 @@ import type { TokenUsage } from "./usage";
 
 export interface Rate { input: number; output: number; cacheRead: number; cacheCreate: number; } // $/M tokens
 
-const DEFAULTS: Record<"opus" | "sonnet" | "haiku", Rate> = {
+const DEFAULTS: Record<"fable" | "opus" | "sonnet" | "haiku", Rate> = {
+  fable: { input: 10, output: 50, cacheRead: 0.25, cacheCreate: 12.5 },
   opus: { input: 15, output: 75, cacheRead: 1.5, cacheCreate: 18.75 },
   sonnet: { input: 3, output: 15, cacheRead: 0.3, cacheCreate: 3.75 },
   haiku: { input: 0.8, output: 4, cacheRead: 0.08, cacheCreate: 1.0 },
@@ -11,6 +12,7 @@ const DEFAULTS: Record<"opus" | "sonnet" | "haiku", Rate> = {
 type Family = keyof typeof DEFAULTS;
 function family(model: string): Family {
   const m = model.toLowerCase();
+  if (m.includes("fable") || m.includes("mythos")) return "fable";
   if (m.includes("haiku")) return "haiku";
   if (m.includes("sonnet")) return "sonnet";
   return "opus";
