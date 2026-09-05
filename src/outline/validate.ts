@@ -1,5 +1,6 @@
 import type { Outline } from "./types";
 import { KNOWN_LAYOUTS } from "./types";
+import { SlidePlanSchema } from "./plan";
 
 export interface ValidationIssue {
   slideId?: string;
@@ -27,6 +28,15 @@ export function validateOutline(o: Outline): ValidationIssue[] {
     }
     if (s.layout && !KNOWN.has(s.layout)) {
       issues.push({ slideId: s.id, message: `unknown layout: ${s.layout}` });
+    }
+    if (s.planError) issues.push({ slideId: s.id, message: s.planError });
+    if (s.plan) {
+      const r = SlidePlanSchema.safeParse(s.plan);
+      if (!r.success) {
+        for (const i of r.error.issues) {
+          issues.push({ slideId: s.id, message: `plan.${i.path.join(".")}: ${i.message}` });
+        }
+      }
     }
   }
   return issues;

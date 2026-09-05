@@ -4,10 +4,10 @@ import { basename, extname, resolve, dirname, join } from "node:path";
 import { parseOutline, serializeOutline, validateOutline } from "./outline/index";
 import { sealDeck, fileSink } from "./export/index";
 import { loadTheme } from "./theme/load";
-import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath, serializeContext } from "./agent/index";
+import { ingest, anthropicClient, fixedPrompter, terminalPrompter, agenticAuthor, parseContext, sidecarPath, serializeContext, PlanParseError } from "./agent/index";
 import { slideJudge } from "./agent/slide-judge";
-import { buildDeck } from "./render/index";
-import { playwrightRenderer, verifyDeck } from "./render/fit-check";
+import { buildDeck, identityBrief } from "./render/index";
+import { playwrightRenderer, verifyDeck, type Interaction } from "./render/fit-check";
 import { hasUsableSection } from "./outline/inject";
 import { resetUsage, snapshotUsage } from "./agent/usage-meter";
 import { costUsd, fmtUsd } from "./agent/pricing";
@@ -95,7 +95,7 @@ function runSeal(args: string[]): void {
   }
 }
 
-async function runIngest(args: string[]): Promise<void> {
+async function runIngestLike(args: string[], mode: "ingest" | "plan"): Promise<void> {
   let input: string | undefined;
   let out: string | undefined;
   let angle: string | undefined;
@@ -127,7 +127,7 @@ async function runIngest(args: string[]): Promise<void> {
   }
 
   if (!input)
-    fail("usage: mindsizer ingest <text-file> [--angle <id>] [-o <out.md>] [--yes] [--source <url>] [--source-label <text>]");
+    fail(`usage: mindsizer ${mode} <text-file> [--angle <id>] [-o <out.md>] [--yes] [--source <url>] [--source-label <text>]`);
 
   let text: string;
   try {
@@ -136,19 +136,41 @@ async function runIngest(args: string[]): Promise<void> {
     fail(`cannot read ${input}`);
   }
 
-  process.stdout.write("digesting…\n");
+  process.stdout.write(mode === "plan" ? "digesting + planning…\n" : "digesting…\n");
   const prompter = angle || yes ? fixedPrompter(angle) : terminalPrompter();
   resetUsage();
 
+  const outPath =
+    out ??
+    join(
+      dirname(resolve(input)),
+      basename(input, extname(input)) + (mode === "plan" ? ".plan.md" : ".outline.md"),
+    );
+
   let result: Awaited<ReturnType<typeof ingest>>;
   try {
-    result = await ingest(text, {
-      model: anthropicClient(),
-      prompter,
-      onDigest: (d) =>
-        process.stdout.write(`✓ digested (${d.keyPoints.length} points)\n`),
-    });
+    result = await ingest(
+      text,
+      {
+        model: anthropicClient(),
+        prompter,
+        onDigest: (d) => process.stdout.write(`✓ digested (${d.keyPoints.length} points)\n`),
+      },
+      { plan: mode === "plan" },
+    );
   } catch (e) {
+    if (e instanceof PlanParseError) {
+      const rawPath = outPath.replace(/\.md$/i, "") + ".raw.json";
+      let saved = false;
+      try {
+        writeFileSync(rawPath, JSON.stringify({ raw: e.raw }, null, 2), "utf8");
+        saved = true;
+      } catch { /* best effort — the planner error below is what matters */ }
+      fail(
+        `${e.message}\n  ` +
+          (saved ? `raw planner reply saved → ${rawPath}` : `could not save the raw planner reply to ${rawPath}`),
+      );
+    }
     fail((e as Error).message);
   }
 
@@ -163,12 +185,6 @@ async function runIngest(args: string[]): Promise<void> {
     outlineMarkdown = serializeOutline(o);
   }
 
-  const outPath =
-    out ??
-    join(
-      dirname(resolve(input)),
-      basename(input, extname(input)) + ".outline.md",
-    );
   try {
     writeFileSync(outPath, outlineMarkdown, "utf8");
   } catch {
@@ -191,6 +207,14 @@ async function runIngest(args: string[]): Promise<void> {
   printCost();
 }
 
+async function runIngest(args: string[]): Promise<void> {
+  return runIngestLike(args, "ingest");
+}
+
+async function runPlan(args: string[]): Promise<void> {
+  return runIngestLike(args, "plan");
+}
+
 /** Print a per-model API-equivalent USD cost line from the usage meter (nothing if empty). */
 function printCost(): void {
   const entries = Object.entries(snapshotUsage());
@@ -199,6 +223,27 @@ function printCost(): void {
   const parts = entries.map(([m, u]) => `${label(m)} ${fmtUsd(costUsd(u, m))}`);
   const total = entries.reduce((s, [m, u]) => s + costUsd(u, m), 0);
   process.stdout.write(`  cost (API-equiv · est):  ~${fmtUsd(total)} — ${parts.join(" · ")}\n`);
+}
+
+/** Print the author system prompt (genre + format + theme aesthetic + contract) — the shared identity for any Layer 2. */
+function runBrief(args: string[]): void {
+  let themeName = "field";
+  for (let k = 0; k < args.length; k++) {
+    const a = args[k];
+    if (a === "--theme") {
+      themeName = args[++k];
+      if (!themeName) fail("--theme requires a name");
+    } else {
+      fail(`unknown option ${a}`);
+    }
+  }
+  let theme;
+  try {
+    theme = loadTheme(themeName);
+  } catch (e) {
+    fail((e as Error).message);
+  }
+  process.stdout.write(identityBrief(theme.brief) + "\n");
 }
 
 async function runBuild(args: string[]): Promise<void> {
@@ -428,6 +473,13 @@ async function runReview(args: string[]): Promise<void> {
   } catch {
     process.stdout.write("· no context sidecar — reviewing visuals + interactions + coherence only\n");
   }
+  // Same precedence as gatherMaterials: plan.md front-matter `direction` WINS over the sidecar's
+  // art direction for conceit/motif, so a hand-written or sidecar-less plan.md still reviews
+  // against its stated controlling metaphor.
+  const fmDir = outline.meta.direction;
+  const conceit = fmDir?.conceit || direction?.conceit;
+  const motif = fmDir?.motif || direction?.motif;
+  direction = conceit && motif ? { conceit, motif } : direction;
 
   process.stdout.write(`reviewing ${outline.slides.length} slides… (model: ${modelFor("review").model})\n`);
   resetUsage();
@@ -490,10 +542,92 @@ async function runReview(args: string[]): Promise<void> {
   if (hasHigh(run)) process.exitCode = 1;
 }
 
+/** Layer-2 eyes: render one saved slide section at 1280×720 and report overflow + console errors. */
+async function runFit(args: string[]): Promise<void> {
+  let input: string | undefined;
+  let shot: string | undefined;
+  let stepsRaw: string | undefined;
+  let themeName = "field";
+  for (let k = 0; k < args.length; k++) {
+    const a = args[k];
+    if (a === "--shot") {
+      shot = args[++k];
+      if (!shot) fail("--shot requires a path");
+    } else if (a === "--steps") {
+      stepsRaw = args[++k];
+      if (stepsRaw === undefined) fail("--steps requires a JSON array");
+    } else if (a === "--theme") {
+      themeName = args[++k];
+      if (!themeName) fail("--theme requires a name");
+    } else if (a.startsWith("-")) {
+      fail(`unknown option ${a}`);
+    } else {
+      input ??= a;
+    }
+  }
+  if (!input) fail("usage: mindsizer fit <slide.html> [--shot <png>] [--steps '<json array>'] [--theme <name>]");
+
+  let html: string;
+  try {
+    html = readFileSync(resolve(input), "utf8");
+  } catch {
+    fail(`cannot read ${input}`);
+  }
+  // the section id is the file stem by convention (<stem>.build/slides/<id>.html)
+  const id = basename(input, extname(input));
+  if (!hasUsableSection(html, id)) {
+    process.stderr.write(`error: no <section data-slide-id="${id}"> in ${input} (exactly one is required)\n`);
+    process.exit(2);
+  }
+
+  let steps: Interaction[] = [];
+  if (stepsRaw !== undefined) {
+    try {
+      const v = JSON.parse(stepsRaw);
+      if (!Array.isArray(v)) throw new Error();
+      steps = v as Interaction[];
+    } catch {
+      fail("--steps must be a JSON array of {click?, press?, wait?}");
+    }
+  }
+
+  let theme;
+  try {
+    theme = loadTheme(themeName);
+  } catch (e) {
+    fail((e as Error).message);
+  }
+
+  const shotPath = shot ?? resolve(input).replace(/\.html$/i, "") + ".png";
+  const renderer = playwrightRenderer(theme.fontFaceCss + "\n" + theme.css);
+  try {
+    try {
+      const r = await renderer.render(html, steps);
+      r.shots.forEach((png, i) => {
+        const p = i === 0 ? shotPath : shotPath.replace(/\.png$/i, "") + `-${i}.png`;
+        writeFileSync(p, png);
+        process.stdout.write(`${i === 0 ? "resting" : `after step ${i}`} → ${p}\n`);
+      });
+      const clean = r.fits && r.consoleErrors.length === 0;
+      process.stdout.write(`overflow: ${r.overflowPx}px · console errors: ${r.consoleErrors.length} · ${clean ? "CLEAN" : "NOT CLEAN"}\n`);
+      for (const e of r.consoleErrors) process.stdout.write(`  ! ${e}\n`);
+      if (!clean) process.exitCode = 1;
+    } finally {
+      await renderer.dispose().catch(() => {});
+    }
+  } catch (e) {
+    fail((e as Error).message);
+  }
+}
+
 function main(argv: string[]): void {
   const args = argv.slice(2);
   if (args[0] === "ingest") {
     void runIngest(args.slice(1));
+    return;
+  }
+  if (args[0] === "plan") {
+    void runPlan(args.slice(1));
     return;
   }
   if (args[0] === "build") {
@@ -502,6 +636,14 @@ function main(argv: string[]): void {
   }
   if (args[0] === "review") {
     void runReview(args.slice(1));
+    return;
+  }
+  if (args[0] === "brief") {
+    runBrief(args.slice(1));
+    return;
+  }
+  if (args[0] === "fit") {
+    void runFit(args.slice(1));
     return;
   }
   runSeal(args);

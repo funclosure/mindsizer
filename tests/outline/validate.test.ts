@@ -38,6 +38,28 @@ describe("validateOutline", () => {
   });
 });
 
+describe("validateOutline — plans", () => {
+  it("reports a planError verbatim, naming the slide", () => {
+    const o = deck([{ id: "s_a", layout: "bespoke", title: "A", markdown: "x", planError: "plan fence is not valid YAML: bad" }]);
+    expect(validateOutline(o)).toEqual([{ slideId: "s_a", message: "plan fence is not valid YAML: bad" }]);
+  });
+  it("reports schema issues with their path", () => {
+    const o = deck([{ id: "s_a", layout: "bespoke", title: "A", markdown: "x",
+      plan: { claim: "c", mechanism: "m", device: { kind: "instrument", resting: "r" } } as any }]);
+    const msgs = validateOutline(o).map((i) => i.message);
+    expect(msgs).toEqual(expect.arrayContaining([
+      expect.stringContaining("plan.device.operate"),
+      expect.stringContaining("plan.aha"),
+    ]));
+    expect(validateOutline(o).every((i) => i.slideId === "s_a")).toBe(true);
+  });
+  it("accepts a valid plan silently", () => {
+    const o = deck([{ id: "s_a", layout: "bespoke", title: "A", markdown: "x",
+      plan: { claim: "c", mechanism: "m", device: { kind: "static", resting: "r" } } }]);
+    expect(validateOutline(o)).toEqual([]);
+  });
+});
+
 describe("crossValidate", () => {
   it("flags missing render files and orphan render files", () => {
     const o = deck([

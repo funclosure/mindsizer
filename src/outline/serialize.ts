@@ -1,7 +1,8 @@
 import matter from "gray-matter";
+import * as yaml from "js-yaml";
 import type { Outline } from "./types";
 
-/** Serialize the canonical Outline model back to Marp-style outline.md. */
+/** Serialize the canonical Outline model back to Marp-style outline.md (plan.md when plans are present). */
 export function serializeOutline(o: Outline): string {
   const body = o.slides
     .map((s) => {
@@ -13,6 +14,11 @@ export function serializeOutline(o: Outline): string {
       const parts = [head, `# ${s.title}`];
       if (s.markdown.trim().length > 0) {
         parts.push("", s.markdown.trim());
+      }
+      if (s.plan) {
+        // lineWidth -1: never fold long strings, so parse(serialize(x)) is byte-stable
+        const y = yaml.dump(s.plan, { lineWidth: -1, noRefs: true }).trimEnd();
+        parts.push("", "```plan", y, "```");
       }
       return parts.join("\n");
     })
@@ -31,5 +37,6 @@ export function serializeOutline(o: Outline): string {
         ...(src.url && { url: src.url }),
       },
     }),
+    ...(o.meta.direction && { direction: { ...o.meta.direction } }),
   });
 }

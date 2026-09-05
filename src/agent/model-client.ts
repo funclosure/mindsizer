@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SlidePlanSchema, PlanDirectionSchema } from "../outline/plan";
 
 export const DigestSchema = z.object({
   title: z.string(),
@@ -38,6 +39,31 @@ export const ArtDirectionSchema = z.object({
 });
 export type DeckDirection = z.infer<typeof ArtDirectionSchema>;
 
+/** Everything the planner sees: the whole idea, not a bullet. */
+export interface PlanInput {
+  sourceText: string;
+  digest: DigestResult;
+  angle: Direction;
+  /** Prior art direction (conceit/motif), advisory — the planner restates the final direction. */
+  art?: { conceit: string; motif: string };
+  slides: { title: string; markdown: string }[];
+}
+
+/** Whole-deck plan: the final direction + one SlidePlan per slide, in slide order. */
+export const DeckPlanSchema = z.object({
+  direction: PlanDirectionSchema,
+  slides: z.array(SlidePlanSchema),
+});
+export type DeckPlan = z.infer<typeof DeckPlanSchema>;
+
+/** DeckPlanSchema pinned to the expected slide count. */
+export function deckPlanSchema(n: number) {
+  return DeckPlanSchema.refine((d) => d.slides.length === n, {
+    path: ["slides"],
+    message: `expected exactly ${n} slides in slide order`,
+  });
+}
+
 /** The LLM-backed operations of the ingest pipeline (the seam). */
 export interface ModelClient {
   digest(sourceText: string): Promise<DigestResult>;
@@ -45,4 +71,6 @@ export interface ModelClient {
   generateOutline(digest: DigestResult, angle: Direction): Promise<DraftDeck>;
   /** Optional: whole-deck art direction. Optional so existing clients/fakes stay valid; ingest guards it. */
   directArt?(digest: DigestResult, angle: Direction, titles: string[]): Promise<DeckDirection>;
+  /** Optional: whole-deck slide planning (Layer 1). Optional so existing clients/fakes stay valid. */
+  planDeck?(input: PlanInput): Promise<DeckPlan>;
 }

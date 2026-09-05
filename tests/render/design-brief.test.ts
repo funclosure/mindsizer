@@ -76,4 +76,67 @@ describe("slideAuthorPrompt — art direction", () => {
   it("omits the art-direction lines when absent", () => {
     expect(slideAuthorPrompt(req).user).not.toMatch(/controlling metaphor/i);
   });
+  it("drops the per-slide art direction when a plan governs the slide", () => {
+    const u = slideAuthorPrompt({
+      ...req,
+      materials: {
+        ...req.materials,
+        conceit: "a ledger", motif: "ruled lines",
+        role: "introduce the tension", instrument: "toggle", otherInstruments: ["slider"],
+        plan: { claim: "c", mechanism: "m", device: { kind: "figure" as const, resting: "r" } },
+      },
+    }).user;
+    expect(u).not.toContain("Suggested interaction");
+    expect(u).not.toContain("introduce the tension");
+    expect(u).toContain("a ledger");      // deck-level direction still rides along
+    expect(u).toContain("ruled lines");
+  });
+});
+
+describe("slideAuthorPrompt — deck arc", () => {
+  it("adds one deck-level arc line when present", () => {
+    const u = slideAuthorPrompt({ ...req, materials: { ...req.materials, arc: "tension → mechanism → payoff" } }).user;
+    expect(u).toContain("Deck argument arc (how the whole piece moves): tension → mechanism → payoff");
+  });
+  it("omits the arc line when absent", () => {
+    expect(slideAuthorPrompt(req).user).not.toContain("Deck argument arc");
+  });
+});
+
+describe("slideAuthorPrompt — slide plan", () => {
+  const plan = {
+    claim: "Founders supply momentum by hand.",
+    mechanism: "growth = push + momentum",
+    device: { kind: "instrument" as const, operate: "drag a crank", changes: "curve splits", resting: "crank at 40%" },
+    aha: "release early → zero",
+    data: "m(t)=m(t-1)*(1+r)",
+    source: "you have to go out and get them",
+  };
+  it("renders every plan field and tells the author to implement, not re-plan", () => {
+    const p = slideAuthorPrompt({ ...req, materials: { ...req.materials, plan } });
+    expect(p.user).toContain("## Slide plan");
+    for (const s of ["Founders supply momentum", "growth = push", "instrument", "drag a crank", "curve splits", "crank at 40%", "release early", "m(t)=", "go out and get them"]) {
+      expect(p.user).toContain(s);
+    }
+    expect(p.user).toMatch(/implement this plan/i);
+    expect(p.user.indexOf("## Slide plan")).toBeLessThan(p.user.indexOf("Slide content (markdown)"));
+  });
+  it("has no plan block without a plan", () => {
+    expect(slideAuthorPrompt(req).user).not.toContain("## Slide plan");
+  });
+  it("renders a minimal figure device cleanly without optional fields", () => {
+    const minimalPlan = {
+      claim: "Figures illustrate the idea.",
+      mechanism: "illustration = visual clarity",
+      device: { kind: "figure" as const, resting: "a diagram" },
+    };
+    const u = slideAuthorPrompt({ ...req, materials: { ...req.materials, plan: minimalPlan } }).user;
+    expect(u).toContain("## Slide plan");
+    expect(u).toContain("Device: figure");
+    expect(u).not.toContain("Device: figure —"); // no trailing dash
+    expect(u).not.toContain("undefined");
+    expect(u).not.toContain("Aha:");
+    expect(u).not.toContain("Data (draw from this");
+    expect(u).not.toContain("Source anchor:");
+  });
 });

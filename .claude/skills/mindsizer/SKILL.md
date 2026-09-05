@@ -59,7 +59,24 @@ examples/dont-scale.deck.html` (zero setup), or `bun run example` to rebuild it.
 If the user pasted the text or it came from a URL, write it to a `.txt` file (a temp path is
 fine). If they already have a file, use it. mindsizer works on the raw text.
 
-## 2. Ingest → outline
+## 2. Ingest → outline (or `plan` → a richer plan.md)
+
+Two entry points. **Prefer `plan`** — it runs the same digest/angle pipeline at high effort
+and additionally writes, per slide, the claim, the mechanism, the comprehension device
+(what the reader operates and what changes), the resting state, and a source anchor:
+
+```bash
+mindsizer plan <source.txt> --yes -o <name>.plan.md
+```
+
+Planning (the `INGEST` role, shared by `plan` and `ingest`) defaults to `claude-opus-4-8` at
+`high` effort. To run it on the strongest model instead — only where that model is available to
+the session — prefix the command with `MINDSIZER_INGEST_MODEL=claude-fable-5-1`. If it isn't
+available, mindsizer stops with a clear error naming the model rather than writing an empty plan.
+
+The resulting `plan.md` is the hand-editable contract between planning and visual design. You
+can then EITHER hand it to the harness (`mindsizer build <name>.plan.md`) OR author the slides
+yourself with the `mindsizer-author` skill. The classic `ingest` still exists for the old flow:
 
 `ingest` digests the text, proposes a few teaching *angles* (how to frame the idea), and writes
 a canonical `outline.md` plus a `*.context.json` sidecar (the digest + chosen angle, which the
@@ -98,6 +115,10 @@ slider, a toggle, a dial) when that makes the idea land. Budget **a few minutes 
 Because it's long-running, **run it in the background** and let the user know it's working, rather
 than blocking. When it finishes it writes one self-contained file (`<name>.outline.html` by
 default, or wherever `-o` points) and `--open` opens it.
+
+The same command works unchanged on a `<name>.plan.md`: `mindsizer build <name>.plan.md --open`.
+Add `--resume` to reuse any slides already hand-authored via the `mindsizer-author` skill —
+it fills in only the slides still missing.
 
 ## 4. Hand it back
 

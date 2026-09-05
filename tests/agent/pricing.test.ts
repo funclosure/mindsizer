@@ -26,6 +26,17 @@ describe("costUsd", () => {
     const u = { input: M, output: 0, cacheRead: 0, cacheCreate: 0 };
     expect(costUsd(u, "claude-opus-4-8", { MINDSIZER_PRICE_OPUS: "bad" })).toBeCloseTo(15, 5);
   });
+  it("prices the fable family ($10 in / $50 out per 1M)", () => {
+    const u = { input: M, output: 0, cacheRead: 0, cacheCreate: 0 };
+    expect(costUsd(u, "claude-fable-5-1", {})).toBeCloseTo(10, 5);
+    const o = { input: 0, output: M, cacheRead: 0, cacheCreate: 0 };
+    expect(costUsd(o, "claude-fable-5-1", {})).toBeCloseTo(50, 5);
+    expect(costUsd(u, "claude-mythos-5-1", {})).toBeCloseTo(10, 5);
+  });
+  it("honours MINDSIZER_PRICE_FABLE", () => {
+    const u = { input: M, output: 0, cacheRead: 0, cacheCreate: 0 };
+    expect(costUsd(u, "claude-fable-5-1", { MINDSIZER_PRICE_FABLE: "1,2,3,4" })).toBeCloseTo(1, 5);
+  });
 });
 
 describe("fmtUsd", () => {

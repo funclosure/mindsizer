@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { digestPrompt, directionPrompt, outlinePrompt, artDirectionPrompt } from "../../src/agent/prompts";
+import { digestPrompt, directionPrompt, outlinePrompt, artDirectionPrompt, planPrompt } from "../../src/agent/prompts";
 
 const digest = {
   title: "Eventual Consistency",
@@ -37,5 +37,35 @@ describe("prompts", () => {
     expect(p.system.toLowerCase()).toContain("conceit");
     expect(p.system.toLowerCase()).toContain("instrument");
     expect(p.user).not.toMatch(/markdown/i);
+  });
+});
+
+describe("planPrompt", () => {
+  const input = {
+    sourceText: "FULL SOURCE ESSAY",
+    digest,
+    angle,
+    art: { conceit: "a ledger", motif: "ruled lines" },
+    slides: [{ title: "One", markdown: "body one" }, { title: "Two", markdown: "body two" }],
+  };
+  it("carries the full source, digest, angle, art direction and every slide", () => {
+    const p = planPrompt(input);
+    expect(p.user).toContain("FULL SOURCE ESSAY");
+    expect(p.user).toContain("replicas converge");
+    expect(p.user).toContain("the mental model");
+    expect(p.user).toContain("a ledger");
+    expect(p.user).toContain("1. One");
+    expect(p.user).toContain("body two");
+  });
+  it("states the boundary, the kinds, and the JSON contract", () => {
+    const p = planPrompt(input);
+    expect(p.system).toContain("mechanism");
+    expect(p.system).toContain('"instrument"');
+    expect(p.system).toContain("same length and order");
+    expect(p.system.toLowerCase()).toContain("json only");
+  });
+  it("omits the art-direction line when absent", () => {
+    const p = planPrompt({ ...input, art: undefined });
+    expect(p.user).not.toContain("Art direction");
   });
 });

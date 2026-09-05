@@ -1,4 +1,4 @@
-import type { Outline, OutlineSlide } from "../outline/types";
+import type { Outline, OutlineSlide, SlidePlan } from "../outline/types";
 import type { DeckContext } from "../agent/context-sidecar";
 
 export interface SlideMaterials {
@@ -6,11 +6,13 @@ export interface SlideMaterials {
   angle: string;
   sourceExcerpt?: string;
   neighborTitles: string[];
-  conceit?: string;         // whole-deck controlling metaphor (art direction)
-  motif?: string;           // shared visual motif
+  conceit?: string;         // whole-deck controlling metaphor (plan front-matter wins, art direction falls back)
+  motif?: string;           // shared visual motif (same precedence)
+  arc?: string;             // deck-level argument arc (plan front-matter only — art direction has no equivalent)
   role?: string;            // this slide's job in the deck
   instrument?: string;      // assigned interaction from the palette
   otherInstruments?: string[]; // instruments already claimed by other slides (vary from these)
+  plan?: SlidePlan;         // Layer-1 plan (plan.md) — implement it, don't re-plan
 }
 
 /** Per-slide context handed to the author: the idea, not just the bullet. */
@@ -24,6 +26,11 @@ export function gatherMaterials(
     .filter((_, i) => i === idx - 1 || i === idx + 1)
     .map((s) => s.title);
   const dir = ctx?.direction;
+  // Precedence: plan.md front-matter WINS over the sidecar's art direction for conceit/motif —
+  // the planning call runs later and sees more, and plan.md is the hand-editable contract, so an
+  // edited `direction:` must take effect. `role`/`instrument` have no front-matter equivalent and
+  // always come from the sidecar.
+  const fm = outline.meta.direction;
   const otherInstruments = dir
     ? Object.entries(dir.instrumentById)
         .filter(([id, v]) => id !== slide.id && v && v !== "none")
@@ -34,10 +41,12 @@ export function gatherMaterials(
     angle: ctx?.angle ?? "",
     sourceExcerpt: ctx?.perSlideExcerpt?.[slide.id],
     neighborTitles,
-    conceit: dir?.conceit,
-    motif: dir?.motif,
+    conceit: fm?.conceit || dir?.conceit,
+    motif: fm?.motif || dir?.motif,
+    arc: fm?.arc,
     role: dir?.roleById?.[slide.id],
     instrument: dir?.instrumentById?.[slide.id],
     otherInstruments,
+    plan: slide.plan,
   };
 }

@@ -136,6 +136,54 @@ describe("ingest digest passthrough", () => {
   });
 });
 
+describe("ingest — plan mode", () => {
+  const slidePlan = { claim: "c", mechanism: "m", device: { kind: "figure" as const, resting: "r" } };
+  const deckPlan = { direction: { conceit: "a crank", motif: "flywheel", arc: "push → catch" }, slides: [slidePlan, slidePlan] };
+
+  it("attaches direction + per-slide plans to the outline", async () => {
+    const calls: unknown[] = [];
+    const client: ModelClient = { ...fakeModel().client, planDeck: async (input) => { calls.push(input); return deckPlan; } };
+    const res = await ingest("the source", { model: client, prompter: fixedPrompter("build") }, { plan: true });
+    const parsed = parseOutline(res.outlineMarkdown);
+    expect(parsed.meta.direction).toEqual(deckPlan.direction);
+    expect(parsed.slides.map((s) => s.plan)).toEqual([slidePlan, slidePlan]);
+    expect(calls).toHaveLength(1);
+    const input = calls[0] as { sourceText: string; slides: { title: string }[] };
+    expect(input.sourceText).toBe("the source");
+    expect(input.slides.map((s) => s.title)).toEqual(["Eventual consistency", "Trade-off"]);
+  });
+
+  it("passes the art-direction conceit/motif to the planner when available", async () => {
+    let seenArt: unknown;
+    const client: ModelClient = {
+      ...fakeModel().client,
+      directArt: async () => ({ conceit: "ledger", motif: "rules", slides: [{ role: "a", instrument: "slider" as const }, { role: "b", instrument: "none" as const }] }),
+      planDeck: async (input) => { seenArt = input.art; return deckPlan; },
+    };
+    await ingest("t", { model: client, prompter: fixedPrompter() }, { plan: true });
+    expect(seenArt).toEqual({ conceit: "ledger", motif: "rules" });
+  });
+
+  it("is fatal when the client cannot plan", async () => {
+    await expect(ingest("t", { model: fakeModel().client, prompter: fixedPrompter() }, { plan: true }))
+      .rejects.toThrow(/cannot plan/);
+  });
+
+  it("propagates a planner failure (no silent degrade)", async () => {
+    const client: ModelClient = { ...fakeModel().client, planDeck: async () => { throw new Error("planner exploded"); } };
+    await expect(ingest("t", { model: client, prompter: fixedPrompter() }, { plan: true }))
+      .rejects.toThrow("planner exploded");
+  });
+
+  it("does not call planDeck without the option", async () => {
+    let called = false;
+    const client: ModelClient = { ...fakeModel().client, planDeck: async () => { called = true; return deckPlan; } };
+    const res = await ingest("t", { model: client, prompter: fixedPrompter() });
+    expect(called).toBe(false);
+    expect(parseOutline(res.outlineMarkdown).slides[0].plan).toBeUndefined();
+  });
+});
+
 describe("ingest art direction", () => {
   const base = {
     digest: async () => digest,

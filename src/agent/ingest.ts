@@ -28,6 +28,7 @@ export interface IngestResult {
 export async function ingest(
   sourceText: string,
   deps: IngestDeps,
+  opts: { plan?: boolean } = {},
 ): Promise<IngestResult> {
   if (!sourceText.trim()) throw new Error("source is empty");
 
@@ -83,6 +84,20 @@ export async function ingest(
     } catch {
       /* art direction is best-effort — never fatal */
     }
+  }
+
+  // Layer 1 planning — the plan IS the product, so (unlike art direction) failure is fatal.
+  if (opts.plan) {
+    if (!deps.model.planDeck) throw new Error("this model client cannot plan (no planDeck)");
+    const plan = await deps.model.planDeck({
+      sourceText,
+      digest,
+      angle,
+      art: direction ? { conceit: direction.conceit, motif: direction.motif } : undefined,
+      slides: outline.slides.map((s) => ({ title: s.title, markdown: s.markdown })),
+    });
+    outline.meta.direction = plan.direction;
+    outline.slides.forEach((s, i) => { s.plan = plan.slides[i]; });
   }
 
   return {

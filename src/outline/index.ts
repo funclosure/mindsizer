@@ -1,5 +1,7 @@
 export type { DeckMeta, OutlineSlide, Outline } from "./types";
 export { KNOWN_LAYOUTS } from "./types";
+export type { SlidePlan, PlanDirection, PlanKind } from "./plan";
+export { PLAN_KINDS, SlidePlanSchema, PlanDirectionSchema } from "./plan";
 export { mintSlideId } from "./id";
 export { parseOutline } from "./parse";
 export { serializeOutline } from "./serialize";
