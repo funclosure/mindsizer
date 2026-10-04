@@ -1,0 +1,2022 @@
+{
+  "deck": "eval/results/2026-10-04-baseline-opus-5-5/dont-scale.deck.html",
+  "plan": "eval/results/2026-10-04-baseline-opus-5-5/dont-scale.plan.md",
+  "sourceId": "dont-scale",
+  "deckTitle": "The Hand-Crank: Why Startups Need a Manual Start",
+  "direction": {
+    "conceit": "Hand-cranking an old car engine. The startup is a motor that won't start by itself. The founder's arm does the cold, hard work of turning it over, and once it catches, it runs on its own power.",
+    "motif": "A crank handle and an engine tachometer. Every slide shows the RPM needle somewhere between 'dead cold' and 'running on its own', with a marked ignition line. The reader always knows how far the engine is from catching, and whether a hand is still needed on the crank.",
+    "arc": "Startups don't start themselves → starting and running are two different jobs → the crank is recruiting users by hand → founders skip it because small numbers look like nothing → compounding shows they aren't → before it catches, the engine can stall → so judge potential, not current size → planes need engines, cannonballs fall → a test for plans with no effort → the forms the crank takes → being small is why you can turn it → an idea is a pair: the engine plus the crank."
+  },
+  "judge": {
+    "model": "claude-opus-5-5",
+    "effort": "medium"
+  },
+  "scoredAt": "2026-10-04T09:23:53.597Z",
+  "slides": [
+    {
+      "id": "s_47fohz9x",
+      "title": "The big idea: startups don't start themselves",
+      "kind": "figure",
+      "instrument": false,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 25,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [
+            {
+              "text": "RPM · NEEDLE BELOW IGNITION",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 9
+            }
+          ],
+          "checked": 25,
+          "minRatio": 4.01
+        }
+      },
+      "controls": 3,
+      "intent": {
+        "title": "The big idea: startups don't start themselves",
+        "claim": "Startups take off because founders make them take off. They do not take off just because the product is good.",
+        "mechanism": "A founder's arm applies force to a crank. The engine (the startup) turns over but does not fire on its own. Only after enough cranking does it catch, and then it runs without the arm. Without the arm, nothing happens, however good the engine is.",
+        "kind": "figure",
+        "aha": "The mousetrap myth pictures the engine starting on its own. The picture shows an arm is required.",
+        "resting": "An old car engine with a crank handle at the front and a founder's hand on it. A tachometer reads near 'dead cold', with the ignition line marked well above the needle. A caption contrasts the myth ('build a better mousetrap and they come') with the reality ('someone has to turn the crank')."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 4,
+          "judged": 4,
+          "read_claim": "A good product doesn't take off on its own: like an old car engine that needs a hand crank, a startup only gets going when its founders do the manual work of starting it.",
+          "read_evidence": [
+            "\"Startups don't start themselves\" (headline, top left)",
+            "\"Startups take off because founders make them take off — not just because the product is good. Getting the engine going is a separate, manual, tiring job, and nobody else will do it.\" (body text, left)",
+            "MYTH: \"Build a better mousetrap and they will come.\" (shown struck through)",
+            "REALITY: \"Someone has to turn the crank.\"",
+            "Engine diagram labeled \"the startup\" / \"GOOD ENGINE · WON'T FIRE ALONE\", with \"THE FOUNDER'S ARM\" and \"CRANK\" labels",
+            "RPM gauge reading \"0040\" with \"RPM · NEEDLE BELOW IGNITION\", between \"DEAD COLD\" and \"RUNS ON ITS OWN\"",
+            "Status text, bottom right: \"Engine cold. A good engine, sitting still.\""
+          ],
+          "evidence": [
+            "Body text: \"Startups take off because founders make them take off — not just because the product is good.\"",
+            "MYTH (struck through): \"Build a better mousetrap and they will come.\" / REALITY: \"Someone has to turn the crank.\"",
+            "Engine diagram: \"GOOD ENGINE · WON'T FIRE ALONE\" with \"THE FOUNDER'S ARM\" on the \"CRANK\"",
+            "Reader's claim: \"a startup only gets going when its founders do the manual work of starting it\""
+          ],
+          "reasoning": "The reader's claim includes both parts of the intended assertion. Founders are the cause of takeoff (they do the manual cranking), and a good product alone is not enough (\"doesn't take off on its own\"). The crank metaphor frames the claim but doesn't change it. The word \"only\" is a little stronger than the intended \"not just because,\" but the point is the same, so nothing important is missing or added."
+        },
+        "mechanism_shown": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "Right-side figure: a diagonal bar labelled \"THE FOUNDER'S ARM\" joins a part labelled \"CRANK\". A highlighted cyan line runs from the crank into the side of an engine block labelled \"the startup\" / \"GOOD ENGINE · WON'T FIRE ALONE\".",
+            "Above the engine is a gauge, \"ENGINE RPM\", with its scale running from \"DEAD COLD\" to \"RUNS ON ITS OWN\". A cyan tick marked \"IGNITION\" sets the threshold, and the needle reads \"0040\" with the caption \"RPM · NEEDLE BELOW IGNITION\".",
+            "Controls: \"TURN THE CRANK ↻\", \"JUST WAIT FOR USERS\" and \"RESET\". The status text reads \"Engine cold. A good engine, sitting still.\"",
+            "No screenshots after operating the controls were provided, so the change from cranking to ignition to self-running is never shown."
+          ],
+          "reasoning": "With the sentences covered, the figure still shows the input path: the arm connects to the crank, which connects to the engine. The RPM gauge has a marked ignition threshold and a \"runs on its own\" zone, so the idea that enough force crosses a threshold is drawn, not just stated. However, this is only the resting state. The dynamics (cranking raises the RPM, the engine catches, then it runs without the arm, while \"just wait\" does nothing) appear only in the button labels and gauge labels. I saw no state where the figure actually shows those changes. Real structure with one key link left unseen earns a 3, not a 4."
+        },
+        "device_works": {
+          "score": null,
+          "na": true,
+          "reason": "device kind is figure"
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "Headline: \"Startups don't start themselves\" is a bit absolute. The source hedges: \"There may be a handful that just grew by themselves, but usually it takes some sort of push.\" The engine label \"WON'T FIRE ALONE\" drops the same hedge.",
+            "MYTH quote: the line is in quotation marks but is reworded, not quoted from the source. It is framed as the common myth rather than as Paul Graham's words, so this is minor.",
+            "Body text: \"nobody else will do it\" goes slightly beyond the source's \"You can't wait for users to come to you,\" but it fits the essay's point.",
+            "Footnote: the source text never names Paul Graham. The attribution is correct in the real world, but it does not come from the text provided."
+          ],
+          "evidence": [
+            "Body text: \"Startups take off because founders make them take off\" is nearly word for word from the source: \"Actually startups take off because the founders make them take off.\"",
+            "Body text: \"Getting the engine going is a separate, manual, tiring job\" paraphrases the source's \"there was a separate and laborious process to get it going.\"",
+            "Footnote: \"like the crank on a car before electric starters, once it's going it keeps going\" matches the source: \"the cranks that car engines had before they got electric starters. Once the engine was going, it would keep going.\"",
+            "Footnote: \"Do Things That Don't Scale (2013)\" matches the source title and its date, \"July 2013\".",
+            "MYTH row: \"“Build a better mousetrap and they will come.”\" is a reworded version of the source's \"if you've made a better mousetrap, people beat a path to your door as promised.\"",
+            "Gauge readout \"0040 RPM\" and the labels \"DEAD COLD\" and \"RUNS ON ITS OWN\" are clearly a toy illustration. They are not presented as data."
+          ],
+          "reasoning": "The main claim and the crank metaphor match the source closely. The gauge values are obviously illustrative. The problems are small: the headline and engine label drop the source's 'usually' hedge, and the myth line is reworded inside quotation marks. The source's author would likely accept these simplifications. There are no fabricated numbers or claims."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "The headline \"Startups don't start themselves\" is a large serif at top left, with \"start themselves\" in cyan italic. It's the clear entry point.",
+            "There are three levels on the left: the small kicker \"01 · THE BIG IDEA\", then the headline, then the body text \"Startups take off because founders make them take off…\" with a bold phrase. The MYTH/REALITY rows and the small Paul Graham citation come after that.",
+            "On the right, an engine diagram labelled \"the startup\" sits under an RPM gauge with \"0040\". The gauge leaves empty space at the upper middle, roughly x 520–870, y 40–250.",
+            "There are many tiny letter-spaced mono labels, about 9–10px: \"RPM · NEEDLE BELOW IGNITION\" (contrast 4.01:1), \"GOOD ENGINE · WON'T FIRE ALONE\", \"DEAD COLD\", \"RUNS ON ITS OWN\", \"THE FOUR'S ARM\", \"CRANK\", \"MYTH\" and \"REALITY\". These would be illegible at presentation distance.",
+            "The struck-through myth text \"Build a better mousetrap and they will come.\" is grey and low-contrast. The citation \"Paul Graham, Do Things That Don't Scale (2013)…\" is around 12–13px.",
+            "The button row (\"TURN THE CRANK\", \"JUST WAIT FOR USERS\", \"RESET\") and the status text \"Engine cold. A good engine, sitting still.\" sit along the bottom right. The bottom-left quarter below the citation, roughly y 540–720, is empty."
+          ],
+          "reasoning": "The hierarchy works: one strong headline, a clear body level, and the left text balances the right diagram. But the slide relies on many 9–10px mono labels that would be unreadable from a distance. One of them fails contrast, and the myth line is deliberately faint. There are also empty zones at the bottom left and upper middle. That is more than the one minor issue a 3 allows."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "numbered eyebrow label — '01 · THE BIG IDEA' at top-left, used as decoration",
+            "default explainer split — prose column on the left (headline, body, myth/reality, citation) and a figure panel on the right",
+            "detached button row — 'TURN THE CRANK ↻', 'JUST WAIT FOR USERS', 'RESET' sit in a row under the figure, separate from the crank they control",
+            "readout — the line 'Engine cold. A good engine, sitting still.' beside the buttons states the engine's state in words, and the gauge caption 'RPM · NEEDLE BELOW IGNITION' says in words what the needle already shows"
+          ],
+          "evidence": [
+            "Top-left micro-label reads '01 · THE BIG IDEA'.",
+            "Left column has the serif headline 'Startups don't start themselves', a body paragraph, a MYTH/REALITY table and a Paul Graham citation. The right half is the engine-and-gauge drawing.",
+            "The buttons 'TURN THE CRANK ↻', 'JUST WAIT FOR USERS' and 'RESET' are in a strip at the bottom right, below a hairline rule and away from the crank drawn at 'THE FOUNDER'S ARM'.",
+            "Text to the right of the buttons: 'Engine cold. A good engine, sitting still.'",
+            "The gauge shows '0040' with 'RPM · NEEDLE BELOW IGNITION', while the needle visibly sits near 'DEAD COLD'.",
+            "The figure is specific to the idea: a crank-start engine labelled 'the startup / GOOD ENGINE · WON'T FIRE ALONE', with the gauge running from 'DEAD COLD' through 'IGNITION' to 'RUNS ON ITS OWN'."
+          ],
+          "reasoning": "The main metaphor is drawn specifically for this idea. The crank, the engine labelled 'the startup' and the ignition-threshold gauge come straight from Paul Graham's analogy, so you could not swap another topic into the figure. The layout around it is generic, though. It uses the default prose-left, figure-right split. It adds a decorative '01' eyebrow label. The controls are buttons in a row away from the crank, when you could have turned the crank itself. There is also a status line restating the engine's state, and a gauge caption repeating what the needle shows. The STRIKETHROUGH myth/reality table is a nice touch. Even so, four of the listed defaults are present, and the split layout sets the overall structure. That puts the slide at 2, held above 1 by the well-made figure."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_47fohz9x.rest.png",
+        "interacted": []
+      }
+    },
+    {
+      "id": "s_3esimwaa",
+      "title": "Two separate jobs",
+      "kind": "instrument",
+      "instrument": true,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 30,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [
+          {
+            "text": "Running: its own power",
+            "hiddenFrac": 0.46
+          }
+        ],
+        "contrast": {
+          "fails": [
+            {
+              "text": "cold",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 9
+            }
+          ],
+          "checked": 30,
+          "minRatio": 4.01
+        }
+      },
+      "controls": 2,
+      "intent": {
+        "title": "Two separate jobs",
+        "claim": "Starting a startup and keeping it running are two separate jobs. The first one is manual, and it ends at a threshold.",
+        "mechanism": "Cranking adds RPM. Below the ignition line, RPM decays back to zero as soon as cranking stops. Above it, the engine sustains its own RPM and the crank is no longer needed. The input is the founder's effort. The relation is the threshold. The output is self-sustaining motion, or a fall back to cold.",
+        "kind": "instrument",
+        "operate": "The reader turns the crank (presses or drags to add turns) and can let go at any moment.",
+        "changes": "The tachometer needle rises with each turn. If released below the ignition line, it sinks back to cold. Once past the line, the engine catches, the crank arm drops away, and the needle holds steady in the 'running on its own' zone.",
+        "aha": "Letting go just short of the line sends the needle all the way back to zero. Crossing it makes the arm unnecessary. These are two different jobs, and the first one doesn't partly count.",
+        "resting": "Two labeled zones on the tachometer: 'Starting: your arm' below the ignition line and 'Running: its own power' above it. The needle is cold and a ghost trace shows one failed attempt that sank back. This reads alone as: effort below the line is lost if you stop, and effort past it is no longer needed."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 4,
+          "judged": 4,
+          "read_claim": "Starting a company and keeping it running are two separate jobs: at first the founders have to push growth by hand until it crosses a threshold, and only after that does growth keep itself going. So it's a mistake to wait for growth to start by itself.",
+          "read_evidence": [
+            "\"Starting and running are two separate jobs\" (headline, top left)",
+            "\"JOB 1 STARTING — Your arm — Hard, hands-on, unscalable effort by the founders. Manual, and it ends at a threshold.\"",
+            "\"JOB 2 RUNNING — Its own power — Growth that feeds itself once it catches. The crank is no longer needed.\"",
+            "\"Common mistake: expecting job 2 to begin by itself. Somebody has to turn the crank first.\"",
+            "Gauge on the right labeled \"IGNITION LINE\", \"STARTING: YOUR ARM\", \"RUNNING: ITS\" with a reading of \"0 RPM · COLD\"",
+            "Chart: \"RPM OVER TIME\", with the note \"EARLIER TRY · STOPPED SHORT — BACK TO COLD\""
+          ],
+          "evidence": [
+            "\"Starting and running are two separate jobs\" (headline)",
+            "\"JOB 1 STARTING — Your arm — Hard, hands-on, unscalable effort by the founders. Manual, and it ends at a threshold.\"",
+            "\"JOB 2 RUNNING — Its own power — Growth that feeds itself once it catches.\"",
+            "Reader claim: \"at first the founders have to push growth by hand until it crosses a threshold\""
+          ],
+          "reasoning": "The reader got the full intended claim. Starting and running are two separate jobs, and the first is manual and ends at a threshold. The reader also adds the common-mistake point and the idea that growth then sustains itself. Both come from the slide and don't contradict the intended claim, so nothing important is missing or distorted."
+        },
+        "mechanism_shown": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "Gauge with a needle, a marked \"IGNITION LINE\" tick on the arc, \"COLD\" at the left end and \"RUNNING: ITS\" at the right, with \"STARTING: YOUR ARM\" over the grey section",
+            "\"RPM OVER TIME\" chart with a dashed \"IGNITION LINE\" and a ghost trace labelled \"EARLIER TRY · STOPPED SHORT — BACK TO COLD\" that rises, peaks below the line and falls back to zero",
+            "Interaction 1: the needle moves to \"8\", and the cyan trace steps up with each turn and sags between turns: \"Turn 6 · 8 rpm. Still below the line. Stop now and it sinks.\"",
+            "Interaction 2: after letting go, the trace drops to the floor and the gauge reads \"0 RPM · COLD\": \"Let go at 8, short of the line. Every turn lost: back to cold.\"",
+            "Interaction 3: crank again up to \"10\", with a sawtooth trace that is still well below the ignition line",
+            "No screenshot shows RPM crossing the ignition line and holding on its own"
+          ],
+          "reasoning": "Effort going in, the threshold and the outcome below the line are all drawn. Each crank adds a step to the trace, the trace decays between turns, and stopping short sends it back to cold. You can read this from the gauge and the time chart without the sentences. But the other half of the mechanism, sustained RPM above the line, is never shown. It exists only as the labels \"RUNNING: ITS\" and \"Its own power\" and the teal arc. So one key link is stated, not depicted."
+        },
+        "device_works": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "At rest the gauge reads \"0\" with \"RPM · COLD\". It shows an \"IGNITION LINE\" mark at about 60 on the arc and a ghost trace labelled \"EARLIER TRY · 52 · LET GO\" / \"EARLIER TRY: STOPPED SHORT — BACK TO COLD\". The hint reads \"Each press is one turn. Stop pressing any time and watch what happens.\"",
+            "In the first run, clicking #crank moved the needle to \"8\", then \"13\", with the caption \"Turn 2 · 13 rpm. Still below the line. Stop now and it sinks.\" The crank arm icon rotated with each turn.",
+            "After I stopped, the needle went back to \"0\" with \"RPM · COLD\". The caption changed to \"Let go at 13, short of the line. Every turn lost: back to cold. The first job doesn't partly count.\" The RPM-over-time chart drew the climb and the fall back to zero.",
+            "Six quick clicks peaked at \"27\" (\"Turn 4 · 27 rpm\") and then dropped to 16 and 8. RPM decays between presses quickly enough that, at the driver's click speed, I could not get near the ignition line at about 60.",
+            "Pressing and holding the button only counted as one turn (\"Turn 1 · 8 rpm\"). Pressing Enter repeatedly gave the same slow climb (peak 16)."
+          ],
+          "reasoning": "The control is easy to find and works: each press raises the needle, and letting go below the line sends it back to cold. The caption and the RPM chart both state the 'doesn't partly count' point clearly. I never saw the other half of the mechanism: crossing the ignition line, the arm dropping away, and the needle holding in the running zone. RPM decays fast between presses, so reaching the line takes a long burst of rapid clicking, and some first-time viewers may never get there. That is only part of the planned change, plus a difficulty problem, so it doesn't earn a 4.",
+          "aha_reached": false,
+          "drives": [
+            [
+              {
+                "click": "#crank"
+              },
+              {
+                "click": "#crank"
+              },
+              {
+                "click": "#crank"
+              },
+              {
+                "wait": 2500
+              }
+            ],
+            [
+              {
+                "click": "#crank"
+              },
+              {
+                "click": "#crank"
+              },
+              {
+                "click": "#crank"
+              },
+              {
+                "click": "#crank"
+              },
+              {
+                "click": "#crank"
+              },
+              {
+                "click": "#crank"
+              }
+            ],
+            [
+              {
+                "hold": {
+                  "at": [
+                    679,
+                    572
+                  ],
+                  "ms": 4000
+                }
+              },
+              {
+                "wait": 2000
+              }
+            ],
+            [
+              {
+                "click": "#crank"
+              },
+              {
+                "press": "Enter"
+              },
+              {
+                "press": "Enter"
+              },
+              {
+                "press": "Enter"
+              },
+              {
+                "press": "Enter"
+              },
+              {
+                "press": "Enter"
+              }
+            ]
+          ]
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "\"Every turn lost: back to cold. The first job doesn't partly count.\" This is an all-or-nothing claim the source never makes. Its closest point is that Airbnb's early fragility meant ~30 days of in-person work 'made the difference.' The claim comes from the simulation's mechanics, so it is a mild extrapolation.",
+            "\"Somebody has to turn the crank first.\" This is stated as absolute. The source hedges: \"There may be a handful that just grew by themselves, but usually it takes some sort of push.\" This is a minor loss of nuance."
+          ],
+          "evidence": [
+            "The quote at bottom left, \"Once the engine was going, it would keep going, but there was a separate and laborious process to get it going.\", matches the source word for word.",
+            "Job 1 says \"Hard, hands-on, unscalable effort by the founders.\" This matches the source: \"startups take off because the founders make them take off\" and \"a separate and laborious process.\"",
+            "Job 2 says \"Growth that feeds itself once it catches. The crank is no longer needed.\" This is a fair reading of \"Once the engine was going, it would keep going.\"",
+            "\"Common mistake: expecting job 2 to begin by itself.\" This matches the would-be founders who believe startups \"either take off or don't\" and that people will \"beat a path to your door.\"",
+            "The RPM values (8, 10, 16), \"EARLIER TRY · 52 · LET GO\", the ignition line and the turn counts belong to an obvious interactive toy simulation. They are not presented as source data.",
+            "After interaction 2, the slide says: \"Every turn lost: back to cold. The first job doesn't partly count.\""
+          ],
+          "reasoning": "The slide's core claim is the source's crank metaphor, and it carries the verbatim quote. Starting and running are separate, starting is laborious and founder-driven, and once running it keeps going. Every number on the slide is clearly part of a toy simulation. Two things are slightly overstated: the absolute 'somebody has to' drops the source's 'usually', and the 'doesn't partly count' line goes further than the source. Both are simplifications the author would probably accept. Nothing is fabricated as fact, so this is a 3 and not a 4."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "The headline \"Starting and running are two separate jobs\" at top left is large serif with a cyan italic accent, so it's a clear entry point",
+            "There are three deliberate levels on the left: the mono kicker \"THE HAND-CRANK · 02\", serif job titles \"Your arm\" / \"Its own power\", and sans body text",
+            "On the right, the label \"RUNNING: ITS\" is cut off at the right edge of the gauge area (the check found it 46% hidden; the full text is \"Running: its own power\")",
+            "Labels are very small (~9px mono): \"COLD\", \"CRANK\", \"RPM · COLD\", \"EARLIER TRY · 52 · LET GO\", \"RPM OVER TIME\". The \"cold\" label fails contrast at 4.01:1",
+            "In the chart, \"EARLIER TRY: STOPPED SHORT — BACK TO COLD\" sits right on the dashed ignition line, so a line runs through the text",
+            "The chart box below the gauge is mostly empty: only a faint dotted line in a large dark rectangle",
+            "The quote \"Once the engine was going…\" is small grey italic and low-contrast, and the space below it on the left is empty down to the bottom of the slide"
+          ],
+          "reasoning": "The left column has a strong headline and a clean, layered hierarchy. The right panel has several problems: a cut-off label (\"RUNNING: ITS\"), many labels too small to read from a distance, chart text with a line running through it, and a chart box that is mostly empty. There are also empty zones at the bottom left and inside the chart. That is clearly more than one minor issue, so the slide can't score a 3."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "default explainer split — prose column on the left ('Starting and running are two separate jobs', JOB 1/JOB 2 rows, mistake line, quote) with a figure panel on the right (gauge + RPM-over-time chart), divided by a vertical hairline",
+            "numbered eyebrow labels — 'THE HAND-CRANK · 02' top-left, plus 'JOB 1 / STARTING' and 'JOB 2 / RUNNING' row labels (these carry some meaning, so this is borderline)",
+            "body copy restating the figure — the left 'Your arm' / 'Its own power' rows say again what the gauge already labels as 'STARTING: YOUR ARM' and 'RUNNING: ITS…'"
+          ],
+          "evidence": [
+            "Left column: headline 'Starting and running are two separate jobs', then 'JOB 1 STARTING — Your arm — Hard, hands-on, unscalable effort…' and 'JOB 2 RUNNING — Its own power — Growth that feeds itself…', then 'Common mistake: expecting job 2 to begin by itself.' and a quote in grey italics.",
+            "Right panel: a semicircle gauge with a grey 'STARTING: YOUR ARM' arc, a cyan 'IGNITION LINE' tick and a teal 'RUNNING: ITS' arc. There is a crank glyph at left labeled 'CRANK', a center readout '0 RPM · COLD' and a ghost marker 'EARLIER TRY · 52 · LET GO'.",
+            "Below the gauge: an 'RPM OVER TIME' chart with a dashed ignition line and a dotted earlier-try curve labeled 'EARLIER TRY: STOPPED SHORT — BACK TO COLD'.",
+            "Controls: 'TURN THE CRANK' and 'RESET' buttons sit under the chart, next to the instruction 'Each press is one turn. Stop pressing any time and watch what happens.'",
+            "'RUNNING: ITS' is cut off at the right edge."
+          ],
+          "reasoning": "The figure fits the idea well. The gauge splits into a hand-powered zone and a self-powered zone at an ignition threshold. The ghost 'earlier try' marker and the decay curve show a start that stopped short and fell back to cold, which is the exact mistake the slide warns about. You could not swap another topic onto this figure. The 'TURN THE CRANK' button is also a metaphor-matched action, not a generic toggle, though it sits apart from the crank glyph on the gauge. The overall layout, though, is the stock left-prose / right-figure split. The left column also repeats the starting/running labels that the gauge already shows, and the slide carries a numbered eyebrow ('· 02'). There are no card grids, gradients, emoji, stat tiles or filler icons. Because the split defines the layout and the restating prose adds a second default, this lands at 2, though at the top of that band thanks to the specific figure."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_3esimwaa.rest.png",
+        "interacted": [
+          "shots/s_3esimwaa.i1.png",
+          "shots/s_3esimwaa.i2.png",
+          "shots/s_3esimwaa.i3.png",
+          "shots/s_3esimwaa.i4.png"
+        ]
+      }
+    },
+    {
+      "id": "s_n9tj8cgf",
+      "title": "What turning the crank looks like",
+      "kind": "comparison",
+      "instrument": false,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 37,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [
+            {
+              "text": "↓ forgets about it",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 10
+            },
+            {
+              "text": "↓ busy, puts it off",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 10
+            },
+            {
+              "text": "↓ gets stuck on setup, alone",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 10
+            }
+          ],
+          "checked": 37,
+          "minRatio": 4.01
+        }
+      },
+      "controls": 1,
+      "intent": {
+        "title": "What turning the crank looks like",
+        "claim": "Turning the crank mostly means recruiting users one at a time, in person, and finishing the setup for them on the spot.",
+        "mechanism": "Two paths from the same 'yes, I'll try it'. In the diffident path, the founder sends a link, and the user has to remember, open it and set things up alone, so each step can lose them. In the Collison path, the founder says 'give me your laptop', and the yes becomes an installed user right there. The output is how many yeses become actual users.",
+        "kind": "comparison",
+        "aha": "Even after the user says yes, the link path still leaves room to lose them. The Collison installation turns the yes straight into a running user.",
+        "resting": "Two columns from one 'Will you try it?' / 'Yes'. Left, 'We'll send you a link': a path with several gaps where the user can drop off. Right, 'Right then, give me your laptop': one step straight to a working setup. Stripe is labeled on the right, with a note that even Stripe, solving an urgent problem, didn't wait."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 3,
+          "judged": 3,
+          "read_claim": "When 10 people say yes, sending them a link turns only about 3 into running users, but setting it up for them on the spot, the way Stripe's founders did, turns all 10 into users.",
+          "read_evidence": [
+            "\"Will you try it?\" — \"Yes.\" (top center box, 'SAME STARTING POINT · 10 PEOPLE')",
+            "Left: \"Great, we'll send you a link.\" with counts dropping 10 → 7 → 5 → 3 and \"3 OF 10 YESES BECOME RUNNING USERS\"",
+            "Right: \"COLLISON INSTALLATION · STRIPE\" / \"Right then, give me your laptop.\" with 10 → 10 and \"10 OF 10 YESES BECOME RUNNING USERS\"",
+            "Callout: \"The founders recruited one at a time and finished the setup themselves.\"",
+            "Bottom right: \"COUNTS ILLUSTRATIVE\""
+          ],
+          "evidence": [
+            "Reader's claim: setting it up for people on the spot \"turns all 10 into users\", while sending a link \"turns only about 3 into running users\"",
+            "Callout seen by the reader: \"The founders recruited one at a time and finished the setup themselves.\"",
+            "Right panel: \"COLLISON INSTALLATION · STRIPE\" / \"Right then, give me your laptop.\"",
+            "The reader's claim does not mention \"turning the crank\" or recruiting one at a time."
+          ],
+          "reasoning": "The reader got the core point: finishing the setup in person, on the spot, is what turns a yes into a running user, while sending a link loses most people. Their claim leaves out the intended framing that this is mostly what \"turning the crank\" means. It also leaves out recruiting people one at a time, even though the callout they quoted shows they saw it. The claim adds conversion numbers that the slide labels as illustrative, but they support the same point. So the core assertion matches, and the framing and recruiting nuance are lost."
+        },
+        "mechanism_shown": {
+          "score": 4,
+          "judged": 4,
+          "evidence": [
+            "Top box: \"SAME STARTING POINT · 10 PEOPLE\" / \"“Will you try it?” — “Yes.”\", with a connector line that branches into two columns",
+            "Left column \"DIFFIDENT PATH\" funnel of dot rows: \"Link sent\" 10 filled → \"Remembers to open it\" 7 → \"Opens it\" 5 → \"Sets it up alone\" 3. Each lost person is drawn as an empty dashed dot, and each drop is labelled (\"↓ FORGETS ABOUT IT\", \"↓ BUSY, PUTS IT OFF\", \"↓ GETS STUCK ON SETUP, ALONE\")",
+            "Right column \"COLLISON INSTALLATION · STRIPE\": \"Founder sets it up, on the spot\" 10 → \"↓ NO GAP — NOTHING TO REMEMBER\" → \"Running user\" 10, all dots filled",
+            "Outputs: large \"3 OF 10 YESES BECOME RUNNING USERS\" vs \"10 OF 10 YESES BECOME RUNNING USERS\"",
+            "Button \"▶ WALK 10 YESES THROUGH\". No screenshots taken after using it"
+          ],
+          "reasoning": "The mechanism is drawn. The figure shows one input (10 yeses) branching into two paths. On the left, each step visibly loses people as dots go from filled to empty. On the right, both rows stay full. The two outputs are shown as counts at the bottom. With the sentences covered, a viewer could still follow input → steps → output from the branching line, the shrinking dot rows and the 3-vs-10 totals. The text labels only name why people drop out; the drop itself is drawn."
+        },
+        "device_works": {
+          "score": null,
+          "na": true,
+          "reason": "device kind is comparison"
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "The drop-off reasons \"FORGETS ABOUT IT\", \"BUSY, PUTS IT OFF\" and \"GETS STUCK ON SETUP, ALONE\" are not in the source. The source never explains why the diffident approach loses users. These reasons are a plausible illustration, and only the counts are explicitly labelled illustrative. This is a minor issue.",
+            "\"10 OF 10 YESES BECOME RUNNING USERS\" suggests the Collison installation converts every user. The source makes no conversion claim. It is covered by the \"COUNTS ILLUSTRATIVE\" label, so this is a minor issue.",
+            "\"Will you try it?\" appears in quotation marks but paraphrases the source's \"Will you try our beta?\". This is a minor issue."
+          ],
+          "evidence": [
+            "Slide quotes the diffident founder as \"Great, we’ll send you a link.\", which matches the source exactly.",
+            "Slide quotes the Collisons as \"Right then, give me your laptop.\", which matches the source exactly. The label \"COLLISON INSTALLATION · STRIPE\" also matches the source's term \"Collison installation\".",
+            "The top prompt is \"“Will you try it?” — “Yes.”\". The source says \"Will you try our beta?\" This is a light paraphrase inside quotation marks.",
+            "The callout says \"Even Stripe — solving a problem people urgently had — didn’t wait for users to come.\" This matches the source: \"the problem they solved was an urgent one. If anyone could have sat back and waited for users, it was Stripe.\"",
+            "The callout also says \"The founders recruited one at a time and finished the setup themselves.\" This matches the source: \"set them up on the spot\" and \"recruiting users individually\".",
+            "The funnel numbers (10→7→5→3 against 10→10) are marked \"COUNTS ILLUSTRATIVE\" in the bottom-right corner.",
+            "The crank framing (\"What turning the crank looks like\") comes from the source's car-engine crank metaphor.",
+            "The footer line \"Like a street vendor handing out samples instead of putting up a billboard\" is clearly an analogy and does not misstate the source."
+          ],
+          "reasoning": "Every specific name, quote and claim about Stripe traces to the source. The numbers are marked as illustrative, and the analogies are labelled as analogies. The only liberties are the invented reasons people drop out of the diffident funnel and a slightly changed quote. These are simplifications the author would probably accept, but they keep the slide from a 4."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "The title \"What turning the crank looks like\" is the clear entry point at top left. A small boxed premise, \"Will you try it?\" — \"Yes.\", sits below it and branches into two columns.",
+            "There are 2–3 deliberate levels: the serif title, the italic column quotes (\"Great, we'll send you a link.\" / \"Right then, give me your laptop.\"), and then the dot-row data.",
+            "The two large numbers \"3\" and \"10\" act as payoff figures, each next to tiny letter-spaced caps reading \"OF 10 YESES BECOME RUNNING USERS\".",
+            "The drop-off annotations \"↓ FORGETS ABOUT IT\", \"↓ BUSY, PUTS IT OFF\" and \"↓ GETS STUCK ON SETUP, ALONE\" are about 10px faint caps, and they fail contrast at 4.01:1.",
+            "Other small labels are also hard to read from a distance: \"SAME STARTING POINT · 10 PEOPLE\", \"HAND ON THE CRANK\", \"COUNTS ILLUSTRATIVE\" and \"DIFFIDENT PATH\".",
+            "There is an empty band of roughly 70px between \"3 OF 10…\" and the footer rule, and the left column ends well above the bottom.",
+            "\"Founder sets it up, on the spot\" wraps onto two lines, so it sits out of line with the single-line row labels on the left.",
+            "The two columns are not mirrored: the right column runs 2 rows plus a callout box, while the left runs 4 rows. Even so, the rows fill a similar height."
+          ],
+          "reasoning": "The hierarchy is strong and deliberate. The title leads, the premise box branches into two parallel paths, and the large 3 vs 10 numbers land the comparison. Space is mostly used on purpose. However, a lot of the text that carries the meaning is tiny, faint, letter-spaced caps around 10px: the drop-off reasons and the labels under the payoff numbers. That text would be hard to read at presentation distance. There is also some dead space under the left column. Because the legibility problem affects many labels, not just one, the slide falls below a 3."
+        },
+        "not_generic": {
+          "score": 3,
+          "judged": 3,
+          "present": [
+            "numbered eyebrow label — top-left \"03 · THE CRANK, IN PRACTICE\" sits above the headline as a section number; it's a small label and doesn't shape the layout"
+          ],
+          "evidence": [
+            "The structure is a branching diagram. A boxed root, \"SAME STARTING POINT · 10 PEOPLE / “Will you try it?” — “Yes.”\", connects by hairline rules to two branches: \"DIFFIDENT PATH\" (left) and \"COLLISON INSTALLATION · STRIPE\" (right). This is not a card grid or a prose/figure split.",
+            "Each branch is a funnel of 10-dot rows. Some dots drain away at each stage (10 → 7 → 5 → 3), with a drop-off reason between stages: \"↓ BUSY, PUTS IT OFF\", \"↓ GETS STUCK ON SETUP, ALONE\". The right branch stays at 10 → 10 with \"↓ NO GAP — NOTHING TO REMEMBER\".",
+            "The big numerals \"3 OF 10 YESES BECOME RUNNING USERS\" and \"10 OF 10 YESES BECOME RUNNING USERS\" are the totals at the end of each funnel. They come from the mechanism, so they don't count as stand-alone stat tiles.",
+            "The callout \"Even Stripe — solving a problem people urgently had — didn't wait for users to come... finished the setup themselves.\" adds context that isn't in the diagram (the problem was urgent; the founders recruited one at a time). It only partly overlaps the figure.",
+            "The top-right gauge, \"HAND ON THE CRANK\", is a small dial. It probably tracks progress through the deck, but I can't confirm that from a still screenshot. It isn't a blob or glow.",
+            "There is one control, \"▶ WALK 10 YESES THROUGH\". It's a single action button tied to the dot funnels, not a row of segmented pills. No readout line is visible.",
+            "No emoji, gradients, filler icons or hero-tagline layout."
+          ],
+          "reasoning": "The form fits the idea: two dot funnels branch from the same \"Yes\". On the left, dots drain away at each named friction point. On the right, the founders do the setup, so every dot survives. You couldn't swap in another topic's text without rebuilding the diagram. The only named default is the small numbered eyebrow \"03 ·\". The callout box is close to restating the figure but adds the Stripe context. The final numerals are funnel outputs, not decorative stats. One minor default holds this at 3 rather than 4."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_n9tj8cgf.rest.png",
+        "interacted": []
+      }
+    },
+    {
+      "id": "s_r9egdmae",
+      "title": "Why founders skip the crank",
+      "kind": "static",
+      "instrument": false,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 28,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [
+            {
+              "text": "shyness · preferring code",
+              "ratio": 3.44,
+              "need": 4.5,
+              "fontPx": 11
+            },
+            {
+              "text": "rpm",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 9
+            },
+            {
+              "text": "pulled by 01 + 02",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 9
+            }
+          ],
+          "checked": 28,
+          "minRatio": 3.44
+        }
+      },
+      "controls": 0,
+      "intent": {
+        "title": "Why founders skip the crank",
+        "claim": "Founders skip the crank for two reasons, and the more dangerous one is a mistake about math, not about personality.",
+        "mechanism": "Two forces pull the founder's hand off the crank. One is personality: shyness, plus preferring to write code over facing rejection from strangers. The other is arithmetic: 10 hand-recruited users look too small to matter. The first is a matter of comfort. The second is a factual error, and the next slide corrects it.",
+        "kind": "static",
+        "aha": "The reason that sounds most rational, 'the numbers are too small', is the one that's wrong.",
+        "resting": "Two numbered reasons. 1, Personality: 'I'd rather write code than talk to strangers.' 2, Math: '10 users can't be how the big ones started.' Reason 2 is visually flagged as the dangerous one and points forward to the next slide. The tachometer sits cold, with the hand hovering off the crank."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 4,
+          "judged": 4,
+          "read_claim": "Founders stop doing early hands-on growth work (\"cranking\") for two reasons, shyness and the belief that tiny user numbers can't matter, and the second, which sounds the most rational, is actually a factual error about how growth works.",
+          "read_evidence": [
+            "Two forces pull the hand off the crank. One is a math error.",
+            "01 PERSONALITY SHYNESS · PREFERRING CODE \"I'd rather write code than talk to strangers.\"",
+            "02 MATH THE DANGEROUS ONE \"10 users can't be how the big ones started.\" Sounds like the rational objection. It's a factual error about how growth works.",
+            "The reason that sounds most sensible, \"the numbers are too small,\" is the one that's wrong.",
+            "gauge at right: \"0 RPM\", \"HAND · OFF\", \"PULLED BY 01 + 02\", \"STATE: CRANKING STOPPED\""
+          ],
+          "evidence": [
+            "Two forces pull the hand off the crank. One is a math error.",
+            "01 PERSONALITY SHYNESS · PREFERRING CODE",
+            "02 MATH THE DANGEROUS ONE \"10 users can't be how the big ones started.\"",
+            "It's a factual error about how growth works.",
+            "The reason that sounds most sensible, \"the numbers are too small,\" is the one that's wrong."
+          ],
+          "reasoning": "The reader found both reasons and labeled them personality (shyness) and math (small numbers). They also saw that the math reason is the dangerous one and that it is a factual error, not a personality issue. That covers the full comparison the slide was meant to make. The reader's added detail that this reason 'sounds rational' fits the intended claim and doesn't change it."
+        },
+        "mechanism_shown": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "Left column is text: '01 PERSONALITY SHYNESS · PREFERRING CODE' / '\"I'd rather write code than talk to strangers.\"' / 'A matter of comfort.' and '02 MATH THE DANGEROUS ONE' / '\"10 users can't be how the big ones started.\"' / 'It's a factual error about how growth works.'",
+            "Right side has an 'ENGINE · RPM' gauge reading '0 RPM' with the needle at 'DEAD COLD' and an 'IGNITION' tick mark",
+            "Below the gauge is a crank drawing with the handle detached and a dashed empty box labelled 'HAND · OFF' and 'PULLED BY 01 + 02'",
+            "Footer: 'STATE: CRANKING STOPPED' and 'GAP TO IGNITION: 100%'",
+            "No arrows or lines connect the 01/02 rows to the hand or the crank. The link exists only in the text label 'PULLED BY 01 + 02'",
+            "Nothing in the figure separates the comfort force from the error force. Both feed in the same way"
+          ],
+          "reasoning": "The figure draws a result state: the hand is off the crank, the engine reads 0 RPM, and the gap to ignition is 100%. That gives some real visual structure. But the two forces themselves are only text rows. Their pull on the hand appears only as the label 'PULLED BY 01 + 02', not as drawn vectors or connections. The key point, that one force is about comfort and the other is a factual error, is carried entirely by sentences. Cover the text and you see a stalled engine and a missing hand, but not two forces or how they differ."
+        },
+        "device_works": {
+          "score": null,
+          "na": true,
+          "reason": "device kind is static"
+        },
+        "fidelity": {
+          "score": 2,
+          "judged": 2,
+          "fabrications": [
+            "\"10 users can't be how the big ones started.\" This is presented as the founders' thought in quotation marks, but the number 10 is invented. The source gives no user count for this objection, and its own example uses 100 users, with 10 as the weekly gain."
+          ],
+          "distortions": [
+            "\"A matter of comfort. Unpleasant to push through, but at least you know you're choosing it.\" This is editorial commentary the source doesn't make. The source calls it \"shyness and laziness\" and says at least one founder \"will have to spend a lot of time on sales and marketing.\"",
+            "\"Laziness\" is dropped and softened to \"PREFERRING CODE\" and \"comfort,\" which makes the source's blunter judgment sound gentler.",
+            "Calling the math reason \"THE DANGEROUS ONE,\" and saying it \"sounds most sensible,\" are the slide's own ranking. The source doesn't say which reason is more dangerous."
+          ],
+          "evidence": [
+            "Title: \"Two forces pull the hand off the crank. One is a math error.\" This matches the source's \"There are two reasons founders resist going out and recruiting users individually,\" and the second reason, the small numbers, is an underestimate of compound growth.",
+            "Item 01: \"PERSONALITY · SHYNESS · PREFERRING CODE\" and \"I'd rather write code than talk to strangers.\" This paraphrases the source's \"a combination of shyness and laziness. They'd rather sit at home writing code than go out and talk to a bunch of strangers.\"",
+            "Item 02: \"10 users can't be how the big ones started.\" The source says \"the absolute numbers seem so small at first. This can't be how the big, famous startups got started.\" The source's example uses \"100 users,\" not 10.",
+            "\"It's a factual error about how growth works.\" This matches \"The mistake they make is to underestimate the power of compound growth.\"",
+            "\"NEXT: SMALL NUMBERS AREN'T SMALL\" fits the source's argument about growing 10% a week.",
+            "The gauge panel (\"0 RPM\", \"GAP TO IGNITION: 100%\", \"STATE: CRANKING STOPPED\") is an illustrative take on the source's crank metaphor, not a factual claim."
+          ],
+          "reasoning": "The slide's basic structure is faithful to the source: two reasons, the first being shyness and preferring code, the second being small numbers and a misunderstanding of compound growth. But it puts a specific number (10 users) the source never gives into a quoted founder thought, and that number clashes with the source's 100-user example. It also adds editorial framing the source doesn't support (\"at least you know you're choosing it,\" \"the dangerous one\") and softens \"laziness.\" The invented number caps the score at 2."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "The headline is the clear entry point: \"Two forces pull the hand off the crank.\" in large serif, with the cyan italic second line \"One is a math error.\"",
+            "Item 02 is highlighted with a cyan left border, a tinted panel, and a filled tag reading \"THE DANGEROUS ONE\". Item 01 is muted, with a grey \"01\". This gives a deliberate second level of hierarchy.",
+            "The right-hand diagram labels are very small mono caps: \"ENGINE · RPM\", \"DEAD COLD\", \"SELF-RUNNING\", \"HAND · OFF\", \"PULLED BY 01 + 02\" (9px), \"RPM\" (9px), \"STATE: CRANKING STOPPED\", \"GAP TO IGNITION: 100%\". Most of these look like 9–11px and would be hard to read from presentation distance.",
+            "\"SHYNESS · PREFERRING CODE\" is 11px at a 3.44:1 contrast ratio, so it is faint next to \"PERSONALITY\".",
+            "Below the closing line \"The reason that sounds most sensible... is the one that's wrong.\" (y≈560), the bottom ~150px on the left is empty. On the right, the crank diagram has an empty dashed box next to \"HAND · OFF\", and the lower half feels sparse."
+          ],
+          "reasoning": "The hierarchy is strong. There is one dominant headline, the emphasised second item works well as the focal point, and the levels step down clearly. But the right-hand diagram depends on many 9–11px labels that won't read at presentation distance, and some of them have low contrast. The bottom-left area is also stranded empty space, so the frame doesn't feel fully used. That is more than one minor issue, which keeps it from a 3."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "Default explainer split: the left column holds prose (headline, two numbered list items and a closing sentence), and the right column is a figure panel (the RPM gauge plus the crank diagram). The figure sits beside the text instead of being joined to it.",
+            "Readout line or panel: the bottom-right labels \"STATE: CRANKING STOPPED\" and \"GAP TO IGNITION: 100%\" describe in words what the gauge already shows. The gauge reads \"0 RPM\" with its needle at \"DEAD COLD\", and the crank is labelled \"HAND · OFF\".",
+            "Numbered eyebrow labels (minor): the large \"01\" and \"02\" mark the two list items. They are partly functional, because the crank diagram refers back to them with \"PULLED BY 01 + 02\"."
+          ],
+          "evidence": [
+            "Top left: an eyebrow reading \"04 · WHY FOUNDERS SKIP THE CRANK\", then the headline \"Two forces pull the hand off the crank. One is a math error.\"",
+            "Left column: \"01 PERSONALITY … 'I'd rather write code than talk to strangers.'\" and \"02 MATH [THE DANGEROUS ONE] … '10 users can't be how the big ones started.'\". Item 02 is highlighted with a cyan left rule.",
+            "Right panel: \"ENGINE · RPM\" gauge with \"0 RPM\", ends labelled \"DEAD COLD\" and \"SELF-RUNNING\", and an \"IGNITION\" tick. Below it is a crank drawing labelled \"HAND · OFF\" and \"PULLED BY 01 + 02\".",
+            "Bottom of the right panel: \"STATE: CRANKING STOPPED\" and \"GAP TO IGNITION: 100%\". These restate the gauge.",
+            "Closing body line: \"The reason that sounds most sensible, 'the numbers are too small,' is the one that's wrong.\" This repeats the headline's \"One is a math error.\""
+          ],
+          "reasoning": "The engine and hand-crank drawing is a metaphor specific to this deck, and the \"PULLED BY 01 + 02\" link is a real attempt to connect the list to the figure. The layout itself is still the stock pattern of prose on the left and a figure on the right. The forces do not visibly act on the crank: the figure is a static gauge stuck at zero, plus a disconnected hand, so the idea of two forces pulling the hand away never takes on a visual form. The status and gap lines are text versions of the gauge, and the final sentence repeats the headline. With the default split defining the layout and a readout line on top of it, the slide meets the anchor for 2 or more named defaults, even though the gauge and crank drawing are more specific than a generic figure would be."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_r9egdmae.rest.png",
+        "interacted": []
+      }
+    },
+    {
+      "id": "s_aewjm1n7",
+      "title": "Compounding: small numbers aren't small",
+      "kind": "instrument",
+      "instrument": true,
+      "gate": {
+        "overflowPx": 104,
+        "consoleErrors": 0,
+        "passed": false
+      },
+      "craftMetrics": {
+        "overflowPx": 104,
+        "consoleErrors": [],
+        "textBoxes": 46,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [],
+          "checked": 46,
+          "minRatio": 4.65
+        }
+      },
+      "controls": 9,
+      "intent": {
+        "title": "Compounding: small numbers aren't small",
+        "claim": "At 10% a week, 100 users become about 14,000 in a year and about 2 million in two. Small early numbers are the start of that curve.",
+        "mechanism": "Users after w weeks = 100 × (1 + r)^w. The weekly rate r and the elapsed weeks w are the inputs. Each week's gain is a percentage of an ever-larger base, so the increments look trivial at first and then explode. The output is the user count over time.",
+        "kind": "instrument",
+        "operate": "A weekly growth-rate slider (1% to 10%) and a time scrubber (week 0 to week 104).",
+        "changes": "The user curve redraws and a counter shows users at the scrubbed week. Week 1 at 10% reads 110, barely different from 100. Scrubbing to week 52 shows about 14,000 and to week 104 about 2 million. Lowering the rate to 5% collapses the two-year figure to about 16,000.",
+        "aha": "Going from 100 to 110 looks like nothing, and the curve looks flat for months. Then the same 10% produces 2 million. The 10 users you recruit by hand are the first steps of that curve.",
+        "resting": "The curve at 10%/week over 104 weeks, with labeled points: week 0 = 100, week 1 = 110, week 52 ≈ 14,000, week 104 ≈ 2,000,000. The first months look like a flat line hugging the axis. A note says '10 hand-recruited users = 10% this week.'"
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 4,
+          "judged": 4,
+          "read_claim": "A small weekly growth rate like 10% looks trivial at first (100 → 110 users) but compounds to about 14,000 users in a year and about 2 million in two years.",
+          "read_evidence": [
+            "Title, top left: \"Small numbers aren't small\"",
+            "Body text, left: \"Growing 10% a week feels slow: 100 users become 110. Keep it up and the same 10% makes ~14,000 in a year and ~2 million in two.\"",
+            "Large number, left: \"2,020,000\", labeled \"USERS AT WEEK 104 · 10% / WEEK\"",
+            "Chart callouts: \"100 → 110\", \"WEEK 52 · 1 YEAR ≈14.2K users\", \"WEEK 104 · 2 YEARS ≈2.02M users\"",
+            "On the chart, the curve stays flat near 0 until about week 78, then rises steeply to 2M"
+          ],
+          "evidence": [
+            "Reader claim: \"A small weekly growth rate like 10% looks trivial at first (100 → 110 users) but compounds to about 14,000 users in a year and about 2 million in two years.\"",
+            "Slide body: \"Growing 10% a week feels slow: 100 users become 110. Keep it up and the same 10% makes ~14,000 in a year and ~2 million in two.\"",
+            "Title: \"Small numbers aren't small\"",
+            "Callouts: \"WEEK 52 · 1 YEAR ≈14.2K users\", \"WEEK 104 · 2 YEARS ≈2.02M users\""
+          ],
+          "reasoning": "The reader got the full numerical assertion: 10% a week takes 100 users to about 14,000 in a year and about 2 million in two. They also got the relational point that a small-looking early step compounds into a huge result. The intended framing is slightly different. It says small early numbers are the start of that curve, while the reader says the growth rate looks trivial at first. The idea is the same, so nothing important is missing."
+        },
+        "mechanism_shown": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "Right-hand chart labelled \"USERS (LINEAR SCALE)\", x-axis 0–104 weeks, y-axis 0–2M. At 10% the curve hugs zero until about week 52 (\"≈14.2K users\"), then turns sharply up to \"≈2.02M users\" at week 104.",
+            "Zoom callout \"ZOOM · WEEK 0 → 1\" shows \"100 → 110\" with \"10 hand-recruited users = 10% growth this week\". A leader line ties it to the curve's starting point.",
+            "After interaction 1 (rate 5%), the y-axis stays fixed at 2M and the curve flattens to almost nothing (\"≈16K users\" at week 104). The callout changes to \"100 → 105\".",
+            "After interaction 2 (2%, week 69), the curve is flat on the floor and a dashed marker sits at week 69. The readout shows \"392\" and \"Gained this week: +8\".",
+            "The left readout shows \"Gained this week: +180,000\" at week 104 and 10%."
+          ],
+          "reasoning": "Both inputs appear in the figure: the week is the x-axis and the scrubbed marker, and the rate changes the curve's shape on a fixed linear y-axis. The output, user count, is the height of the curve. A viewer can see 'flat then explosive' and how the rate controls it without reading any sentences. The weakest link is the core idea that each week's gain is a percentage of a growing base. The figure never draws the per-week increments as growing steps. That idea appears only in the zoom callout's text and the 'Gained this week' number, so the figure shows the result of compounding more than the step that causes it."
+        },
+        "device_works": {
+          "score": 4,
+          "judged": 4,
+          "evidence": [
+            "Clicking \"Wk 1\" changes the counter to \"USERS AT WEEK 1 · 10% / WEEK\" \"110\" with \"Gained this week: +10 ← the ones you recruit by hand\", and a marker appears at the flat start of the curve.",
+            "Clicking \"Wk 52\" shows \"14,200\" and \"Gained this week: +1,291\". The marker sits at x=52, where the curve is still almost flat on the linear axis, which runs to \"2M\".",
+            "At rest (week 104, 10%) the slide shows \"2,020,000\" and the chart label \"≈2.02M users\".",
+            "Clicking the \"5%\" rate preset and then \"Wk 104\" shows \"16,000\". The curve flattens to the floor and the labels change to \"≈1,264 users\" at week 52 and \"≈16K users\" at week 104. The zoom box changes to \"100 → 105\".",
+            "Dragging the week slider to 69 shows \"71,800\" with a dashed scrub line and a dot on the curve. Dragging the rate slider to 2% redraws the curve flat, with \"≈784 users\" at week 104."
+          ],
+          "reasoning": "The rate and week controls, both sliders and preset buttons, do exactly what was planned. The curve redraws and the counter reads 110, about 14,200 and about 2.02M at weeks 1, 52 and 104, and the two-year figure drops to about 16K at 5%. The y-axis stays fixed at 2M, which makes the drop at 5% easy to see, and the 'Wk 1' readout ties the +10 directly to hand recruitment. One small weakness: the slide opens at week 104, so a first-time viewer sees the climax first instead of the flat start, but the Wk 1 preset makes the start easy to reach.",
+          "aha_reached": true,
+          "drives": [
+            [
+              {
+                "click": "#wp > button:nth-of-type(1)"
+              },
+              {
+                "click": "#wp > button:nth-of-type(3)"
+              },
+              {
+                "click": "#rp > button:nth-of-type(2)"
+              },
+              {
+                "click": "#wp > button:nth-of-type(4)"
+              }
+            ],
+            [
+              {
+                "drag": {
+                  "from": [
+                    516,
+                    531
+                  ],
+                  "to": [
+                    380,
+                    531
+                  ]
+                }
+              },
+              {
+                "drag": {
+                  "from": [
+                    516,
+                    448
+                  ],
+                  "to": [
+                    150,
+                    448
+                  ]
+                }
+              }
+            ]
+          ]
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [],
+          "evidence": [
+            "Body text: \"Growing 10% a week feels slow: 100 users become 110. Keep it up and the same 10% makes ~14,000 in a year and ~2 million in two.\" This matches the source: \"If you have 100 users, you need to get 10 more next week to grow 10% a week... After a year you'll have 14,000 users, and after 2 years you'll have 2 million.\"",
+            "Chart annotations \"WEEK 52 · 1 YEAR ≈14.2K users\" and \"WEEK 104 · 2 YEARS ≈2.02M users\" are correct: 100×1.1^52 ≈ 14,204 and 100×1.1^104 ≈ 2.02M.",
+            "\"Gained this week: +180,000\" at week 104 at 10%: 2.02M − 2.02M/1.1 ≈ 183K. This is acceptably rounded.",
+            "Interactive states are correct math, not claims attributed to the source. At 5%: \"16,000\", \"≈1,264 users\" and \"+761\" (1.05^104 ≈ 159, 1.05^52 ≈ 12.64). At 2%, week 69: \"392\", \"≈280\" and \"≈784\" (1.02^69 ≈ 3.92, 1.02^52 ≈ 2.80, 1.02^104 ≈ 7.84).",
+            "Zoom box: \"100 → 110 / 10 hand-recruited users = 10% growth this week\". This links the source's 10-user example to its 'recruit manually' section. It is a reasonable bridge.",
+            "Title \"Small numbers aren't small\" restates the source's point that founders resist because \"the absolute numbers seem so small at first\" and underestimate compound growth.",
+            "Quote \"Like planting a single seed: it looks like nothing until the orchard is there.\" This is the slide's own metaphor, not from the source. The source uses a car-engine crank and a newborn baby. It does not misstate the source."
+          ],
+          "reasoning": "I found no fabrications or distortions. Every number on the slide comes from the source (100, 110, 10%, ~14,000, ~2 million) or is correctly computed from the slide's stated formula, users = 100 × (1+r)^w. The slider values for other growth rates are clearly a toy control range. Two framings are the slide's own additions and are not attributed to Graham: the 'hand-recruited' label and the seed/orchard metaphor. Both are acceptable paraphrase or analogy. I'm giving a 3 rather than a 4 because the closing metaphor and 'feels slow' framing go a little beyond the source's own wording. The source says only that 110 'may not seem much better than 100'."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "The title \"Small numbers aren't small\" (large serif, with a cyan italic second half) at top left is a clear entry point. The big cyan \"2,020,000\" readout is a strong second level.",
+            "The chart takes up the right half and has deliberate annotations: \"≈2.02M users\" at the top-right endpoint, a \"WEEK 52 · 1 YEAR ≈14.2K users\" callout, and a \"ZOOM · WEEK 0 → 1 100 → 110\" box with a leader line to the origin.",
+            "Several labels are small and faint mono caps: \"USERS (LINEAR SCALE)\", the axis ticks \"0.5M\" and \"1.5M\", \"WEEKLY GROWTH RATE\", and the zoom-box line \"10 hand-recruited users = 10% growth this week\". Most look like ~10–11px.",
+            "The left column is busy: title, body, a stat, two sliders, two button rows (\"1% 5% 10%\", \"Wk 1 Wk 26 Wk 52 Wk 104\") and a quote all stack down to y≈625.",
+            "The deterministic check reports 104px of overflow, so content runs past the frame vertically.",
+            "The chart's upper-left area, above the zoom box and left of the curve, is mostly empty. The curve shape justifies this."
+          ],
+          "reasoning": "The hierarchy is deliberate and works: the title leads, then the big number, then the annotated chart. Space is mostly used on purpose. Against that, many labels are tiny, low-weight mono caps that won't read from presentation distance, the left column is a dense stack of controls, and there is 104px of overflow. Those are several issues, not one minor one, so this lands at the top of a 2 rather than a 3."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "default explainer split — prose, readout and controls in a left column, chart panel on the right",
+            "readout restating control state — 'USERS AT WEEK 104 · 10% / WEEK' over a giant '2,020,000' with 'Gained this week: +180,000', which repeats the slider values (10%, 104) and the chart's end label '≈2.02M users'",
+            "segmented pill buttons — '1% / 5% / 10%' and 'Wk 1 / Wk 26 / Wk 52 / Wk 104' rows of small boxed buttons under each slider, set apart from the chart they change",
+            "body copy restating the figure — 'Keep it up and the same 10% makes ~14,000 in a year and ~2 million in two' repeats the chart annotations 'WEEK 52 · 1 YEAR ≈14.2K users' and 'WEEK 104 · 2 YEARS ≈2.02M users'"
+          ],
+          "evidence": [
+            "Left column: eyebrow 'COMPOUNDING · USERS = 100 × (1+R)^W', headline 'Small numbers aren't small', a prose paragraph, a stat-like readout '2,020,000', two sliders with pill-button rows, and a pull-quote 'Like planting a single seed…'",
+            "Right panel: 'USERS (LINEAR SCALE)' area chart from 0 to 104 weeks, with annotations at week 52 and week 104",
+            "A 'ZOOM · WEEK 0 → 1' callout box reading '100 → 110 / 10 hand-recruited users = 10% growth this week', connected by a leader line to the flat start of the curve",
+            "The paragraph's numbers (110, ~14,000, ~2 million) all appear again in the chart's labels"
+          ],
+          "reasoning": "The chart itself fits the idea. A linear-scale curve that stays flat and then shoots up is the right way to show 'small numbers aren't small', and the zoom callout pinned to week 0→1 is a specific, well-chosen choice. The arrangement around it is the standard explainer template, though: prose and controls on the left, figure on the right. On top of that, a big-number readout restates the slider state, rows of pill buttons sit under the sliders, and the body text repeats the chart's own annotations. With four named defaults present (only the chart and zoom callout are tailored to this idea), the slide scores 2."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_aewjm1n7.rest.png",
+        "interacted": [
+          "shots/s_aewjm1n7.i1.png",
+          "shots/s_aewjm1n7.i2.png"
+        ]
+      }
+    },
+    {
+      "id": "s_qaarysva",
+      "title": "Fragility: the engine can stall",
+      "kind": "sequence",
+      "instrument": false,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 32,
+        "overlaps": [
+          {
+            "a": "stall → back to cold",
+            "b": "fix their listings",
+            "areaPx": 1673,
+            "frac": 0.89
+          }
+        ],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [],
+          "checked": 32,
+          "minRatio": 5.76
+        }
+      },
+      "controls": 2,
+      "intent": {
+        "title": "Fragility: the engine can stall",
+        "claim": "Before growth catches, almost every startup is fragile, and a short burst of manual effort can decide whether it lives.",
+        "mechanism": "There is a state progression near the ignition line. Without effort, RPM drifts down and the engine stalls. With sustained hands-on work (Airbnb going door to door in New York, recruiting hosts and fixing their listings), RPM climbs past the line. Per the source, about 30 days of in-person work made the difference. Once the engine is running, the same knocks no longer stall it.",
+        "kind": "sequence",
+        "aha": "The company now seen as an 'unstoppable juggernaut' was once about 30 days of legwork away from stalling.",
+        "resting": "Three stages along the tachometer. (1) Sputtering just below the ignition line, labeled 'fragile'. (2) About 30 days of door-to-door work in New York, needle climbing, with Airbnb rolly bags. (3) Running: 'unstoppable juggernaut'. A faint branch from stage 1 shows the alternative, a stall back to cold. A side note gives the campfire analogy: feed it twigs or it goes out."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 3,
+          "judged": 3,
+          "read_claim": "Airbnb, now seen as an unstoppable juggernaut, was once fragile and only got past the point where it could stall because of about 30 days of hands-on, door-to-door work in New York; most startups are similarly fragile until a short burst of manual effort gets growth going.",
+          "read_evidence": [
+            "Title: \"The “unstoppable juggernaut” was once ~30 days of legwork from stalling.\"",
+            "Chart band label: \"02 · ≈30 DAYS, HANDS ON\" with the curve crossing \"IGNITION LINE · RUNS ON ITS OWN\" at \"CATCHES\"",
+            "Chart annotation: \"AIRBNB · NEW YORK DOOR TO DOOR: RECRUIT HOSTS, FIX THEIR LISTINGS\" (the text overlaps the dotted line and \"BACK TO COLD\")",
+            "Right panel: \"Fragility wasn’t unique to Airbnb. Almost every startup is fragile at first: before growth catches, a short burst of manual effort decides whether it lives.\"",
+            "Phase labels: \"01 · FRAGILE\", \"03 · RUNNING\", \"KNOCK · ABSORBED\""
+          ],
+          "evidence": [
+            "Right panel: \"Almost every startup is fragile at first: before growth catches, a short burst of manual effort decides whether it lives.\"",
+            "Reader's claim: \"most startups are similarly fragile until a short burst of manual effort gets growth going\"",
+            "Title: \"The 'unstoppable juggernaut' was once ~30 days of legwork from stalling.\""
+          ],
+          "reasoning": "The reader got the general claim: startups are fragile before growth catches, and a short burst of manual effort makes the difference. The Airbnb example is the slide's own supporting case, so it isn't an added claim. Two small shifts: the reader says 'most' where the slide says 'almost every', and 'gets growth going' instead of 'decides whether it lives'. The second one weakens the life-or-death stakes a little, but the causal link is still there."
+        },
+        "mechanism_shown": {
+          "score": 4,
+          "judged": 4,
+          "evidence": [
+            "The chart's axes are \"RPM\" (from \"COLD\" upward) and \"TIME →\", with a dashed horizontal line labelled \"IGNITION LINE · RUNS ON ITS OWN\"",
+            "Phase 01, \"FRAGILE\": a white curve wobbles just below the line, annotated \"SPUTTERING JUST BELOW THE LINE — ANY KNOCK CAN KILL IT\"",
+            "Phase 02, \"≈30 DAYS, HANDS ON\": a shaded band where the cyan curve rises and crosses the line at \"CATCHES\". A dotted branch labelled \"NO EFFORT\" falls toward the \"COLD\" floor",
+            "Phase 03, \"RUNNING\": above the line, two dips are each marked \"KNOCK · ABSORBED\" and the curve recovers after both",
+            "Toggle buttons \"HANDS ON CRANK\" / \"LEFT ALONE\" (only the resting state was shown)",
+            "Overlapping text: \"KNOCK · ABSORBEDKNOCK\" runs together, and \"FIX THEIR LISTINGS\" collides with what looks like the dotted line's end label (\"…COLD\"), producing garbled text near the bottom of the shaded band"
+          ],
+          "reasoning": "With the sentences covered, the figure alone still shows the relation. The shaded hands-on period drives RPM up past the ignition threshold, the no-effort branch decays to cold, and after ignition the same knocks become recoverable dips. The input (effort over time), the threshold relation and both outcomes are all plotted on real axes, and the two branches put the counterfactual on the chart itself. Overlapping labels reduce legibility, but they do not hide the mechanism."
+        },
+        "device_works": {
+          "score": null,
+          "na": true,
+          "reason": "device kind is sequence"
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "\"a short burst of manual effort decides whether it lives\" — the source's ~30-day figure is about Airbnb only. Calling the effort 'short' for every startup slightly overgeneralizes it, though it fits the essay's crank metaphor.",
+            "\"RECRUIT HOSTS, FIX THEIR LISTINGS\" — the source says 'recruiting new users' and 'helping existing ones improve their listings'. 'Hosts' and 'fix' are small rewordings, not material changes.",
+            "\"ANALOGY · NEWBORN CAMPFIRE\" — the slide combines the source's newborn-baby image and its fire image (which the source uses for narrow markets) into its own analogy. It is labeled as an analogy and does not misstate the source."
+          ],
+          "evidence": [
+            "The title reads \"The “unstoppable juggernaut” was once ~30 days of legwork from stalling.\" The source says: \"Airbnb now seems like an unstoppable juggernaut, but early on it was so fragile that about 30 days of going out and engaging in person with users made the difference between success and failure.\"",
+            "The chart annotation reads \"AIRBNB · NEW YORK / DOOR TO DOOR: RECRUIT HOSTS, FIX THEIR LISTINGS\". The source says: \"going door to door in New York, recruiting new users and helping existing ones improve their listings.\"",
+            "The right panel reads \"Fragility wasn’t unique to Airbnb. Almost every startup is fragile at first\". The source says: \"That initial fragility was not a unique feature of Airbnb. Almost all startups are fragile initially.\"",
+            "The engine framing (\"BEFORE THE ENGINE CATCHES\", \"HANDS ON CRANK\") comes from the source's own metaphor: car engines that needed a crank before electric starters.",
+            "The chart has no numeric axes (RPM / COLD / TIME →). The knocks, the ignition line and the stall path are plainly illustrative.",
+            "The luggage icons echo the source's line \"I picture them with rolly bags\"."
+          ],
+          "reasoning": "Every specific claim on the slide traces to the source: the ~30 days, 'unstoppable juggernaut', New York door to door, listings, and 'almost all startups are fragile'. The chart is clearly a toy illustration with no made-up numbers. The only issues are small paraphrases and a slight generalization that the author would likely accept. That is faithful, but not perfectly exact, so it scores 3 rather than 4."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "The headline \"The “unstoppable juggernaut” was once ~30 days of legwork from stalling.\" is a large serif at top left with the cyan italic accent, so it's the clear entry point",
+            "There are three levels: a small mono kicker \"FRAGILITY · BEFORE THE ENGINE CATCHES\", then the headline, then the chart and the right-hand panel",
+            "Bottom of the chart, inside the hands-on band: \"FIX THEIR LISTINGS\" sits on top of \"STALL → BACK TO COLD\", so the text reads as garbled \"FISTHEIR BACK TO COLD\". The automated check also flagged this overlap",
+            "Labels collide at the dips: \"KNOCK · ABSORBEDKNOCK · ABSORBED\" runs together with no gap",
+            "The dotted 'no effort' line passes through the \"AIRBNB · NEW YORK\" annotation block",
+            "Most chart labels (\"01 · FRAGILE\", \"SPUTTERING JUST BELOW THE LINE\", \"NO EFFORT\", \"TIME →\") look like ~11px uppercase mono in muted gray, which is small at presentation distance",
+            "Right panel has three sections, \"OPERATE IT\", \"THE POINT\" and \"ANALOGY · NEWBORN CAMPFIRE\", separated by rules. It reads clearly, but the panel ends at about y=580 and leaves an empty lower-right corner"
+          ],
+          "reasoning": "The overall structure is strong: there is one obvious entry point, a deliberate split between the chart and the side panel, and good use of the frame. However, the chart has two places where text collides: the overlapping \"fix their listings\"/\"stall → back to cold\" labels, and the run-together \"ABSORBEDKNOCK\". It also uses many very small mono labels, which hurts legibility from a distance. The text that runs together means it can't score 3, and the overlap is limited to one cluster, so the slide as a whole isn't broken."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "default explainer split — chart panel on the left takes about two-thirds of the width, with a stacked prose column on the right (operate / the point / analogy). The parts are reversed from the usual prose-left layout, but it's still the standard explainer split.",
+            "detached segmented pill buttons — 'HANDS ON CRANK' / 'LEFT ALONE' toggle sits in the right column, away from the chart it controls",
+            "readout line — 'With ~30 days of in-person work, RPM climbs past the line. After that, the same knocks no longer stall it.' describes the active toggle state in words",
+            "numbered eyebrow labels — '01 · FRAGILE', '02 · ≈30 DAYS, HANDS ON', '03 · RUNNING' on the chart phases (these do mark real phases, so they're only partly decorative)",
+            "filler icons — two suitcase pictograms beside 'AIRBNB · NEW YORK' (a little thematic, but generic)"
+          ],
+          "evidence": [
+            "Chart at left: RPM vs TIME curve with a dashed 'IGNITION LINE · RUNS ON ITS OWN', 'KNOCK · ABSORBED' dips, and a dotted 'NO EFFORT' branch falling toward COLD",
+            "Right column: 'OPERATE IT · SAME START, TWO HANDS' above two pill buttons, then a readout sentence, then 'THE POINT' paragraph, then 'ANALOGY · NEWBORN CAMPFIRE'",
+            "The readout text repeats what the curve already shows (climbs past the line, knocks absorbed)",
+            "Overlapping labels: 'KNOCK · ABSORBEDKNOCK' collide, and 'FIX THEIR LISTINGS' / 'FALLS BACK TO COLD' overprint near the bottom of zone 02"
+          ],
+          "reasoning": "The chart itself is specific to the idea. It shows an engine-ignition metaphor with a threshold line, a hands-on window, knock dips that get absorbed, and a counterfactual branch that decays, so it couldn't be reused for another topic. Everything around it follows a template, though. The layout is the standard chart-plus-sidebar split. The only control is a pair of pill buttons cut off from the chart. A readout sentence restates the toggle state. Numbered phase eyebrows and suitcase icons add more defaults. That's 3–5 named defaults, but the specific central figure keeps this out of the template tier."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_qaarysva.rest.png",
+        "interacted": []
+      }
+    },
+    {
+      "id": "s_z4le9mds",
+      "title": "Ask the right question",
+      "kind": "comparison",
+      "instrument": false,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 28,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [
+            {
+              "text": "NOW: TINY",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 11
+            }
+          ],
+          "checked": 28,
+          "minRatio": 4.01
+        }
+      },
+      "controls": 0,
+      "intent": {
+        "title": "Ask the right question",
+        "claim": "Judge an early startup by how big it could get if the founders did the right things, not by whether it's taking over the world yet.",
+        "mechanism": "There are two measuring sticks for the same small startup. The wrong one reads the current needle (cold, tiny) and concludes it's nothing, which is judging a larval startup by an established one's standards. The right one projects where the needle could go if the crank is turned. The first leads founders to dismiss their own company, as Gates nearly did when he returned to Harvard.",
+        "kind": "comparison",
+        "aha": "Both questions look at the same needle and reach opposite verdicts. One sees a newborn as useless, and the other sees what it can grow into.",
+        "resting": "Side by side, the same cold tachometer with two readings. Left, 'Is this taking over the world?' reads only the current needle, and the verdict is 'no → quit' (Gates back at Harvard). Right, 'How big could this get if the founders did the right things?' shows a dashed projection to the running zone. The newborn-baby line sits as a caption under the left side."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 4,
+          "judged": 4,
+          "read_claim": "If you judge an early startup by how big it is now, you'll decide to quit; if you ask how big it could get if the founders did the right things, the same tiny reading tells you to keep going, so don't write off your own startup too early.",
+          "read_evidence": [
+            "Ask the right question",
+            "\"Is this taking over the world yet?\" … NOW: TINY … VERDICT No → quit.",
+            "\"How big could this get if the founders did the right things?\" … COULD BE: RUNNING … VERDICT Yes → keep cranking.",
+            "Same needle. Opposite verdicts.",
+            "DON'T DISMISS YOUR OWN STARTUP TOO EARLY"
+          ],
+          "evidence": [
+            "\"Is this taking over the world yet?\" … NOW: TINY … VERDICT No → quit.",
+            "\"How big could this get if the founders did the right things?\" … COULD BE: RUNNING … VERDICT Yes → keep cranking.",
+            "\"Same needle. Opposite verdicts.\"",
+            "\"DON'T DISMISS YOUR OWN STARTUP TOO EARLY\""
+          ],
+          "reasoning": "The reader got the full intended claim: judge by how big the startup could get if the founders do the right things, not by whether it's taking over the world yet. They also got the contrast and why it matters (the same reading leads to opposite verdicts). The extra point about not dismissing your own startup too early fits the claim and doesn't change it. Nothing important is missing."
+        },
+        "mechanism_shown": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "Two side-by-side gauges labelled \"COLD\" … \"IGNITION\" … \"RUNNING\", each with the same solid needle pointing near \"COLD\"",
+            "Left gauge: needle with label \"NOW: TINY\", verdict \"No → quit.\"",
+            "Right gauge: the same solid needle plus a dashed cyan projected needle toward \"RUNNING\", a dashed outer arc, the label \"COLD BE: RUNNING\", and the right part of the arc filled teal",
+            "Slider \"RIGHT THINGS DONE\" at \"85%\" with the caption \"Drag: the projection moves. The left verdict never does\"",
+            "Gates/Harvard and 'larval startup by an established one's standards' appear only in the body text at bottom left",
+            "Footer: \"Same needle. Opposite verdicts.\""
+          ],
+          "reasoning": "The figure itself shows the comparison. The same needle sits at the same reading on both gauges, but the right gauge adds a dashed projected needle and arc that reach toward RUNNING, and a slider is wired to that projection. That is a drawn input → relation → output, and a viewer could read it without the sentences. The link from the wrong reading to founders dismissing their own company (Gates going back to Harvard) is only stated in text, and the verdicts are plain words rather than something the figure produces. No screenshot after operating the slider was provided, so I couldn't confirm that the projection actually moves."
+        },
+        "device_works": {
+          "score": null,
+          "na": true,
+          "reason": "device kind is comparison"
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "The quoted wrong question becomes \"Is this taking over the world yet?\" The added \"yet\" and dropped \"company\" are small changes, but the slide shows them inside quotation marks as if they were the source's words.",
+            "\"No → quit.\" is the slide's own dramatization of the wrong verdict. The source warns against dismissing a startup but never uses \"quit\". It is an acceptable simplification."
+          ],
+          "evidence": [
+            "Left quote: \"Is this taking over the world yet?\" The source has \"is this company taking over the world?\" The slide adds \"yet\" and drops \"company\" but keeps the meaning.",
+            "Right quote: \"How big could this get if the founders did the right things?\" The source has \"how big could this company get if the founders did the right things?\" Only \"company\" is dropped, so this is nearly verbatim.",
+            "Body text: \"Judging a larval startup by an established one's standards\". This matches the source's \"They unconsciously judge larval startups by the standards of established ones.\"",
+            "Body text: \"like calling a newborn useless because it can't hold a job\". This paraphrases the source's newborn analogy (\"there's no way this tiny creature could ever accomplish anything\"). The phrase \"can't hold a job\" is the slide's own addition.",
+            "Body text: \"Bill Gates went back to Harvard after starting Microsoft.\" The source says \"He returned to Harvard for the fall semester after starting Microsoft.\"",
+            "Footer: \"DON'T DISMISS YOUR OWN STARTUP TOO EARLY\". This matches \"The big danger is that you'll dismiss your startup yourself.\"",
+            "\"keep cranking\" and the COLD/IGNITION/RUNNING gauge reuse the source's metaphor of the car-engine crank.",
+            "\"RIGHT THINGS DONE 85%\" is an interactive slider. The caption \"Drag: the projection moves\" marks it as a toy control, not a figure from the source."
+          ],
+          "reasoning": "Every factual claim traces to the source: the larval-startup judging error, the newborn analogy, Bill Gates going back to Harvard, the two questions and the warning not to dismiss your own startup. The 85% value is clearly an interactive illustration. The only problems are small: the quoted questions are slightly reworded and the newborn analogy is embellished. The source's author would likely accept both."
+        },
+        "craft": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "The title \"Ask the right question\" at top left is clearly the largest element, with \"right\" in italic cyan. It's a strong single entry point.",
+            "The two columns mirror each other: a small mono label (\"WRONG STICK · READS THE NEEDLE NOW\" / \"RIGHT STICK · PROJECTS THE NEEDLE\"), then a serif question, then a gauge, then a verdict. That gives a deliberate 3-level hierarchy.",
+            "The right column is accented in cyan (\"Yes → keep cranking.\", the dashed projection arc) while the left is grey. This contrast sets the emphasis on purpose.",
+            "Many small mono labels are tiny and faint at presentation distance: \"NOW: TINY\" (11px, 4.01:1), \"COLD\", \"RUNNING\", \"IGNITION\", \"VERDICT\", \"RIGHT THINGS DONE\", \"85%\", and the footer \"DON'T DISMISS YOUR OWN STARTUP TOO EARLY\".",
+            "The body text \"Judging a larval startup by an established one's standards…\" and \"Drag: the projection moves…\" looks to be about 14px and reads as small.",
+            "There is an empty band of about 70px between the end of the body text (~y570) and the footer rule (~y645). Under the left question, the space before the gauge (~y210–280) is also somewhat empty."
+          ],
+          "reasoning": "The hierarchy is clear and deliberate: one entry point, parallel columns, and the cyan accent pulls the eye to the right verdict. Space is mostly balanced, with only a modest gap above the footer. The main weakness goes beyond one minor issue: there are many tiny, low-weight mono labels (gauge ticks, verdict tags, slider label, footer tagline) around 11px, one of which fails contrast, and they won't read at presentation distance. Strong composition, but the systematic use of small text keeps this from a 4, and it is borderline for a 3."
+        },
+        "not_generic": {
+          "score": 3,
+          "judged": 3,
+          "present": [
+            "numbered eyebrow label — top-left '07 · JUDGING A COLD ENGINE' in mono micro-type above the title",
+            "readout restating control value (minor) — '85%' printed at the right end of the 'RIGHT THINGS DONE' slider; it just repeats where the thumb sits"
+          ],
+          "evidence": [
+            "Top-left eyebrow: '07 · JUDGING A COLD ENGINE'.",
+            "The layout is two matched semicircular gauges, each running 'COLD' → 'IGNITION' → 'RUNNING'. Both have the same cream needle pointing low. The left one is labeled 'NOW: TINY'. The right one adds a dashed cyan arc and a dashed projected needle labeled 'COULD BE: RUNNING'.",
+            "Paired headers 'WRONG STICK · READS THE NEEDLE NOW' and 'RIGHT STICK · PROJECTS THE NEEDLE', with the quotes '“Is this taking over the world yet?”' and '“How big could this get if the founders did the right things?”'.",
+            "Verdict rows: 'VERDICT No → quit.' in grey and 'VERDICT Yes → keep cranking.' in cyan italic.",
+            "The slider 'RIGHT THINGS DONE … 85%' sits directly under the right gauge and drives its projection. It is not a detached row of pill buttons.",
+            "The left body text ('like calling a newborn useless… Bill Gates went back to Harvard') adds an analogy and an example that the figure does not show, so it is not a restatement.",
+            "Footer: 'Same needle. Opposite verdicts.' and 'DON'T DISMISS YOUR OWN STARTUP TOO EARLY'."
+          ],
+          "reasoning": "This is not the default prose-left, figure-right split, and it is not a card grid. The slide puts the same needle on two dials side by side. One dial reads the needle as it is now and the other projects where it could go, which is exactly the slide's argument ('Same needle. Opposite verdicts.'). You couldn't swap in another topic's text and keep this layout. The dashed projection arc and the slider attached to the right dial are specific choices that carry meaning. Two small defaults remain: the numbered eyebrow '07 ·' and the '85%' value readout. Neither shapes the layout, but having both keeps this from a 4. The right panel's 'Drag:' caption is close to instruction filler, though its second half ('The left verdict never does — it can't see the future') adds a point of its own."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_z4le9mds.rest.png",
+        "interacted": []
+      }
+    },
+    {
+      "id": "s_8fnoytzz",
+      "title": "Powered aircraft, not projectiles",
+      "kind": "instrument",
+      "instrument": true,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 33,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [],
+          "checked": 33,
+          "minRatio": 4.65
+        }
+      },
+      "controls": 3,
+      "intent": {
+        "title": "Powered aircraft, not projectiles",
+        "claim": "Startups are powered aircraft, not projectiles. No amount of launch velocity replaces an engine that keeps running.",
+        "mechanism": "A projectile gets one impulse (the big launch or a big partnership) and then only decays, coming down whatever the starting speed. A powered aircraft keeps generating thrust: a core of happy users whose enthusiasm keeps driving growth. The inputs are initial impulse versus sustained thrust. The output is whether altitude is held.",
+        "kind": "instrument",
+        "operate": "A 'launch size' slider (small launch → huge launch with partnership) and an 'engine' toggle (off/on, where on means a core of happy users).",
+        "changes": "With the engine off, a bigger launch makes the arc taller, but it always lands back at zero. With the engine on, even a tiny launch climbs and keeps climbing. The two flight paths draw over the same timeline.",
+        "aha": "Pushing the launch slider to maximum never keeps the cannonball up. Turning the engine on keeps even the smallest launch flying.",
+        "resting": "Two paths on one chart: a cannonball arc from a big blast that falls back to the ground, and a plane from a modest takeoff that keeps rising. The cannonball is labeled 'Big Launch / big partnership' and the plane 'core group of happy users'. The tachometer on the plane reads 'running on its own'."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 4,
+          "judged": 4,
+          "read_claim": "A big launch or partnership is like a cannonball that peaks and falls back to zero, but a startup with its own engine, a core group of happy users, keeps climbing like a powered plane.",
+          "read_evidence": [
+            "\"Powered aircraft, not projectiles\" (headline, top left)",
+            "\"The cannonball gets one blast and falls. The plane keeps flying because its engine keeps turning.\" (pull quote, left)",
+            "\"A launch only has to produce a core group of happy users whose enthusiasm drives growth after that.\" (body text)",
+            "Dotted arc labeled \"BIG LAUNCH / BIG PARTNERSHIP\" that ends at \"LANDS\" near WK 32, and a cyan curve still rising toward WK 52 (chart)",
+            "\"CANNONBALL · PEAK 64 · LANDS WK 32 · WK 52 ALT 0\" and \"PLANE · WK 52 ALT 82 · STILL CLIMBING\" (readout under the chart)"
+          ],
+          "evidence": [
+            "Headline: \"Powered aircraft, not projectiles\"",
+            "Pull quote: \"The cannonball gets one blast and falls. The plane keeps flying because its engine keeps turning.\"",
+            "Chart: the \"BIG LAUNCH / BIG PARTNERSHIP\" arc \"LANDS WK 32\", while the plane is \"STILL CLIMBING\" at WK 52"
+          ],
+          "reasoning": "The reader got the whole claim. Startups are planes, not projectiles, and a big launch (the blast) can't take the place of an engine that keeps running and keeps the climb going. They also named what the engine is (happy users). That detail is on the slide, so it adds to the claim without changing it."
+        },
+        "mechanism_shown": {
+          "score": 4,
+          "judged": 4,
+          "evidence": [
+            "Resting: a dotted parabola labelled \"BIG LAUNCH / BIG PARTNERSHIP\" rises and falls to a dot labelled \"LANDS\" near WK 32, then runs flat along the axis; a solid cyan curve with an arrowhead climbs to the top right past \"WK 52 →\"",
+            "Gauge labelled \"PLANE ENGINE · RPM\" with ends \"DEAD COLD\" and \"ON ITS OWN\"; its needle points at the arc labelled \"CORE GROUP OF HAPPY USERS\" and reads \"RUNNING ON ITS OWN\"",
+            "Interaction 1 (slider at \"HUGE + PARTNERSHIP · 10.0\", engine OFF): the parabola reaches the top of the chart but still \"LANDS\" around WK 40, and the cyan curve makes a small hop, then lies flat; the gauge needle drops to \"DEAD COLD · NO THRUST\"; the readout says \"PLANE · WK 52 ALT 0 · GROUNDED\"",
+            "Interaction 2 (slider at \"SMALL · 1.0\", engine ON): the parabola shrinks to a tiny bump that lands at WK 4, while the cyan curve still climbs to \"WK 52 ALT 82 · STILL CLIMBING\"",
+            "Readout strip: \"CANNONBALL · PEAK 64 · LANDS WK 32 · WK 52 ALT 0\""
+          ],
+          "reasoning": "The relation is drawn. Two trajectories on altitude-vs-time axes share one start point. The impulse curve always comes back down to zero, whatever its size, and the thrust curve's height is tied to an engine gauge you can switch on and off. Changing the impulse slider changes only the parabola's peak, never whether it lands; turning thrust off grounds the plane. So a viewer can trace input (impulse size, engine on/off) → trajectory → output (altitude held or not) without reading the sentences. There are small flaws: labels overlap at small launch sizes (\"BIG PARTNERSHIP\" collides with \"LANDS\"), and the gauge is a fairly literal metaphor. Still, the mechanism itself is fully depicted."
+        },
+        "device_works": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "Engine OFF at launch 8.0: the plane line becomes a small hop near the start and goes flat, the gauge reads \"DEAD COLD · NO THRUST\" and the readout says \"PLANE · WK 52 ALT 0 · GROUNDED\"",
+            "Slider at maximum, \"HUGE + PARTNERSHIP · 10.0\": the dotted arc rises to the top of the chart (\"PEAK 100\") but still ends at \"LANDS WK 40 · WK 52 ALT 0\"",
+            "Slider at minimum, \"SMALL · 1.0\", engine ON: the cannonball barely leaves the axis (\"PEAK 1 · LANDS WK 4\"), yet the cyan curve climbs to the top-right arrow with \"WK 52 ALT 82 · STILL CLIMBING\" and \"RUNNING ON ITS OWN\"",
+            "Layout shift: at 10.0 the label wraps onto two lines (\"LAUNCH SIZE · / CANNONBALL\") and pushes the slider down from y≈474 to y≈488, so my second drag at y=474 missed the slider",
+            "At maximum, the \"BIG LAUNCH / BIG PARTNERSHIP\" label sits above the \"ALTITUDE · GROWTH\" header, outside the plot. At minimum, \"BIG PARTNERSHIP\" overlaps the \"LANDS\" label near the origin",
+            "The bottom readout wraps badly when the engine is ON: \"WK 52 ALT\" ends one line and \"0\" starts the next, and \"STILL / CLIMBING\" is also split"
+          ],
+          "reasoning": "Both controls produce the planned change right away. A bigger launch makes the arc taller but it always lands at altitude 0, and turning the engine on makes even the 1.0 launch climb to 82 and keep going. The aha is reachable and the numbers back it up. It falls short of a 4 because of polish problems: the slider jumps down when its label wraps at maximum, labels collide at the minimum, the peak label overflows the plot at maximum, and the bottom readout wraps awkwardly.",
+          "aha_reached": true,
+          "drives": [
+            [
+              {
+                "click": "section[data-slide-id] > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(3) > button:nth-of-type(1)"
+              },
+              {
+                "drag": {
+                  "from": [
+                    371,
+                    474
+                  ],
+                  "to": [
+                    470,
+                    474
+                  ]
+                }
+              },
+              {
+                "drag": {
+                  "from": [
+                    462,
+                    474
+                  ],
+                  "to": [
+                    60,
+                    474
+                  ]
+                }
+              }
+            ],
+            [
+              {
+                "click": "#ls"
+              },
+              {
+                "press": "Home"
+              },
+              {
+                "click": "section[data-slide-id] > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(3) > button:nth-of-type(1)"
+              },
+              {
+                "click": "section[data-slide-id] > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(3) > button:nth-of-type(2)"
+              }
+            ]
+          ]
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "'whose enthusiasm drives growth after that' and the gauge label 'RUNNING ON ITS OWN' slightly shift the source's point. The source credits founder effort ('You have to make an extraordinary effort initially') and how happy the founders made the users, not users carrying growth on their own. This is a minor reframing, not a material distortion, because the body text still says the engine must run 'all the time'."
+          ],
+          "evidence": [
+            "Title 'Powered aircraft, not projectiles' matches the source: 'founders who seem to believe startups are projectiles rather than powered aircraft'.",
+            "'Many founders hope one big launch or one big-company partnership will send them flying. It rarely works' matches the source's Big Launch section ('usually doesn't work') and its point that 'a partnership with a big company will be their big break' is a common mistake.",
+            "'A launch only has to produce a core group of happy users' paraphrases 'All you need from a launch is some initial core of users. How well you're doing a few months later will depend more on how happy you made those users than how many there were of them.'",
+            "Chart readouts such as 'CANNONBALL · PEAK 64 · LANDS WK 32', 'PLANE · WK 52 ALT 82' and the slider value 'BIG · 8.0' come from an obvious toy simulation. They change with the slider (peak 100 or 1, lands week 40 or 4), so they are not presented as data from the source."
+          ],
+          "reasoning": "The core claims trace to the source's 'Big' section: projectiles vs. powered aircraft, launches and partnerships rarely working, and a launch only needing a core of users whose happiness matters. The numbers are clearly simulation outputs from an interactive control, so they are not fabrications. The one weakness is a small shift of emphasis from founder effort to self-sustaining user enthusiasm. That is an acceptable simplification, not a distortion."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "Clear entry point: large serif headline \"Powered aircraft,\" with the cyan italic \"not projectiles\" in the upper left, then body text, then an italic pull quote with a cyan rule: \"The cannonball gets one blast and falls...\"",
+            "The chart fills the right side with a dotted cannonball arc labeled \"BIG LAUNCH / BIG PARTNERSHIP\" and a cyan exponential curve that ends in an arrowhead at the top right",
+            "Gauge annotation crowds the curve: the label \"CORE GROUP OF HAPPY USERS\" sits right against the cyan gauge arc, and its 'C' is clipped by the arc, so it looks crowded near the rising curve",
+            "Bottom stat line wraps awkwardly: \"CANNONBALL · PEAK 64 · LANDS WK 32 · WK 52 ALT\" leaves a lone \"0\" on the next line, and \"STILL CLIMBING\" also breaks to a second line",
+            "Dead band between the x-axis labels (\"LAUNCH\", \"WK 26\", \"WK 52 →\") at y≈560 and the stats rule at y≈640; the left column below the OFF/ON toggle (y≈550–720) is empty",
+            "Many labels are tiny monospace text, roughly 10–11px: \"DEAD COLD\", \"ON ITS OWN\", \"PLANE ENGINE · RPM\", \"LANDS\", the axis labels. These would be hard to read at presentation distance"
+          ],
+          "reasoning": "The hierarchy is good: the headline, then the body and pull quote, then the controls, with the chart as a strong second focal point. But there are several craft problems, not just one. The gauge label collides with the arc, the stats footer wraps badly and leaves a stranded \"0\", the lower part of both columns is empty, and much of the annotation text is too small to read projected. That adds up to more than the single minor issue a 3 allows."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "default explainer split (#7): the left column holds the eyebrow, headline, two prose paragraphs, a pull quote and the controls, and the right panel holds the chart. The idea does suit a chart, but the arrangement is the stock template.",
+            "readout line (#10): the bottom strip reads \"CANNONBALL · PEAK 64 · LANDS WK 32 · WK 52 ALT 0 PLANE · WK 52 ALT 82 · STILL CLIMBING\". It mostly repeats in words what the chart already shows (\"LANDS\" marker, curve still rising at WK 52). The slider value \"BIG · 8.0\" also echoes the control's setting.",
+            "prose restating the figure (#8), partial: the pull quote \"The cannonball gets one blast and falls. The plane keeps flying because its engine keeps turning.\" says in words exactly what the dotted arc and the cyan curve show.",
+            "segmented pill control (#9), partial: an \"OFF | ON\" toggle for \"PLANE'S ENGINE · HAPPY USERS\" sits in the left column, away from the engine gauge on the chart, so the control is separated from the thing it changes."
+          ],
+          "evidence": [
+            "Left column: \"THRUST VS. IMPULSE\" eyebrow, headline \"Powered aircraft, not projectiles\", body copy about \"big launch\" / \"core group of happy users\", an italic pull quote, then a slider \"LAUNCH SIZE · CANNONBALL\" and an OFF/ON toggle.",
+            "Right panel: a dotted parabola labeled \"BIG LAUNCH / BIG PARTNERSHIP\" landing at a \"LANDS\" dot around WK 32, a cyan exponential curve with an arrowhead, and an inset dial \"PLANE ENGINE · RPM\" running from \"DEAD COLD\" to \"ON ITS OWN\" with the caption \"RUNNING ON ITS OWN\".",
+            "Bottom readout strip lists the peak, landing week and week-52 altitudes, and the text wraps awkwardly (\"ALT 0\" wraps, leaving the \"0\" alone on the next line).",
+            "There are no card grids, emoji, gradients, filler icons or stat tiles."
+          ],
+          "reasoning": "The figure is specific to this idea: a projectile arc set against a powered climb, with an engine-RPM gauge, is a real visual metaphor for 'launch vs. ongoing engine', so you couldn't swap in another topic's text. But the slide around the figure is generic. The layout is the stock text-left / figure-right split. On top of that there is a readout strip that repeats the chart in words, a pull quote that restates the figure, and an OFF/ON toggle placed away from the gauge it controls. That adds up to two or more named defaults, even though the chart itself is good, so the slide lands at a 2."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_8fnoytzz.rest.png",
+        "interacted": [
+          "shots/s_8fnoytzz.i1.png",
+          "shots/s_8fnoytzz.i2.png"
+        ]
+      }
+    },
+    {
+      "id": "s_4qynvpk9",
+      "title": "A warning sign",
+      "kind": "static",
+      "instrument": false,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 28,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [],
+          "checked": 28,
+          "minRatio": 6.14
+        }
+      },
+      "controls": 0,
+      "intent": {
+        "title": "A warning sign",
+        "claim": "Any growth plan that leaves out the founders' effort should make you suspicious.",
+        "mechanism": "A simple test applied to a plan: find who is turning the crank. If the answer is 'nobody, the launch or partner does it', the plan treats the startup as a projectile and fails the test. Extraordinary effort, not just an extraordinary first move, is what passes.",
+        "kind": "static",
+        "aha": "Once you ask who is turning the crank, the plan with no effort in it stands out right away.",
+        "resting": "A single bold rule, 'Be suspicious of any growth plan that skips the effort', followed by one diagnostic question, 'Who is turning the crank?' Below are two short example plans: 'Launch big and users will come' (no hand on the crank, marked suspect) and 'We'll set up every early user ourselves' (hand on the crank, passes). The crank appears empty next to the suspect plan."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 4,
+          "judged": 4,
+          "read_claim": "Don't trust a growth plan unless someone, ideally the founders, is personally doing the early work. A plan that counts on a big launch to bring users in on its own will stall.",
+          "read_evidence": [
+            "Headline: \"Be suspicious of any growth plan that skips the effort.\"",
+            "\"ASK OF EVERY PLAN — Who is turning the crank?\"",
+            "Plan A: \"Launch big and the users will come.\" / \"Crank: nobody.\" / gauge labeled \"STALLED\" / tag \"× SUSPECT\"",
+            "Plan B: \"We'll set up every early user ourselves.\" / \"Crank: the founders.\" / gauge labeled \"TURNING OVER\" / tag \"✓ PASSES\"",
+            "Source: \"It's not enough just to do something extraordinary initially. You have to make an extraordinary effort initially.\""
+          ],
+          "evidence": [
+            "Headline: \"Be suspicious of any growth plan that skips the effort.\"",
+            "\"ASK OF EVERY PLAN — Who is turning the crank?\"",
+            "Plan A: \"Crank: nobody.\" → \"STALLED\" / \"× SUSPECT\"",
+            "Plan B: \"Crank: the founders.\" → \"TURNING OVER\" / \"✓ PASSES\"",
+            "Reader: \"Don't trust a growth plan unless someone, ideally the founders, is personally doing the early work.\""
+          ],
+          "reasoning": "The reader's claim states the intended assertion: be suspicious of a growth plan that leaves out the founders' effort. It keeps the relational part, that a plan without founder effort deserves suspicion, and adds that such a plan stalls. That addition is supported by the slide and doesn't change the core point. The reader's wording \"someone, ideally the founders\" is slightly softer than the intended focus on the founders, but this is a small hedge and doesn't lose the assertion."
+        },
+        "mechanism_shown": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "Plan A figure: a grey crank labelled \"NO HAND\" (dashed empty circle where a hand would be) next to a gauge whose needle rests at \"COLD\", with the caption \"STALLED\"",
+            "Plan B figure: a teal crank labelled \"FOUNDER\" with a dashed curved arrow for rotation and a thick teal handle, next to a gauge whose needle points toward \"IGNITION\", with the caption \"TURNING OVER\"",
+            "The verdict badges \"× SUSPECT\" and \"✓ PASSES\" sit under the text columns",
+            "Body text spells out the link: \"Crank: nobody... That's a projectile: one big push, then it falls\" and \"Their effort turns the engine over until it catches\""
+          ],
+          "reasoning": "The figure shows the relation as two states side by side. The input is whether a hand is on the crank (empty dashed hand vs. 'FOUNDER' with a rotation arrow), and the output is the gauge (needle at COLD/'STALLED' vs. near IGNITION/'TURNING OVER'). If you cover the sentences, you can still read 'no one cranking → engine stalls; founder cranking → engine catches'. Some of it still relies on text: the plans being tested are only shown as quotations, the projectile analogy is only stated in words, and the two figures are static icons rather than a drawn causal flow. That fits a 3."
+        },
+        "device_works": {
+          "score": null,
+          "na": true,
+          "reason": "device kind is static"
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "\"one big push, then it falls\" adds a little to the source. The source only contrasts projectiles with powered aircraft and says launches matter little. This is a small extension the author would probably accept.",
+            "\"We'll set up every early user ourselves\" generalizes from the Collison installation, which the slide doesn't name. It is a fair paraphrase of recruiting users manually."
+          ],
+          "evidence": [
+            "Headline \"Be suspicious of any growth plan that skips the effort.\" paraphrases the source's \"Any strategy that omits the effort is ipso facto suspect.\"",
+            "The SOURCE quote at the bottom, \"It's not enough just to do something extraordinary initially. You have to make an extraordinary effort initially.\", matches the source word for word.",
+            "The crank image and \"turns the engine over until it catches\" come from the source's metaphor of the cranks car engines had before electric starters: \"Once the engine was going, it would keep going.\"",
+            "Plan A's \"The launch or a partner is supposed to do the work. That's a projectile\" matches the source's sections on the Big Launch and partnerships, and its line about founders who \"believe startups are projectiles rather than powered aircraft\".",
+            "Plan B's \"Crank: the founders... That's a powered aircraft\" matches the source's point that \"startups take off because the founders make them take off\".",
+            "The quoted plans, \"Launch big and the users will come.\" and \"We'll set up every early user ourselves.\", are labeled PLAN A and PLAN B. They read as made-up example plans, not quotes from the author."
+          ],
+          "reasoning": "Every claim on the slide traces to the source. The headline, the crank metaphor, projectiles versus powered aircraft, and the warning about launches and partnerships are all there, and the quote is exact. The two plan 'quotes' are invented examples, but the PLAN A/B labels mark them as examples, so they aren't attributed to the author. 'Then it falls' is a small embellishment. The slide is faithful with minor paraphrase, and the invented plan quotes in quotation marks keep it from a 4."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "The headline \"Be suspicious of any growth plan that skips the effort.\" is set in large serif type at the top left, with \"skips the effort.\" in cyan italic. It is the obvious place to start reading.",
+            "The second level is the cyan italic \"Who is turning the crank?\" with the small mono label \"ASK OF EVERY PLAN\". The third level is the two quoted plans, \"“Launch big and the users will come.”\" and \"“We'll set up every early user ourselves.”\"",
+            "The two panels mirror each other and are split by a vertical rule. Each pairs its text with a crank-and-gauge diagram (\"NO HAND\"/\"STALLED\" against \"FOUNDER\"/\"TURNING OVER\") and ends in a verdict tag: a dashed \"× SUSPECT\" or a filled cyan \"✓ PASSES\".",
+            "Several labels are very small, roughly 9–10px: \"COLD\", \"IGNITION\", \"CRANK\", \"NO HAND\", \"STALLED\" and \"FOUNDER\". The body copy, such as \"The launch or a partner is supposed to do the work...\", is only about 14px.",
+            "Below the \"SOURCE\" quote line (about y=590) the slide is empty down to the bottom edge, about 130px of the 720px height. The headline also stops around x=1010, leaving the top right open."
+          ],
+          "reasoning": "The hierarchy is clear and deliberate: the large headline, then the cyan question, then the two quotes, then the body text and verdicts. The side-by-side comparison layout is well thought out. However, the diagram labels are tiny and would not be readable from presentation distance. The body text is borderline small, and the empty band at the bottom makes the content feel crowded toward the top. Because of these problems together, it falls just short of a 3."
+        },
+        "not_generic": {
+          "score": 3,
+          "judged": 3,
+          "present": [
+            "numbered eyebrow labels — top-left \"09 — A WARNING SIGN\" uses a slide number as a decorative eyebrow (minor; the micro-label style itself comes from the theme)",
+            "default explainer split (mild) — inside each plan panel, prose (quote + \"Crank: …\" copy) sits on the left and a figure (crank + gauge) on the right; it is repeated twice as a symmetric A/B comparison"
+          ],
+          "evidence": [
+            "Top-left eyebrow: \"09 — A WARNING SIGN\"; top-right: \"THE CRANK TEST\"",
+            "Plan A: quote \"Launch big and the users will come.\" with body \"Crank: nobody. The launch or a partner is supposed to do the work…\" on the left. On the right is a greyed crank labelled \"NO HAND\" and a gauge whose needle sits at \"COLD\", labelled \"STALLED\"",
+            "Plan B: \"We'll set up every early user ourselves.\" with \"Crank: the founders…\" on the left. On the right is a cyan crank arm labelled \"FOUNDER\" with a curved motion arrow, and a gauge needle near \"IGNITION\", labelled \"TURNING OVER\"",
+            "Verdict tags: \"× SUSPECT\" (dashed outline) and \"✓ PASSES\" (filled cyan). These are static stamps, not controls",
+            "Body copy partly restates the figure: \"Crank: nobody\" matches \"NO HAND\", and \"turns the engine over\" matches \"TURNING OVER\"",
+            "No emoji, gradients, glows, card grid, stat tiles or filler icons. The dot-grid and hairlines come from the theme"
+          ],
+          "reasoning": "The core visual is built for this idea: a hand-crank engine starter paired with an ignition gauge directly shows the 'who is turning the crank?' test. It contrasts an empty crank with a stalled needle against a founder-driven crank with the needle near ignition. You could not swap in another topic's text without redrawing it. The A/B layout uses hairline-divided panels, not rounded cards. Two things pull the score down. First, there is the decorative numbered eyebrow. Second, each panel uses the standard text-left/figure-right arrangement, and its body copy partly repeats what the figure labels already say ('nobody' vs 'NO HAND', 'turns the engine over' vs 'TURNING OVER'). These are minor and do not define the slide. It falls short of a 4 because of the redundant copy and the template-like symmetric split."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_4qynvpk9.rest.png",
+        "interacted": []
+      }
+    },
+    {
+      "id": "s_04d74bwe",
+      "title": "Ways to turn the crank",
+      "kind": "figure",
+      "instrument": false,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 44,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [
+            {
+              "text": "01",
+              "ratio": 3.44,
+              "need": 4.5,
+              "fontPx": 12
+            },
+            {
+              "text": "02",
+              "ratio": 3.44,
+              "need": 4.5,
+              "fontPx": 12
+            },
+            {
+              "text": "03",
+              "ratio": 3.44,
+              "need": 4.5,
+              "fontPx": 12
+            },
+            {
+              "text": "04",
+              "ratio": 3.44,
+              "need": 4.5,
+              "fontPx": 12
+            },
+            {
+              "text": "05",
+              "ratio": 3.44,
+              "need": 4.5,
+              "fontPx": 12
+            }
+          ],
+          "checked": 44,
+          "minRatio": 3.44
+        }
+      },
+      "controls": 5,
+      "intent": {
+        "title": "Ways to turn the crank",
+        "claim": "The crank takes several forms: recruiting by hand, delighting users, starting narrow, building it yourself and being the software. It's the same manual push each time.",
+        "mechanism": "Each tactic is one way the founder's arm supplies the starting force the system can't supply yet. Recruiting finds users (peers, or more of your most enthusiastic group). Delight makes them happy enough to drive growth. Narrow focus concentrates heat to reach critical mass. Hand assembly avoids factory minimums. Doing tasks manually stands in for automation that doesn't exist yet.",
+        "kind": "figure",
+        "aha": "Tactics that look unrelated, a thank-you card, a Harvard-only launch and hand-built watches, are all the same move: a person doing by hand what the system can't do yet.",
+        "resting": "Five hands on one crank, or five spokes around it. Each is labeled with a tactic, its company and the concrete act: Recruit by hand, Pinterest at a design-bloggers conference. Delight, Wufoo's handwritten thank-you notes. Start narrow, Facebook at Harvard only. Build it yourself, Pebble assembling the first several hundred watches. Be the software, Stripe's 'instant' merchant accounts set up manually behind the scenes. All five feed the same tachometer."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 4,
+          "judged": 4,
+          "read_claim": "Five early-startup tactics that look different (recruiting users by hand, obsessive delight, starting narrow, building it yourself, being the software) are all the same thing: founders doing by hand what the system can't do yet, to manually crank a cold engine until it runs.",
+          "read_evidence": [
+            "Five tactics, one arm on the crank",
+            "Each is a person doing by hand what the system can't do yet.",
+            "Recruit by hand Pinterest — at a design-bloggers conference",
+            "Be the software Stripe — \"instant\" accounts set up manually",
+            "A thank-you card, a Harvard-only launch, hand-built watches — the same manual push.",
+            "0 OF 5 HANDS ON THE CRANK / Engine cold",
+            "SOURCE · P. GRAHAM, \"DO THINGS THAT DON'T SCALE\""
+          ],
+          "evidence": [
+            "Five tactics, one arm on the crank",
+            "Each is a person doing by hand what the system can't do yet.",
+            "A thank-you card, a Harvard-only launch, hand-built watches — the same manual push.",
+            "Recruit by hand ... Be the software"
+          ],
+          "reasoning": "The reader names all five forms of the crank: recruiting by hand, delighting users, starting narrow, building it yourself and being the software. They also state the relational point that these are all the same manual push. The extra framing ('doing by hand what the system can't do yet', 'cold engine') adds detail from the slide but doesn't change the claim. The intended assertion comes through in full, including the 'same thing each time' link."
+        },
+        "mechanism_shown": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "Five thin curved lines run from each tactic row (\"01 Recruit by hand\" … \"05 Be the software\") and converge on a circle labelled \"THE CRANK\" with a handle drawn on it",
+            "A dashed line links the crank to a gauge labelled \"ONE TACHOMETER\", running from \"COLD\" to \"IGNITION\" to \"RUNS\". The needle rests at cold.",
+            "Bottom-right counter reads \"0 OF 5 HANDS ON THE CRANK\" and \"Engine cold\"",
+            "What each tactic replaces is given only in text: \"INSTEAD OF · WORD OF MOUTH THAT ISN'T RUNNING YET\", \"INSTEAD OF · AUTOMATION THAT DOESN'T EXIST YET\", etc.",
+            "Subtitle: \"Click a tactic to put its hand on the crank.\" There are no screenshots taken after anyone clicked."
+          ],
+          "reasoning": "The figure draws a real chain: the five tactics feed one crank, and the crank drives a tachometer that runs from cold to running. With the sentences covered, a viewer could still read \"many manual inputs → one crank → the engine gets going.\" But the core of the mechanism, that each tactic stands in for a system capability that doesn't exist yet, appears only in the \"INSTEAD OF\" text lines. The drawing also treats all five tactics the same, so it doesn't show how each one supplies force differently. I couldn't check whether clicking tactics actually moves the needle, because there are no screenshots taken after interaction."
+        },
+        "device_works": {
+          "score": null,
+          "na": true,
+          "reason": "device kind is figure"
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "Minor: \"Five tactics\" is a selection. The source also covers consulting for a single user and the Viaweb approach of using your software on users' behalf, so these aren't all the tactics. The slide doesn't claim five is the complete list.",
+            "Minor: the source names the hardware variant \"pulling a Meraki\". The slide shows only Pebble, which the source does use as an example of it."
+          ],
+          "evidence": [
+            "Row 01 \"Recruit by hand — Pinterest — at a design-bloggers conference\" matches the source: Ben Silbermann \"went to a conference of design bloggers to recruit users\".",
+            "Row 02 \"Wufoo — a handwritten thank-you note to each user\" matches the source: \"Wufoo sent each new user a hand-written thank you note\".",
+            "Row 03 \"Facebook — Harvard students only\" matches the source: \"At first it was just for Harvard students\".",
+            "Row 04 \"Pebble — first several hundred watches by hand\" and \"A FACTORY ORDER (MIN. SEVERAL HUNDRED THOUSAND $)\" match the source: \"The Pebbles assembled the first several hundred watches themselves\" and \"The minimum order for a factory production run is usually several hundred thousand dollars\".",
+            "Row 05 \"Stripe — \\\"instant\\\" accounts set up manually\" matches the source: the founders \"manually signed them up for traditional merchant accounts behind the scenes\".",
+            "The crank metaphor (\"THE CRANK\", \"Engine cold\") comes from the source's image of car-engine cranks before electric starters.",
+            "The \"INSTEAD OF\" lines (e.g. \"WORD OF MOUTH THAT ISN'T RUNNING YET\", \"HAPPY USERS DRIVING GROWTH ON THEIR OWN\") are the slide's own interpretation. They are not quoted from the source, but they fit its argument that growth needs a manual push before it runs on its own."
+          ],
+          "reasoning": "Every company, number and claim on the slide traces to the source. The \"instead of\" glosses are reasonable interpretations that fit Graham's argument, not invented facts. Picking five of the tactics is a simplification the author would accept. Some glosses go a little beyond the source's wording, so this gets a 3, not a 4."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "Clear entry point: large serif title \"Five tactics, one arm on the crank\" with \"one arm\" in cyan italic, then a gray subtitle, then the list. That gives a deliberate 3-level hierarchy.",
+            "Row 02 wraps: \"a handwritten thank-you note to each user\" runs onto a second line, which pushes \"INSTEAD OF · HAPPY USERS DRIVING GROWTH ON THEIR OWN\" down onto the divider line above row 03. That row is cramped and uneven compared with the others.",
+            "Much of the small text is around 11–12px and faint: the index numbers \"01\"–\"05\" (3.44:1 contrast at 12px), the \"INSTEAD OF ·\" mono labels, \"THE CRANK\", \"COLD\", \"RUNS\", \"ONE TACHOMETER\", \"0 OF 5 HANDS ON THE CRANK\", and the source line \"SOURCE · P. GRAHAM...\". All of these are hard to read from presentation distance.",
+            "The right half (crank diagram and tachometer) is visually sparse. The crank glyph and the gauge are small, with large empty dark zones above \"ONE TACHOMETER\" and between the gauge and \"Engine cold\"",
+            "Footer takeaway \"A thank-you card, a Harvard-only launch, hand-built watches — the same manual push.\" is well placed and anchors the bottom."
+          ],
+          "reasoning": "The headline and the list have a deliberate hierarchy, and the connector lines feeding into the crank are a good idea. But the row 02 wrap breaks the list's rhythm and crowds its divider. Many labels are tiny, faint mono caps that won't read from a distance. The diagram on the right is undersized, so the area around it feels empty rather than deliberately open. Because there are several issues, not just one minor one, this scores a 2 rather than a 3."
+        },
+        "not_generic": {
+          "score": 3,
+          "judged": 3,
+          "present": [
+            "Readout panel restating state in words — bottom right: \"0 OF 5 HANDS ON THE CRANK\" / \"Engine cold\". This repeats what the tachometer needle (resting at \"COLD\") and the empty crank already show.",
+            "Numbered labels (borderline) — small mono \"01\"–\"05\" beside each tactic row. They index a list of five, so they are only mildly decorative."
+          ],
+          "evidence": [
+            "Left column lists five tactics separated by hairline rules: \"Recruit by hand  Pinterest — at a design-bloggers conference\" / \"INSTEAD OF · WORD OF MOUTH THAT ISN'T RUNNING YET\", and so on through \"Be the software  Stripe\".",
+            "Thin curves run from the right edge of every row and meet at a single circle labelled \"THE CRANK\", which has a handle drawn on it. A dashed line then links the crank to a gauge labelled \"ONE TACHOMETER\", with \"COLD\", \"IGNITION\" (cyan arc) and \"RUNS\" marked on it.",
+            "Bottom right: \"0 OF 5 HANDS ON THE CRANK\" above \"Engine cold\" in serif type.",
+            "Footer: \"A thank-you card, a Harvard-only launch, hand-built watches — the same manual push.\"",
+            "No cards, no gradients or glows, no emoji, no filler icons, no stat tiles, and no pill-button row. The interaction is clicking the tactic rows themselves (\"Click a tactic to put its hand on the crank\"), so it is attached to the content."
+          ],
+          "reasoning": "The layout is built around the idea itself. Five separate manual tactics feed, through converging wires, into a single crank that drives a single tachometer from cold to running. That is the slide's argument (\"five tactics, one arm on the crank\"), and the figure would not suit another topic. There is text on the left and a figure on the right, but they are joined by the wires, so this is not the generic prose-plus-figure split. The one clear default is the readout \"0 OF 5 HANDS ON THE CRANK / Engine cold\", which says in words what the gauge already shows. The 01–05 numbers are a minor list index. No default shapes the layout."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_04d74bwe.rest.png",
+        "interacted": []
+      }
+    },
+    {
+      "id": "s_mlyvq9qq",
+      "title": "Small is an advantage",
+      "kind": "comparison",
+      "instrument": false,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 29,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [
+          {
+            "text": "write you a note",
+            "hiddenFrac": 0.08
+          },
+          {
+            "text": "users → product",
+            "hiddenFrac": 0.06
+          }
+        ],
+        "contrast": {
+          "fails": [
+            {
+              "text": "PRODUCT",
+              "ratio": 1.28,
+              "need": 4.5,
+              "fontPx": 11
+            },
+            {
+              "text": "polished",
+              "ratio": 1.28,
+              "need": 4.5,
+              "fontPx": 10
+            },
+            {
+              "text": "ATTENTION",
+              "ratio": 1.79,
+              "need": 4.5,
+              "fontPx": 11
+            }
+          ],
+          "checked": 29,
+          "minRatio": 1.28
+        }
+      },
+      "controls": 3,
+      "intent": {
+        "title": "Small is an advantage",
+        "claim": "Being tiny is an advantage. You can give a level of attention no big company can, and that attention makes up for an unfinished product and gets you the best feedback you'll ever have.",
+        "mechanism": "A user's experience equals the product plus your attention. A big company has a polished product but can't give individual attention. Tim Cook can't send a handwritten note. A small startup has a buggy, incomplete product but can add attention until the overall experience is insanely great. The same close contact sends direct feedback back into the product.",
+        "kind": "comparison",
+        "aha": "The startup's product bar is clearly worse, yet its total experience bar matches or beats the giant's. Attention is the part a big company can't buy.",
+        "resting": "Two stacked bars labeled 'experience of being the user'. Big company: a tall 'product' segment and almost no 'attention' segment. Your startup: a short, rough 'product' segment topped with a large 'attention' segment, reaching as high or higher. A feedback arrow loops from the startup's users back to its product. The café-owner analogy is a caption."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 3,
+          "judged": 3,
+          "read_claim": "A small startup can give users far more personal attention than a big company, and that extra attention lifts the total user experience above the big company's polished product even when the startup's own product is buggy and unfinished.",
+          "read_evidence": [
+            "Title: \"Small is an advantage\"",
+            "Body text: \"Being tiny lets you give attention no big company can. That attention makes up for a buggy, unfinished product\"",
+            "Formula: \"experience of being the user = product + attention\"",
+            "Chart: the BIG COMPANY bar is mostly \"PRODUCT polished\" with a thin \"attention ≈ 0\" sliver on top. The YOUR STARTUP bar has \"PRODUCT buggy · unfinished\" plus a large \"ATTENTION\" block, and its top is labeled \"TOTAL ▲ ABOVE THE GIANT\", higher than the dashed \"BIG COMPANY'S TOTAL\" line",
+            "\"Go to great lengths and the total clears the giant. That part they can't buy.\""
+          ],
+          "evidence": [
+            "Title: \"Small is an advantage\"",
+            "Body: \"Being tiny lets you give attention no big company can. That attention makes up for a buggy, unfinished product\"",
+            "Formula: \"experience of being the user = product + attention\"",
+            "Chart: startup bar \"TOTAL ▲ ABOVE THE GIANT\" vs big company \"attention ≈ 0\""
+          ],
+          "reasoning": "The reader got the main claim and its causal link: being tiny lets you give attention that big companies can't, and that attention makes up for an unfinished product. They missed the second payoff, that this attention also gets you the best feedback you'll ever have. The reader also added a stronger comparison (the total experience beats the giant's), but the slide's chart supports that. Losing the feedback benefit is a secondary point, so the score is 3."
+        },
+        "mechanism_shown": {
+          "score": 4,
+          "judged": 4,
+          "evidence": [
+            "Two stacked bars on a shared baseline: \"BIG COMPANY\" is a tall grey \"PRODUCT polished\" bar topped by a thin cyan sliver labelled \"attention ≈ 0 / Tim Cook can't write you a note\"",
+            "\"YOUR STARTUP\" bar: a short hatched \"PRODUCT buggy · unfinished\" block with a jagged top, plus a large cyan \"ATTENTION\" block stacked on it",
+            "A dashed line marks \"BIG COMPANY'S TOTAL\", and the startup stack rises past it under the label \"TOTAL ▲ ABOVE THE GIANT\"",
+            "A curved cyan arrow runs from ATTENTION down to PRODUCT, labelled \"DIRECT FEEDBACK users → produc[t]\"",
+            "Toggle \"YOUR STARTUP'S ATTENTION — TRY IT\" with \"NONE / SOME / HANDWRITTEN\" (HANDWRITTEN is selected)",
+            "Some labels are clipped at the edges: \"ttention ≈ 0\", \"rite you a note\", \"users → produc\""
+          ],
+          "reasoning": "The stacked bars draw the equation experience = product + attention directly. Bar height is the total, the two parts are visibly stacked, and the dashed reference line shows the startup's total passing the giant's. The feedback loop is drawn as an arrow from attention back into the product, and the toggle lets the viewer change the attention input. With the sentences covered, the figure still shows the whole relation. Only the post-toggle states can't be checked because no screenshots after operating the controls were provided. The clipped labels hurt the polish but not how clearly the mechanism comes through."
+        },
+        "device_works": {
+          "score": null,
+          "na": true,
+          "reason": "device kind is comparison"
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "\"Go to great lengths and the total clears the giant\" and \"TOTAL ▲ ABOVE THE GIANT\" mildly overstate the source. The source says attentiveness can make the experience insanely great despite a buggy product. It never compares this against a big company's total experience.",
+            "\"attention ≈ 0\" for the big company and \"That part they can't buy\" stretch the source a little. The source says big companies can't give that level of personal service, not that their attention is zero or that the issue is money."
+          ],
+          "evidence": [
+            "Body text: \"Being tiny lets you give attention no big company can.\" This matches the source: \"That's one advantage of being small: you can provide a level of service no big company can.\"",
+            "Body text: \"That attention makes up for a buggy, unfinished product.\" This matches the source: \"give users an insanely great experience with an early, incomplete, buggy product, if you make up the difference with attentiveness.\"",
+            "Body text: \"talking to users gets you the best feedback you'll ever have.\" This matches the source: \"The feedback you get from engaging directly with your earliest users will be the best you ever get.\"",
+            "Formula: \"experience of being the user = product + attention\". This fairly simplifies the source: \"It's not the product that should be insanely great, but the experience of being your user. The product is just one component of that.\"",
+            "Chart annotation: \"Tim Cook can't write you a note\". This matches the source: \"Tim Cook doesn't send you a hand-written note after you buy a laptop. He can't.\"",
+            "Toggle labels \"NONE / SOME / HANDWRITTEN\". These echo Wufoo's hand-written thank-you notes. The bar heights work as an illustrative toy control, not as data.",
+            "Café quote at the bottom left: \"Like a neighborhood café owner who remembers your order...\". This is a metaphor, not a claim attributed to the source.",
+            "Arrow on the chart: \"DIRECT FEEDBACK users → product\". This matches the source's \"feedback loop that makes the product good.\""
+          ],
+          "reasoning": "The core claims all trace back to Graham's 'Delight' and 'Experience' sections. These are: small companies can give service big companies can't, attention makes up for a buggy product, the experience matters more than the product alone, the Tim Cook note, and early users give the best feedback. No numbers, names or quotes are made up. The chart is clearly an illustrative toy. The 'clears the giant' framing goes a bit beyond what the source says, but the author would probably accept it as a simplification."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "Title \"Small is an advantage\" sits large at top left with \"advantage\" in cyan italic, so the slide has one clear entry point",
+            "Three deliberate levels on the left: the title, the body paragraph \"Being tiny lets you give attention...\", then mono labels and the \"NONE / SOME / HANDWRITTEN\" control",
+            "Left edge of the chart is clipped: \"attention ≈ 0\" has its first letter cut, and \"Tim Cook can't / rite you a note\" crowds into the Big Company bar",
+            "Right edge annotation is cut off: \"users → produc\" next to \"DIRECT FEEDBACK\"",
+            "\"PRODUCT\" and \"polished\" on the light grey bar are nearly invisible (1.28:1 contrast), and they label the main comparison bar",
+            "\"BIG COMPANY'S TOTAL\" is very faint and runs into the cyan Attention block",
+            "Many mono labels are about 10–11px (\"buggy · unfinished\", \"users → produc\", \"Tim Cook can't\") and too small to read at presentation distance",
+            "Dead zone on the left between \"can't buy.\" (~y515) and the quote at ~y630, and empty space above the chart (y140–240) on the right"
+          ],
+          "reasoning": "The macro hierarchy works: the title clearly leads, and the two-column split between the text and the bar chart is sensible. But the chart, which carries the slide's argument, has clipped annotations on both edges. Its key label on the big-company bar is almost invisible, and several labels are tiny or faint. Together with the stranded empty zones, that puts this below a 3."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "default explainer split — prose column on the left (headline paragraph, formula, control, caption, café quote) and a figure panel on the right (two-bar chart). The layout would look the same for almost any topic.",
+            "row of small segmented/pill buttons as the only control — 'NONE | SOME | HANDWRITTEN' sits in the left column, about 450px away from the startup bar it changes",
+            "readout line restating state — 'Go to great lengths and the total clears the giant. That part they can't buy.' under the buttons puts the HANDWRITTEN state into words. The chart already shows this with 'TOTAL ▲ ABOVE THE GIANT'."
+          ],
+          "evidence": [
+            "Left column: 'Being tiny lets you give attention no big company can…' then 'experience of being the user = product + attention' then 'YOUR STARTUP'S ATTENTION — TRY IT' above three equal-width segmented buttons, with HANDWRITTEN filled cyan",
+            "Right panel: the 'BIG COMPANY' bar is a solid cream 'PRODUCT polished' bar with a thin cyan 'attention ≈ 0' cap. The 'YOUR STARTUP' bar is a hatched 'PRODUCT buggy · unfinished' base topped by a tall cyan 'ATTENTION' block. A dashed 'BIG COMPANY'S TOTAL' line runs across, and a curved arrow labelled 'DIRECT FEEDBACK users → produc' loops from attention back to product.",
+            "The chart label 'TOTAL ▲ ABOVE THE GIANT' and the caption 'the total clears the giant' say the same thing",
+            "Annotations are clipped at the edges: 'ttention ≈ 0 / Tim Cook can't / rite you a note' is cut off on the left, and 'users → produc' is cut off on the right",
+            "No card grid, emoji, gradients, filler icons or stat tiles. The 'ENGINE' gauge in the header and the '11 / 12' micro-label are theme chrome."
+          ],
+          "reasoning": "The figure itself is made for this idea. The startup's product is drawn hatched and torn at the top to show it is buggy, attention is stacked on top to reach a total that clears the big company's dashed line, and the feedback arrow shows attention flowing back into the product. You could not swap another topic's text into that drawing. But it sits inside the standard explainer frame. Prose goes on the left and the figure on the right. The only control is a detached segmented button row in the prose column, not something you grab on the bars. A caption under the buttons then repeats in words what the chart already labels. That is three named defaults wrapped around a figure that is specific to the idea, so the layout is defined by defaults, not by the idea."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_mlyvq9qq.rest.png",
+        "interacted": []
+      }
+    },
+    {
+      "id": "s_o58ghhzt",
+      "title": "A startup idea comes in pairs",
+      "kind": "figure",
+      "instrument": false,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 30,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [],
+          "checked": 30,
+          "minRatio": 4.65
+        }
+      },
+      "controls": 3,
+      "intent": {
+        "title": "A startup idea comes in pairs",
+        "claim": "A startup idea is a pair: what you'll build plus the unscalable things you'll do to start it. Done well, the second part becomes permanent company DNA.",
+        "mechanism": "The idea is a vector, not a single number. Component 1 is the product (the engine). Component 2 is the unscalable starting work (the crank). Both are needed to get running. Afterward, the crank habits, aggressive acquisition and delighting users, carry on into the larger company rather than being thrown away.",
+        "kind": "figure",
+        "aha": "The crank isn't thrown away once the engine catches. The habits it built keep running inside the company.",
+        "resting": "The engine and crank shown as one unit labeled 'startup idea = (what you'll build, how you'll hand-start it)'. The tachometer finally reads 'running on its own'. A strand from the crank runs into the running engine, labeled 'stays in the DNA: aggressive about users, delighting users', showing the crank habits persist after ignition."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 4,
+          "judged": 4,
+          "read_claim": "A startup idea has two parts: the product you build (the engine) and the unscalable work you do to get it started (the crank), and the habits the crank builds stay with the company as it grows.",
+          "read_evidence": [
+            "A startup idea comes in pairs",
+            "startup idea = ( what you'll build, how you'll hand-start it )",
+            "The engine — the product you'll build",
+            "The crank — the unscalable things you'll do to get it going",
+            "The crank isn't discarded — its habits keep running inside the company.",
+            "STAYS IN THE DNA → AGGRESSIVE ABOUT USERS → DELIGHTING USERS"
+          ],
+          "evidence": [
+            "startup idea = ( what you'll build, how you'll hand-start it )",
+            "The crank — the unscalable things you'll do to get it going",
+            "The crank isn't discarded — its habits keep running inside the company.",
+            "STAYS IN THE DNA → AGGRESSIVE ABOUT USERS → DELIGHTING USERS"
+          ],
+          "reasoning": "The reader got both parts of the claim. First, an idea is a pair: what you build plus the unscalable things you do to start it. Second, the habits from that second part stay in the company's DNA. The intended qualifier 'done well' isn't stated outright. The DNA chain toward delighting users partly covers it, so only a minor nuance may be missing."
+        },
+        "mechanism_shown": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "A crank handle drawn at the lower left (\"02 · CRANK — UNSCALABLE START\") connects to a circular hub that sits on the edge of a box labelled \"01 · ENGINE — WHAT YOU BUILD\"",
+            "An arc runs from the crank hub into the engine box and ends at a dot beside \"STAYS IN THE DNA → AGGRESSIVE ABOUT USERS → DELIGHTING USERS\"",
+            "Gauge at top right runs from \"DEAD COLD\" through \"IGNITION\" to \"RUNNING ON ITS OWN\", with the needle at \"RUNNING ON ITS OWN\"",
+            "Bracket \"ONE UNIT · THE STARTUP IDEA\" spans both the crank and the engine",
+            "Stepper \"1 · CRANKING  2 · CATCHES  3 · GROWS\" with step 3 active; there is only a resting screenshot, so other states are not shown",
+            "The vector idea appears only as text: \"startup idea = ( what you'll build, how you'll hand-start it )\""
+          ],
+          "reasoning": "The figure draws a real relation: the crank is physically attached to the engine, a gauge shows the engine's state, and an arc carries the crank's habits into the engine box. A viewer could roughly follow crank → engine catches → habits stay inside without reading the sentences. But the 'vector, not a scalar' idea is only a text formula plus a bracket, and the crank → ignition link is only implied. I can't see the earlier stepper states, so how the crank drives the gauge isn't visible as a change."
+        },
+        "device_works": {
+          "score": null,
+          "na": true,
+          "reason": "device kind is figure"
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "The bottom caption 'The crank isn't discarded — its habits keep running inside the company.' is unconditional. The source limits this to 'In the best case' and says you'll 'probably' stay aggressive. The body text's 'Done well' keeps some of that condition, so this is a minor overstatement."
+          ],
+          "evidence": [
+            "Heading 'A startup idea comes in pairs' and 'NOT A SCALAR — A VECTOR' match the source's Vector section: 'stop thinking of startup ideas as scalars... think of them as pairs of what you're going to build, plus the unscalable thing(s) you're going to do initially'.",
+            "'startup idea = ( what you'll build, how you'll hand-start it )', '01 The engine — the product you'll build' and '02 The crank — the unscalable things you'll do to get it going' are a faithful reworking of that pair. They reuse the source's own crank image: 'the cranks that car engines had before they got electric starters... a separate and laborious process to get it going'.",
+            "'STAYS IN THE DNA → AGGRESSIVE ABOUT USERS → DELIGHTING USERS' matches the source: 'both components of the vector contribute to your company's DNA... If you have to be aggressive about user acquisition when you're small, you'll probably still be aggressive when you're big... if you have to work hard to delight users... you'll keep doing it when you have a lot.'",
+            "The body text 'Done well, the crank isn't thrown away: the habits it built — chasing users, delighting them — keep running inside the company as it grows' paraphrases 'not merely a necessary evil, but change the company permanently for the better'. 'Done well' roughly stands in for the source's 'In the best case'.",
+            "The gauge labels 'DEAD COLD', 'IGNITION', 'RUNNING ON ITS OWN' and the step labels '1 · CRANKING / 2 · CATCHES / 3 · GROWS' are diagram states that extend the metaphor. They are not presented as facts from the source.",
+            "There are no numbers, names or quotes on the slide that need checking."
+          ],
+          "reasoning": "The slide's claims trace closely to the source's final Vector section and its crank metaphor. Nothing is fabricated. The one weakness is that the caption drops the source's 'in the best case' / 'probably' hedging. The source says the habits from the unscalable start can carry over; the caption says they do. This is a small simplification, not a material distortion, so the slide is faithful but not perfect."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "The title \"A startup idea comes in pairs\" in large serif type at the top left, with \"in pairs\" in cyan italic, is a clear single entry point",
+            "Secondary level: \"startup idea = ( what you'll build, how you'll hand-start it )\" in a mid-size serif below the \"NOT A SCALAR — A VECTOR\" eyebrow",
+            "Many tiny monospace labels: \"DEAD COLD\", \"IGNITION\", \"HAND OFF · ENGINE CAUGHT\", \"ONE UNIT · THE STARTUP IDEA\", \"→ AGGRESSIVE ABOUT USERS\". They look about 9–11px, too small to read at presentation distance",
+            "The diagram on the right has an empty interior inside the engine box between \"01 · ENGINE — WHAT YOU BUILD\" and the curve. The four small tabs on top of the box add clutter without meaning",
+            "The gauge in the top right (\"RUNNING ON ITS OWN\") floats on its own, disconnected from the bracket and diagram below it",
+            "The bottom-right caption \"The crank isn't discarded — its habits keep running inside the company.\" sits crowded against the \"02 · CRANK — UNSCALABLE START\" labels",
+            "On the left, the body paragraph ends around y=510 and the step tabs \"1 · CRANKING 2 · CATCHES 3 · GROWS\" are at y=650, leaving a dead band of about 130px between them"
+          ],
+          "reasoning": "The left column has a strong, deliberate hierarchy with a clear title entry point and well-ordered levels. The right side is weaker: three competing elements (the gauge, the engine diagram and the closing quote), a lot of tiny mono labels that won't read from a distance, and a crowded bottom-right corner. Taken together with the dead band on the left, this is more than one minor issue, so it lands at 2 rather than 3."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "default explainer split — prose column on the left (headline, the 'startup idea = (what you'll build, how you'll hand-start it)' formula, 01/02 list, paragraph) and the figure panel on the right (gauge, engine box, crank)",
+            "segmented pill buttons as the only control — '1 · CRANKING', '2 · CATCHES', '3 · GROWS' sit in the bottom-left, away from the crank/engine figure they change",
+            "readout restating state — 'RUNNING ON ITS OWN' under the gauge repeats the gauge's own end label 'RUNNING ON ITS OWN' and the active '3 · GROWS' step",
+            "body copy restating the figure — the paragraph 'the habits it built — chasing users, delighting them — keep running inside the company' says the same thing as the figure's 'STAYS IN THE DNA → AGGRESSIVE ABOUT USERS → DELIGHTING USERS' and the italic caption 'The crank isn't discarded — its habits keep running inside the company.'"
+          ],
+          "evidence": [
+            "Left column at x≈64–504 holds all the text. Right half holds the diagram: a gauge labelled 'DEAD COLD' / 'IGNITION' / 'RUNNING ON ITS OWN', a box labelled '01 · ENGINE — WHAT YOU BUILD', and a crank with a circle labelled '02 · CRANK — UNSCALABLE START'",
+            "Bottom-left tab bar: '1 · CRANKING' | '2 · CATCHES' | '3 · GROWS (active, cyan fill)'",
+            "The same message appears three times: in the left paragraph, in the figure's 'STAYS IN THE DNA' list, and in the italic caption at the bottom right",
+            "'01'/'02' in cyan beside 'The engine' and 'The crank' are tied to the figure labels '01 · ENGINE' and '02 · CRANK', so they work as labels, not decoration. '12 / 12 · THE TAKEAWAY' is the deck's micro-label style."
+          ],
+          "reasoning": "The figure itself fits the idea. A crank turning an engine, with a gauge going from dead cold to running on its own, is a real metaphor drawn for this topic, and you couldn't swap another topic's text into it. But the slide is laid out around the standard explainer split. The stepper is a detached row of segmented buttons rather than something you do on the crank. A gauge caption restates the gauge's state, and the 'habits keep running' point is said three times (paragraph, diagram list, caption). That makes four named defaults, so the score is 2 despite the specific diagram."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_o58ghhzt.rest.png",
+        "interacted": []
+      }
+    }
+  ],
+  "deckCriteria": {
+    "coherence": {
+      "score": 3,
+      "judged": 3,
+      "evidence": [
+        "Slide 1: an engine drawing with a crank handle, plus a tachometer reading '0040' with an 'IGNITION' arc and the labels 'DEAD COLD' and 'RUNS ON ITS OWN'",
+        "Slide 2: a large tachometer with an 'IGNITION LINE' tick, a crank-handle icon, and a 'TURN THE CRANK' button",
+        "Slide 3: a small tachometer in the top-right corner over a dot-tally chart of users recruited one by one",
+        "Slide 4: a tachometer reading 0 with 'DEAD COLD / SELF-RUNNING' labels and a crank-handle glyph",
+        "Slide 6: the growth curve has a dashed 'IGNITION LINE — RUNS ON ITS OWN' threshold and a stall dip",
+        "Slide 7: two matching gauges side by side ('NOW: TINY' vs 'COULD BE: RUNNING'); the caption reads 'Same needle. Opposite verdicts.'",
+        "Slide 9: paired small gauges with crank glyphs for each plan, marked 'SUSPECT' / 'PASSES'",
+        "Slide 10: a crank glyph at a junction where five tactic lines meet, plus a mini tachometer reading 'Engine cold'",
+        "Slide 11: only a tiny gauge and the words 'HAND STILL ON THE CRANK' in the header; the main figure is a bar chart",
+        "Slide 12: an engine, a crank and a gauge reading 'RUNNING ON ITS OWN'",
+        "Slide 5 and slide 8 show only curves and charts, with no visible gauge or crank (slide 8 is a projectile arc vs. a powered curve)",
+        "Every slide uses the same small-caps kicker, a serif headline with an italic cyan accent, and a row of pill buttons at the bottom"
+      ],
+      "reasoning": "The deck has a real shared kit: the same tachometer drawing (arc, ignition tick, dead-cold and running labels), the same crank glyph, the same headline and kicker style, and the same control pills. The motif also builds through the deck: the engine is cold on slide 1, the gauges are compared on slide 7, the plans are tested with gauges on slide 9, and the engine runs on its own on slide 12. It falls short of a 4 because the motif is uneven. Slides 5 and 8 seem to drop the gauge, slide 11 keeps it only as a token in the header, and on slide 6 it is reduced to a threshold line on a chart. Overall the motif runs through most slides, with a few that are weak or missing it.",
+      "motif_slides": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "6",
+        "7",
+        "9",
+        "10",
+        "11",
+        "12"
+      ]
+    },
+    "quiz": {
+      "score": 0.5,
+      "correct": 4,
+      "partial": 4,
+      "total": 8,
+      "lenient": 0.75,
+      "items": [
+        {
+          "id": "q1",
+          "q": "What does the car-engine crank metaphor say about how startups take off?",
+          "kind": "mechanism",
+          "ref": "Startups don't usually take off on their own. The founders have to push them through a separate, laborious start-up phase, like hand-cranking an engine, and after that the engine keeps running by itself.",
+          "answer": "Startups don't start themselves. Like a car engine before electric starters, someone has to hand-crank the startup until it fires. Getting it going is a separate, manual, tiring job that only the founders will do, and after that it keeps running on its own power.",
+          "from": "Slides 1, 2",
+          "grade": "correct",
+          "why": "Captures the key idea: startups need a separate, laborious hand-crank phase run by the founders, and after that they keep running on their own."
+        },
+        {
+          "id": "q2",
+          "q": "Why does the essay argue that recruiting users one by one is worth it even though the numbers seem tiny at first?",
+          "kind": "mechanism",
+          "ref": "Because of compound growth. If you keep up a steady weekly growth rate like 10%, small absolute gains build into huge numbers (about 14,000 users after one year and 2 million after two), so manual recruiting can get you to scale.",
+          "answer": "Small numbers aren't small, because growth compounds. At 10% a week, 100 users become 110, which feels slow, but the same rate reaches about 14,000 users in a year and about 2 million in two. Founders who think '10 users can't be how the big ones started' are making a factual error about how growth works.",
+          "from": "Slides 4, 5",
+          "grade": "correct",
+          "why": "Explains compound growth at 10% a week, with the same 14k and 2M figures."
+        },
+        {
+          "id": "q3",
+          "q": "What mistake do inexperienced founders and investors make when they judge early startups, and what question should they ask instead?",
+          "kind": "relation",
+          "ref": "They judge fragile, larval startups by the standards of established companies and dismiss them. Instead they should ask how big the company could get if the founders did the right things.",
+          "answer": "They judge a tiny, early startup by an established company's standards and ask 'Is this taking over the world yet?', which leads them to quit too early. The deck says to ask instead 'How big could this get if the founders did the right things?'",
+          "from": "Slide 7",
+          "grade": "correct",
+          "why": "Names the mistake (judging by established-company standards) and the right question (how big could it get if the founders do the right things)."
+        },
+        {
+          "id": "q4",
+          "q": "How can a small startup give better customer service than a big company, and why do founders often fail to see this?",
+          "kind": "relation",
+          "ref": "Being small lets founders give personal attention that big companies can't, like hand-written thank-you notes. Founders miss this because their standards for service were set by the big companies they've been customers of, and because engineers aren't trained in customer service.",
+          "answer": "Being tiny lets a startup give attention no big company can, such as a handwritten note that a big-company CEO couldn't write. That attention makes up for a buggy, unfinished product, so the user's total experience (product plus attention) can beat the giant's. The deck doesn't explain why founders fail to see this.",
+          "from": "Slide 11",
+          "grade": "partial",
+          "why": "Covers how being small allows personal attention, but leaves out why founders miss it (standards set by big companies, engineers not trained in service)."
+        },
+        {
+          "id": "q5",
+          "q": "In a startup's early months, how does the meaning of 'insanely great' shift, and why does over-engaging with users improve the product?",
+          "kind": "mechanism",
+          "ref": "What should be insanely great is the experience of being a user, not the product, so attentiveness can make up for a buggy, incomplete product. Engaging directly with early users also gives the best feedback, which drives the iteration that makes the product good.",
+          "answer": "Not covered. The deck only says that talking to users gives you the best feedback you'll ever have, and its chart shows feedback going directly from users into the product. It never mentions the phrase 'insanely great' or how its meaning shifts.",
+          "from": "Slide 11",
+          "grade": "partial",
+          "why": "Says user feedback improves the product, but misses the shift from a great product to a great user experience. It also says 'not covered', though q4's answer touched on attention making up for a buggy product."
+        },
+        {
+          "id": "q6",
+          "q": "Why might a startup deliberately start in a narrow market, as Facebook did with Harvard?",
+          "kind": "mechanism",
+          "ref": "Like keeping a fire contained so it gets hot, a narrow market lets you reach critical mass quickly because the users feel the product is really for them. You can then expand from there.",
+          "answer": "Starting narrow, as Facebook did with Harvard students only, is one form of hand-cranking. It is presented as the alternative to needing critical mass across a whole market. The deck gives no further reasons.",
+          "from": "Slide 10",
+          "grade": "partial",
+          "why": "Links narrow markets to critical mass, but misses the fire-containment idea of reaching critical mass quickly because users feel the product is really for them."
+        },
+        {
+          "id": "q7",
+          "q": "What benefits come from doing things manually that you plan to automate later, or from building hardware yourself, as Meraki and Pebble did?",
+          "kind": "mechanism",
+          "ref": "It lets you launch faster and avoid obstacles like large minimum factory orders. You also learn exactly what to build or automate, and in hardware you can tweak the design faster, because you've done the work yourself.",
+          "answer": "Doing things by hand stands in for systems that don't exist yet. Stripe set up 'instant' accounts manually instead of waiting for automation, and Pebble built its first several hundred watches by hand instead of placing a factory order that needed several hundred thousand dollars. Meraki is not covered, and the deck lists no other specific benefits.",
+          "from": "Slide 10",
+          "grade": "partial",
+          "why": "Implies launching sooner and avoiding a large factory order, but misses learning what to build or automate and faster hardware iteration."
+        },
+        {
+          "id": "q8",
+          "q": "Why does the essay reject the 'Big Launch' and big-company partnerships, and what does it mean to think of startup ideas as vectors rather than scalars?",
+          "kind": "relation",
+          "ref": "Startups are like powered aircraft, not projectiles: success depends on sustained effort and on how happy you make your first users, not on initial velocity, and strategies that skip the effort are suspect. A startup idea should be seen as a pair: what you'll build plus the unscalable things you'll do to get started, and ideally those things become a permanent part of the company's DNA.",
+          "answer": "A big launch or partnership is like a cannonball: one push, then it falls, whereas a startup needs its own engine of happy users running all the time. A launch only needs to produce a core group of happy users. Seeing the idea as a vector means it is a pair: what you'll build (the engine) and how you'll hand-start it (the crank's unscalable work).",
+          "from": "Slides 8, 9, 12",
+          "grade": "correct",
+          "why": "Covers the projectile vs. sustained-engine contrast built on happy users, and the vector idea as a pair of what you'll build and the unscalable work to start it. It only omits the 'DNA' detail."
+        }
+      ]
+    }
+  },
+  "summary": {
+    "slides": 12,
+    "means": {
+      "claim_at_rest": 3.75,
+      "mechanism_shown": 3.25,
+      "device_works": 3.33,
+      "fidelity": 2.92,
+      "craft": 2.08,
+      "not_generic": 2.33
+    },
+    "passRate": {
+      "claim_at_rest": 1,
+      "mechanism_shown": 0.92,
+      "device_works": 1,
+      "fidelity": 0.92,
+      "craft": 0.08,
+      "not_generic": 0.33
+    },
+    "unknown": {
+      "claim_at_rest": 0,
+      "mechanism_shown": 0,
+      "device_works": 0,
+      "fidelity": 0,
+      "craft": 0,
+      "not_generic": 0
+    },
+    "coherence": 3,
+    "quiz": 0.5,
+    "gatePassed": 11,
+    "keyQuestion": {
+      "gatePassed": 11,
+      "failedKey": 1,
+      "rate": 0.091,
+      "byCriterion": {
+        "mechanism_shown": 1
+      },
+      "slideIds": [
+        "s_r9egdmae"
+      ]
+    }
+  },
+  "evalCost": {
+    "judgeCalls": 78,
+    "usage": {
+      "input": 172,
+      "output": 56464,
+      "cacheRead": 2366529,
+      "cacheCreate": 265516
+    },
+    "usd": 12.77,
+    "wallMs": 202137
+  }
+}

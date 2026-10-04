@@ -2,3 +2,13 @@
 {"at":"2026-10-04T09:06:14.795Z","id":"dont-scale","step":"plan","attempt":1,"code":0,"ms":127735}
 {"at":"2026-10-04T09:10:54.482Z","id":"dont-scale","step":"build","attempt":1,"code":0,"ms":279686}
 {"at":"2026-10-04T09:10:54.483Z","id":"dont-scale","step":"build","status":"ok","ms":279686,"attempts":1}
+{"at":"2026-10-04T09:18:07.467Z","step":"start","run":"2026-10-04-baseline-opus-5-5","sources":["dont-scale"],"model":"claude-opus-5-5"}
+{"at":"2026-10-04T09:20:30.627Z","step":"score","deck":"dont-scale-committed-plan","out":"/home/user/mindsizer/eval/results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan","code":0,"ms":143159}
+{"at":"2026-10-04T09:23:36.942Z","step":"score","deck":"dont-scale-committed-plan","out":"/home/user/mindsizer/eval/results/2026-10-04-baseline-opus-5-5/scores-r2/dont-scale-committed-plan","code":0,"ms":186312}
+{"at":"2026-10-04T09:23:53.621Z","step":"score","deck":"dont-scale","out":"/home/user/mindsizer/eval/results/2026-10-04-baseline-opus-5-5/scores/dont-scale","code":0,"ms":202994}
+{"at":"2026-10-04T09:23:54.000Z","step":"score","deck":"ref-opus-4-8-dont-scale","out":"/home/user/mindsizer/eval/results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale","code":0,"ms":203371}
+{"at":"2026-10-04T09:26:32.119Z","step":"score","deck":"ref-opus-4-8-dont-scale","out":"/home/user/mindsizer/eval/results/2026-10-04-baseline-opus-5-5/scores-r2/ref-opus-4-8-dont-scale","code":0,"ms":158498}
+{"at":"2026-10-04T09:26:36.105Z","step":"score","deck":"dont-scale","out":"/home/user/mindsizer/eval/results/2026-10-04-baseline-opus-5-5/scores-r2/dont-scale","code":0,"ms":179163}
+{"at":"2026-10-04T09:26:36.202Z","step":"noise","code":0}
+{"at":"2026-10-04T09:26:36.288Z","step":"report","code":0}
+{"at":"2026-10-04T09:26:36.354Z","step":"calibration","code":0}

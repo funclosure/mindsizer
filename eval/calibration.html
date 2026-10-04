@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Judge Calibration Sheet</title>
+<style>
+:root{--bg:#f6f5f1;--fg:#1b1d22;--dim:#5d6270;--card:#fff;--line:#d9d6cc;--accent:#2f6fdf;--accent-fg:#fff;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#121418;--fg:#e8e6e0;--dim:#9aa0ac;--card:#1b1e24;--line:#30343d;--accent:#6c9cff;--accent-fg:#0b0d10;}}
+:root[data-theme="dark"]{--bg:#121418;--fg:#e8e6e0;--dim:#9aa0ac;--card:#1b1e24;--line:#30343d;--accent:#6c9cff;--accent-fg:#0b0d10;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;}
+main{max-width:1280px;margin:0 auto;padding:24px 16px 120px;}
+h1{font-size:24px;margin:0 0 6px}
+p.lede{color:var(--dim);margin:0 0 16px;max-width:75ch}
+details{margin:4px 0}summary{cursor:pointer;font-weight:600}
+ol.anchors{margin:6px 0 10px;padding-left:28px;color:var(--dim)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin:20px 0;}
+.card header{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-bottom:12px}
+.card h2{font-size:18px;margin:0}
+.n,.meta{color:var(--dim);font-size:12px;font-family:ui-monospace,monospace}
+.grid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:16px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.shots img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:4px}
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+dl.intent{margin:0 0 10px;font-size:13px}dt{font-weight:600;color:var(--dim);text-transform:uppercase;font-size:11px;letter-spacing:.06em;margin-top:6px}dd{margin:2px 0 0}
+dd.md{white-space:pre-wrap;max-height:160px;overflow:auto}
+fieldset.crit{border:none;padding:4px 0;margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:8px;border-top:1px solid var(--line)}
+fieldset.crit legend{float:left;width:130px;font-size:13px;font-family:ui-monospace,monospace;padding:0}
+fieldset[disabled]{opacity:.45}
+.opts{display:flex;gap:4px}
+.opts label{position:relative}
+.opts input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.opts span{display:inline-grid;place-items:center;width:34px;height:30px;border:1px solid var(--line);border-radius:6px;font-weight:600}
+.opts input:checked+span{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.opts input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.judge{font-size:12px;color:var(--dim);font-family:ui-monospace,monospace}
+textarea{width:100%;min-height:56px;margin-top:8px;background:transparent;color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:6px;font:inherit}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center}
+button{font:inherit;padding:8px 14px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
+button.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+#status{color:var(--dim);font-size:13px}
+#out{width:100%;max-width:1280px;display:none}
+</style></head>
+<body><main>
+<h1>Judge calibration sheet</h1>
+<p class="lede">20 slides from run <code>2026-10-04-baseline-opus-5-5</code>, spread across the judges' score range and shuffled. Score each criterion 1–4 (pass ≥ 3; hover a number for its anchor; “?” = can't tell). Grade the rendered slide, not the intent text. Judge scores are hidden so they don't anchor you; reveal them only after you finish. When done, press <b>Copy as JSON</b> and paste the result into <code>eval/calibration/&lt;your-name&gt;.json</code>. These become few-shot examples and tuning targets for the judge prompts.</p>
+<details><summary>Score anchors</summary><details><summary>claim_at_rest</summary><ol class="anchors"><li value="1">No claim, a contradictory claim, or the slide is unreadable at rest.</li><li value="2">Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim.</li><li value="3">Same core assertion as intended; a secondary nuance or qualifier is lost.</li><li value="4">The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added.</li></ol></details><details><summary>mechanism_shown</summary><ol class="anchors"><li value="1">The mechanism is absent, or only named in a sentence.</li><li value="2">Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2.</li><li value="3">The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text.</li><li value="4">The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences.</li></ol></details><details><summary>device_works</summary><ol class="anchors"><li value="1">No control, a control that does nothing, or it breaks the slide.</li><li value="2">Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable.</li><li value="3">Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range.</li><li value="4">Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer.</li></ol></details><details><summary>fidelity</summary><ol class="anchors"><li value="1">The core claim contradicts the source, or there are multiple fabrications.</li><li value="2">At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)</li><li value="3">Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative.</li><li value="4">Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted.</li></ol></details><details><summary>craft</summary><ol class="anchors"><li value="1">Broken: overlapping or cut-off text, illegible, chaotic.</li><li value="2">Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment.</li><li value="3">Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label).</li><li value="4">A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster.</li></ol></details><details><summary>not_generic</summary><ol class="anchors"><li value="1">A template slide: 3+ defaults, content interchangeable.</li><li value="2">The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present.</li><li value="3">At most one minor default (e.g. a small eyebrow label) that does not define the layout.</li><li value="4">No named defaults. The visual form is specific to this idea — you could not swap in another topic's text.</li></ol></details></details>
+<label><input type="text" id="rater" placeholder="your name" style="font:inherit;padding:6px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--fg)"></label>
+<article class="card" data-id="s_rb9s0oum" data-deck="ref-opus-4-8-dont-scale">
+      <header><span class="n">1/20</span><h2>The Idea Is a Vector, Not a Point</h2><span class="meta">ref-opus-4-8-dont-scale · s_rb9s0oum · outline</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_rb9s0oum.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_rb9s0oum.rest.png" alt="resting screenshot of The Idea Is a Vector, Not a Point"></a>
+          <div class="thumbs"><a href="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_rb9s0oum.i1.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_rb9s0oum.i1.png" alt="interacted state 1"></a><a href="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_rb9s0oum.i2.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_rb9s0oum.i2.png" alt="interacted state 2"></a></div>
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>content (no plan)</dt><dd class="md">Pulling it all together: a startup idea isn't just *what you'll build*. It's a vector with two parts — **what you'll build** plus **the unscalable things you'll do to get it started**.
+
+- Hardware founders can assemble the first units by hand ('pull a Meraki').
+- B2B founders can act as consultants, building for a single user, or do tasks manually before automating them.
+- Beware the strategies that omit real effort — the Big Launch, the big-company partnership. Any plan that lets you skip the cranking is suspect.
+
+Ideally, those early unscalable habits don't disappear once you scale — they become permanent DNA: a company that stays unusually attentive because that's how it learned to live.</dd>
+            
+            
+            
+            
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_rb9s0oum-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_rb9s0oum-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_rb9s0oum-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_rb9s0oum-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_rb9s0oum-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_rb9s0oum-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_rb9s0oum-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_rb9s0oum-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_rb9s0oum-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_rb9s0oum-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="device_works">
+        <legend>device_works</legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_rb9s0oum-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_rb9s0oum-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_rb9s0oum-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_rb9s0oum-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_rb9s0oum-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 1</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_rb9s0oum-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_rb9s0oum-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_rb9s0oum-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_rb9s0oum-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_rb9s0oum-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_rb9s0oum-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_rb9s0oum-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_rb9s0oum-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_rb9s0oum-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_rb9s0oum-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_rb9s0oum-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_rb9s0oum-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_rb9s0oum-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_rb9s0oum-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_rb9s0oum-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_47fohz9x" data-deck="dont-scale">
+      <header><span class="n">2/20</span><h2>The big idea: startups don't start themselves</h2><span class="meta">dont-scale · s_47fohz9x · figure</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_47fohz9x.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_47fohz9x.rest.png" alt="resting screenshot of The big idea: startups don't start themselves"></a>
+          
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>claim</dt><dd>Startups take off because founders make them take off. They do not take off just because the product is good.</dd>
+            <dt>mechanism</dt><dd>A founder's arm applies force to a crank. The engine (the startup) turns over but does not fire on its own. Only after enough cranking does it catch, and then it runs without the arm. Without the arm, nothing happens, however good the engine is.</dd>
+            
+            
+            <dt>aha</dt><dd>The mousetrap myth pictures the engine starting on its own. The picture shows an arm is required.</dd>
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_47fohz9x-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_47fohz9x-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_47fohz9x-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_47fohz9x-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_47fohz9x-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_47fohz9x-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_47fohz9x-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_47fohz9x-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_47fohz9x-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_47fohz9x-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="device_works" disabled>
+        <legend>device_works <small>(n/a)</small></legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_47fohz9x-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_47fohz9x-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_47fohz9x-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_47fohz9x-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_47fohz9x-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: n/a</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_47fohz9x-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_47fohz9x-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_47fohz9x-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_47fohz9x-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_47fohz9x-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_47fohz9x-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_47fohz9x-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_47fohz9x-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_47fohz9x-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_47fohz9x-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_47fohz9x-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_47fohz9x-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_47fohz9x-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_47fohz9x-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_47fohz9x-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_3esimwaa" data-deck="dont-scale">
+      <header><span class="n">3/20</span><h2>Two separate jobs</h2><span class="meta">dont-scale · s_3esimwaa · instrument</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_3esimwaa.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_3esimwaa.rest.png" alt="resting screenshot of Two separate jobs"></a>
+          <div class="thumbs"><a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_3esimwaa.i1.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_3esimwaa.i1.png" alt="interacted state 1"></a><a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_3esimwaa.i2.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_3esimwaa.i2.png" alt="interacted state 2"></a><a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_3esimwaa.i3.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_3esimwaa.i3.png" alt="interacted state 3"></a><a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_3esimwaa.i4.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_3esimwaa.i4.png" alt="interacted state 4"></a></div>
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>claim</dt><dd>Starting a startup and keeping it running are two separate jobs. The first one is manual, and it ends at a threshold.</dd>
+            <dt>mechanism</dt><dd>Cranking adds RPM. Below the ignition line, RPM decays back to zero as soon as cranking stops. Above it, the engine sustains its own RPM and the crank is no longer needed. The input is the founder's effort. The relation is the threshold. The output is self-sustaining motion, or a fall back to cold.</dd>
+            <dt>operate</dt><dd>The reader turns the crank (presses or drags to add turns) and can let go at any moment.</dd>
+            <dt>changes</dt><dd>The tachometer needle rises with each turn. If released below the ignition line, it sinks back to cold. Once past the line, the engine catches, the crank arm drops away, and the needle holds steady in the 'running on its own' zone.</dd>
+            <dt>aha</dt><dd>Letting go just short of the line sends the needle all the way back to zero. Crossing it makes the arm unnecessary. These are two different jobs, and the first one doesn't partly count.</dd>
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_3esimwaa-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_3esimwaa-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_3esimwaa-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_3esimwaa-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_3esimwaa-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_3esimwaa-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_3esimwaa-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_3esimwaa-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_3esimwaa-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_3esimwaa-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="device_works">
+        <legend>device_works</legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_3esimwaa-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_3esimwaa-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_3esimwaa-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_3esimwaa-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_3esimwaa-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_3esimwaa-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_3esimwaa-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_3esimwaa-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_3esimwaa-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_3esimwaa-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_3esimwaa-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_3esimwaa-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_3esimwaa-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_3esimwaa-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_3esimwaa-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_3esimwaa-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_3esimwaa-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_3esimwaa-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_3esimwaa-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_3esimwaa-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_s65qftb4" data-deck="ref-opus-4-8-dont-scale">
+      <header><span class="n">4/20</span><h2>The Math Founders Underestimate</h2><span class="meta">ref-opus-4-8-dont-scale · s_s65qftb4 · outline</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_s65qftb4.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_s65qftb4.rest.png" alt="resting screenshot of The Math Founders Underestimate"></a>
+          <div class="thumbs"><a href="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_s65qftb4.i1.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_s65qftb4.i1.png" alt="interacted state 1"></a></div>
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>content (no plan)</dt><dd class="md">Those tiny numbers feel like failure because founders judge them as a snapshot instead of a rate. The thing that matters isn't *how many* users today — it's *how fast the number compounds*.
+
+At 10% growth per week, 100 users becomes millions within about two years. The early total is supposed to look small; the slope is what you're building.
+
+&gt; Like **a single fold of paper** — one fold seems trivial, but fold it 42 times and it would reach the moon. Compounding hides enormous outcomes inside unimpressive beginnings.</dd>
+            
+            
+            
+            
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_s65qftb4-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_s65qftb4-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_s65qftb4-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_s65qftb4-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_s65qftb4-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_s65qftb4-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_s65qftb4-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_s65qftb4-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_s65qftb4-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_s65qftb4-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="device_works">
+        <legend>device_works</legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_s65qftb4-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_s65qftb4-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_s65qftb4-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_s65qftb4-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_s65qftb4-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_s65qftb4-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_s65qftb4-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_s65qftb4-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_s65qftb4-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_s65qftb4-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_s65qftb4-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_s65qftb4-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_s65qftb4-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_s65qftb4-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_s65qftb4-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_s65qftb4-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_s65qftb4-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_s65qftb4-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_s65qftb4-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_s65qftb4-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_1fmw6h66" data-deck="dont-scale-committed-plan">
+      <header><span class="n">5/20</span><h2>Recruit Users One by One</h2><span class="meta">dont-scale-committed-plan · s_1fmw6h66 · sequence</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_1fmw6h66.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_1fmw6h66.rest.png" alt="resting screenshot of Recruit Users One by One"></a>
+          
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>claim</dt><dd>Users are won one at a time by hand, and those small numbers compound into enormous ones through sustained weekly growth.</dd>
+            <dt>mechanism</dt><dd>Input: founder personally reaches and sets up one individual user (not broadcast-and-wait). Relation: each added user compounds at a weekly growth rate. Output: a tiny starting base multiplies over time — the manual act is small, the compounding is not.</dd>
+            
+            
+            
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_1fmw6h66-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_1fmw6h66-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_1fmw6h66-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_1fmw6h66-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_1fmw6h66-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_1fmw6h66-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_1fmw6h66-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_1fmw6h66-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_1fmw6h66-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_1fmw6h66-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="device_works" disabled>
+        <legend>device_works <small>(n/a)</small></legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_1fmw6h66-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_1fmw6h66-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_1fmw6h66-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_1fmw6h66-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_1fmw6h66-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: n/a</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_1fmw6h66-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_1fmw6h66-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_1fmw6h66-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_1fmw6h66-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_1fmw6h66-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_1fmw6h66-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_1fmw6h66-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_1fmw6h66-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_1fmw6h66-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_1fmw6h66-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_1fmw6h66-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_1fmw6h66-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_1fmw6h66-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_1fmw6h66-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_1fmw6h66-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_nxwe77ju" data-deck="dont-scale-committed-plan">
+      <header><span class="n">6/20</span><h2>The Idea Is a Vector, Not a Point</h2><span class="meta">dont-scale-committed-plan · s_nxwe77ju · figure</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_nxwe77ju.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_nxwe77ju.rest.png" alt="resting screenshot of The Idea Is a Vector, Not a Point"></a>
+          
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>claim</dt><dd>A startup is a vector — what you'll build plus the unscalable effort to start it — and that early push often becomes the company's permanent DNA.</dd>
+            <dt>mechanism</dt><dd>Composition of two components into one vector: 'what you build' (direction) added to 'the unscalable things you do' (magnitude of effort). Relation: the effort component isn't discarded scaffolding — it persists as habits (obsessing over users, learning by contact) baked into the company for good.</dd>
+            
+            
+            
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_nxwe77ju-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_nxwe77ju-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_nxwe77ju-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_nxwe77ju-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_nxwe77ju-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_nxwe77ju-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_nxwe77ju-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_nxwe77ju-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_nxwe77ju-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_nxwe77ju-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="device_works" disabled>
+        <legend>device_works <small>(n/a)</small></legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_nxwe77ju-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_nxwe77ju-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_nxwe77ju-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_nxwe77ju-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_nxwe77ju-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: n/a</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_nxwe77ju-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_nxwe77ju-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_nxwe77ju-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_nxwe77ju-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_nxwe77ju-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_nxwe77ju-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_nxwe77ju-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_nxwe77ju-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_nxwe77ju-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_nxwe77ju-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_nxwe77ju-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_nxwe77ju-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_nxwe77ju-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_nxwe77ju-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_nxwe77ju-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_04d74bwe" data-deck="dont-scale">
+      <header><span class="n">7/20</span><h2>Ways to turn the crank</h2><span class="meta">dont-scale · s_04d74bwe · figure</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_04d74bwe.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_04d74bwe.rest.png" alt="resting screenshot of Ways to turn the crank"></a>
+          
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>claim</dt><dd>The crank takes several forms: recruiting by hand, delighting users, starting narrow, building it yourself and being the software. It's the same manual push each time.</dd>
+            <dt>mechanism</dt><dd>Each tactic is one way the founder's arm supplies the starting force the system can't supply yet. Recruiting finds users (peers, or more of your most enthusiastic group). Delight makes them happy enough to drive growth. Narrow focus concentrates heat to reach critical mass. Hand assembly avoids factory minimums. Doing tasks manually stands in for automation that doesn't exist yet.</dd>
+            
+            
+            <dt>aha</dt><dd>Tactics that look unrelated, a thank-you card, a Harvard-only launch and hand-built watches, are all the same move: a person doing by hand what the system can't do yet.</dd>
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_04d74bwe-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_04d74bwe-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_04d74bwe-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_04d74bwe-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_04d74bwe-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_04d74bwe-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_04d74bwe-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_04d74bwe-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_04d74bwe-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_04d74bwe-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="device_works" disabled>
+        <legend>device_works <small>(n/a)</small></legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_04d74bwe-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_04d74bwe-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_04d74bwe-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_04d74bwe-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_04d74bwe-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: n/a</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_04d74bwe-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_04d74bwe-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_04d74bwe-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_04d74bwe-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_04d74bwe-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_04d74bwe-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_04d74bwe-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_04d74bwe-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_04d74bwe-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_04d74bwe-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_04d74bwe-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_04d74bwe-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_04d74bwe-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_04d74bwe-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_04d74bwe-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_71dy6v33" data-deck="dont-scale-committed-plan">
+      <header><span class="n">8/20</span><h2>Delight Beyond What's Reasonable</h2><span class="meta">dont-scale-committed-plan · s_71dy6v33 · instrument</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_71dy6v33.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_71dy6v33.rest.png" alt="resting screenshot of Delight Beyond What's Reasonable"></a>
+          <div class="thumbs"><a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_71dy6v33.i1.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_71dy6v33.i1.png" alt="interacted state 1"></a><a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_71dy6v33.i2.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_71dy6v33.i2.png" alt="interacted state 2"></a></div>
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>claim</dt><dd>With only a handful of users you can give each an insanely great experience, and that attentiveness compensates for a buggy, incomplete product.</dd>
+            <dt>mechanism</dt><dd>Input: founder attentiveness per user (feasible only at small scale). Relation: total experience quality = product quality + attentiveness; attentiveness fills the gap the incomplete product leaves. Output: users feel delighted even when the product is rough.</dd>
+            <dt>operate</dt><dd>The reader raises an 'attentiveness' dial while the product stays buggy/incomplete.</dd>
+            <dt>changes</dt><dd>As attentiveness rises, the overall experience meter climbs into 'insanely great' even though the product bar stays low — and the dial is only reachable while user count is small.</dd>
+            <dt>aha</dt><dd>You can deliver an insanely great experience on a bad product — the missing product quality is made up by attention no big company could afford.</dd>
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_71dy6v33-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_71dy6v33-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_71dy6v33-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_71dy6v33-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_71dy6v33-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_71dy6v33-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_71dy6v33-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_71dy6v33-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_71dy6v33-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_71dy6v33-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="device_works">
+        <legend>device_works</legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_71dy6v33-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_71dy6v33-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_71dy6v33-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_71dy6v33-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_71dy6v33-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_71dy6v33-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_71dy6v33-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_71dy6v33-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_71dy6v33-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_71dy6v33-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_71dy6v33-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_71dy6v33-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_71dy6v33-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_71dy6v33-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_71dy6v33-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_71dy6v33-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_71dy6v33-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_71dy6v33-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_71dy6v33-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_71dy6v33-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_r9egdmae" data-deck="dont-scale">
+      <header><span class="n">9/20</span><h2>Why founders skip the crank</h2><span class="meta">dont-scale · s_r9egdmae · static</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_r9egdmae.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_r9egdmae.rest.png" alt="resting screenshot of Why founders skip the crank"></a>
+          
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>claim</dt><dd>Founders skip the crank for two reasons, and the more dangerous one is a mistake about math, not about personality.</dd>
+            <dt>mechanism</dt><dd>Two forces pull the founder's hand off the crank. One is personality: shyness, plus preferring to write code over facing rejection from strangers. The other is arithmetic: 10 hand-recruited users look too small to matter. The first is a matter of comfort. The second is a factual error, and the next slide corrects it.</dd>
+            
+            
+            <dt>aha</dt><dd>The reason that sounds most rational, 'the numbers are too small', is the one that's wrong.</dd>
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_r9egdmae-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_r9egdmae-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_r9egdmae-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_r9egdmae-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_r9egdmae-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_r9egdmae-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_r9egdmae-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_r9egdmae-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_r9egdmae-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_r9egdmae-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="device_works" disabled>
+        <legend>device_works <small>(n/a)</small></legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_r9egdmae-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_r9egdmae-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_r9egdmae-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_r9egdmae-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_r9egdmae-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: n/a</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_r9egdmae-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_r9egdmae-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_r9egdmae-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_r9egdmae-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_r9egdmae-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_r9egdmae-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_r9egdmae-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_r9egdmae-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_r9egdmae-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_r9egdmae-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_r9egdmae-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_r9egdmae-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_r9egdmae-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_r9egdmae-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_r9egdmae-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_mlyvq9qq" data-deck="dont-scale">
+      <header><span class="n">10/20</span><h2>Small is an advantage</h2><span class="meta">dont-scale · s_mlyvq9qq · comparison</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_mlyvq9qq.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_mlyvq9qq.rest.png" alt="resting screenshot of Small is an advantage"></a>
+          
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>claim</dt><dd>Being tiny is an advantage. You can give a level of attention no big company can, and that attention makes up for an unfinished product and gets you the best feedback you'll ever have.</dd>
+            <dt>mechanism</dt><dd>A user's experience equals the product plus your attention. A big company has a polished product but can't give individual attention. Tim Cook can't send a handwritten note. A small startup has a buggy, incomplete product but can add attention until the overall experience is insanely great. The same close contact sends direct feedback back into the product.</dd>
+            
+            
+            <dt>aha</dt><dd>The startup's product bar is clearly worse, yet its total experience bar matches or beats the giant's. Attention is the part a big company can't buy.</dd>
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_mlyvq9qq-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_mlyvq9qq-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_mlyvq9qq-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_mlyvq9qq-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_mlyvq9qq-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_mlyvq9qq-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_mlyvq9qq-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_mlyvq9qq-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_mlyvq9qq-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_mlyvq9qq-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="device_works" disabled>
+        <legend>device_works <small>(n/a)</small></legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_mlyvq9qq-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_mlyvq9qq-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_mlyvq9qq-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_mlyvq9qq-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_mlyvq9qq-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: n/a</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_mlyvq9qq-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_mlyvq9qq-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_mlyvq9qq-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_mlyvq9qq-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_mlyvq9qq-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_mlyvq9qq-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_mlyvq9qq-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_mlyvq9qq-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_mlyvq9qq-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_mlyvq9qq-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_mlyvq9qq-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_mlyvq9qq-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_mlyvq9qq-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_mlyvq9qq-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_mlyvq9qq-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_yyelfkor" data-deck="dont-scale-committed-plan">
+      <header><span class="n">11/20</span><h2>Start Narrow to Catch Fire</h2><span class="meta">dont-scale-committed-plan · s_yyelfkor · instrument</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_yyelfkor.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_yyelfkor.rest.png" alt="resting screenshot of Start Narrow to Catch Fire"></a>
+          <div class="thumbs"><a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_yyelfkor.i1.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_yyelfkor.i1.png" alt="interacted state 1"></a><a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_yyelfkor.i2.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_yyelfkor.i2.png" alt="interacted state 2"></a><a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_yyelfkor.i3.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_yyelfkor.i3.png" alt="interacted state 3"></a></div>
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>claim</dt><dd>Concentrating limited effort on a deliberately tiny market builds the density needed to catch, where the same effort spread thin dies out.</dd>
+            <dt>mechanism</dt><dd>Input: a fixed amount of founder effort (heat). Relation: concentrated on a small market it exceeds the ignition threshold and self-sustains; spread across a large market it falls below threshold everywhere and dissipates. Output: saturation of a small space, then it can jump.</dd>
+            <dt>operate</dt><dd>The reader adjusts how wide the market/field the same flame is spread across.</dd>
+            <dt>changes</dt><dd>Spread wide, the flame thins below threshold and dies; packed onto concentrated kindling it crosses the threshold, catches, and then jumps outward.</dd>
+            <dt>aha</dt><dd>The same flame that dies across a whole field catches when packed tight — critical mass is about density, not total size.</dd>
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_yyelfkor-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_yyelfkor-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_yyelfkor-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_yyelfkor-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_yyelfkor-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_yyelfkor-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_yyelfkor-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_yyelfkor-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_yyelfkor-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_yyelfkor-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="device_works">
+        <legend>device_works</legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_yyelfkor-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_yyelfkor-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_yyelfkor-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_yyelfkor-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_yyelfkor-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_yyelfkor-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_yyelfkor-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_yyelfkor-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_yyelfkor-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_yyelfkor-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_yyelfkor-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_yyelfkor-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_yyelfkor-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_yyelfkor-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_yyelfkor-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_yyelfkor-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_yyelfkor-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_yyelfkor-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_yyelfkor-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_yyelfkor-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_aewjm1n7" data-deck="dont-scale">
+      <header><span class="n">12/20</span><h2>Compounding: small numbers aren't small</h2><span class="meta">dont-scale · s_aewjm1n7 · instrument</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_aewjm1n7.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_aewjm1n7.rest.png" alt="resting screenshot of Compounding: small numbers aren't small"></a>
+          <div class="thumbs"><a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_aewjm1n7.i1.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_aewjm1n7.i1.png" alt="interacted state 1"></a><a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_aewjm1n7.i2.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_aewjm1n7.i2.png" alt="interacted state 2"></a></div>
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>claim</dt><dd>At 10% a week, 100 users become about 14,000 in a year and about 2 million in two. Small early numbers are the start of that curve.</dd>
+            <dt>mechanism</dt><dd>Users after w weeks = 100 × (1 + r)^w. The weekly rate r and the elapsed weeks w are the inputs. Each week's gain is a percentage of an ever-larger base, so the increments look trivial at first and then explode. The output is the user count over time.</dd>
+            <dt>operate</dt><dd>A weekly growth-rate slider (1% to 10%) and a time scrubber (week 0 to week 104).</dd>
+            <dt>changes</dt><dd>The user curve redraws and a counter shows users at the scrubbed week. Week 1 at 10% reads 110, barely different from 100. Scrubbing to week 52 shows about 14,000 and to week 104 about 2 million. Lowering the rate to 5% collapses the two-year figure to about 16,000.</dd>
+            <dt>aha</dt><dd>Going from 100 to 110 looks like nothing, and the curve looks flat for months. Then the same 10% produces 2 million. The 10 users you recruit by hand are the first steps of that curve.</dd>
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_aewjm1n7-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_aewjm1n7-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_aewjm1n7-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_aewjm1n7-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_aewjm1n7-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_aewjm1n7-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_aewjm1n7-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_aewjm1n7-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_aewjm1n7-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_aewjm1n7-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="device_works">
+        <legend>device_works</legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_aewjm1n7-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_aewjm1n7-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_aewjm1n7-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_aewjm1n7-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_aewjm1n7-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_aewjm1n7-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_aewjm1n7-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_aewjm1n7-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_aewjm1n7-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_aewjm1n7-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_aewjm1n7-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_aewjm1n7-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_aewjm1n7-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_aewjm1n7-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_aewjm1n7-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_aewjm1n7-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_aewjm1n7-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_aewjm1n7-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_aewjm1n7-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_aewjm1n7-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_vekib1on" data-deck="ref-opus-4-8-dont-scale">
+      <header><span class="n">13/20</span><h2>Fragile Things Get Misjudged</h2><span class="meta">ref-opus-4-8-dont-scale · s_vekib1on · outline</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_vekib1on.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_vekib1on.rest.png" alt="resting screenshot of Fragile Things Get Misjudged"></a>
+          <div class="thumbs"><a href="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_vekib1on.i1.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_vekib1on.i1.png" alt="interacted state 1"></a></div>
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>content (no plan)</dt><dd class="md">Because early numbers are tiny, outsiders (and founders themselves) judge a startup by the standards of established companies — and conclude it's a toy. But nearly every startup is extremely fragile at the start. That fragility is normal, not fatal.
+
+The right question isn't 'how big is this now?' It's 'how big could this get if the founders did the right things?'
+
+&gt; Like **judging an oak by the acorn** — measured as it is today, it looks like nothing. Measured by what it could become, it's a forest.</dd>
+            
+            
+            
+            
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_vekib1on-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_vekib1on-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_vekib1on-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_vekib1on-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_vekib1on-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_vekib1on-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_vekib1on-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_vekib1on-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_vekib1on-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_vekib1on-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="device_works">
+        <legend>device_works</legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_vekib1on-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_vekib1on-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_vekib1on-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_vekib1on-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_vekib1on-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_vekib1on-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_vekib1on-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_vekib1on-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_vekib1on-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_vekib1on-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_vekib1on-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_vekib1on-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_vekib1on-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_vekib1on-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_vekib1on-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_vekib1on-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_vekib1on-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_vekib1on-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_vekib1on-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_vekib1on-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_2sv7wjjp" data-deck="ref-opus-4-8-dont-scale">
+      <header><span class="n">14/20</span><h2>Startups Don't Start Themselves</h2><span class="meta">ref-opus-4-8-dont-scale · s_2sv7wjjp · outline</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_2sv7wjjp.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_2sv7wjjp.rest.png" alt="resting screenshot of Startups Don't Start Themselves"></a>
+          <div class="thumbs"><a href="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_2sv7wjjp.i1.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_2sv7wjjp.i1.png" alt="interacted state 1"></a><a href="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_2sv7wjjp.i2.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_2sv7wjjp.i2.png" alt="interacted state 2"></a><a href="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_2sv7wjjp.i3.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_2sv7wjjp.i3.png" alt="interacted state 3"></a></div>
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>content (no plan)</dt><dd class="md">Here's the mental model that changes everything: a startup is not a seed you plant and water. At the very beginning it has no momentum of its own. The founders are the engine that gets it moving — by sheer manual force — until it can finally run on its own.
+
+Nothing about the early days is automatic. The growth you eventually want to be self-sustaining has to first be created by hand.
+
+&gt; Like **hand-cranking an old car engine** — you spin it by force until the motor catches and runs on its own. No crank, no ride.</dd>
+            
+            
+            
+            
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_2sv7wjjp-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_2sv7wjjp-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_2sv7wjjp-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_2sv7wjjp-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_2sv7wjjp-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_2sv7wjjp-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_2sv7wjjp-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_2sv7wjjp-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_2sv7wjjp-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_2sv7wjjp-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="device_works">
+        <legend>device_works</legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_2sv7wjjp-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_2sv7wjjp-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_2sv7wjjp-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_2sv7wjjp-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_2sv7wjjp-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_2sv7wjjp-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_2sv7wjjp-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_2sv7wjjp-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_2sv7wjjp-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_2sv7wjjp-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_2sv7wjjp-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_2sv7wjjp-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_2sv7wjjp-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_2sv7wjjp-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_2sv7wjjp-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_2sv7wjjp-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_2sv7wjjp-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_2sv7wjjp-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_2sv7wjjp-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_2sv7wjjp-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_0p7uw7ur" data-deck="dont-scale-committed-plan">
+      <header><span class="n">15/20</span><h2>Why It Has to Be Unscalable</h2><span class="meta">dont-scale-committed-plan · s_0p7uw7ur · comparison</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_0p7uw7ur.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/shots/s_0p7uw7ur.rest.png" alt="resting screenshot of Why It Has to Be Unscalable"></a>
+          
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>claim</dt><dd>Scalable tactics assume a force already in motion; at the start none exists, so disproportionate personal effort is the only lever available.</dd>
+            <dt>mechanism</dt><dd>Two levers acting on the same load: the 'scalable' lever (word-of-mouth, brand trust) requires pre-existing momentum to transmit any force, so at zero momentum it moves nothing; the 'unscalable' lever (direct personal effort) supplies force from the founder directly and works precisely because the user count is tiny.</dd>
+            
+            <dt>changes</dt><dd>At zero-momentum the scalable lever is slack and transmits no force; the unscalable lever is taut and moves the load — the difference is whether the lever needs a crowd that doesn't exist yet.</dd>
+            
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_0p7uw7ur-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_0p7uw7ur-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_0p7uw7ur-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_0p7uw7ur-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_0p7uw7ur-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_0p7uw7ur-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_0p7uw7ur-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_0p7uw7ur-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_0p7uw7ur-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_0p7uw7ur-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="device_works" disabled>
+        <legend>device_works <small>(n/a)</small></legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_0p7uw7ur-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_0p7uw7ur-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_0p7uw7ur-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_0p7uw7ur-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_0p7uw7ur-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: n/a</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_0p7uw7ur-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_0p7uw7ur-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_0p7uw7ur-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_0p7uw7ur-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_0p7uw7ur-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_0p7uw7ur-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_0p7uw7ur-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_0p7uw7ur-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_0p7uw7ur-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_0p7uw7ur-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_0p7uw7ur-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_0p7uw7ur-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_0p7uw7ur-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_0p7uw7ur-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_0p7uw7ur-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_z4le9mds" data-deck="dont-scale">
+      <header><span class="n">16/20</span><h2>Ask the right question</h2><span class="meta">dont-scale · s_z4le9mds · comparison</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_z4le9mds.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_z4le9mds.rest.png" alt="resting screenshot of Ask the right question"></a>
+          
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>claim</dt><dd>Judge an early startup by how big it could get if the founders did the right things, not by whether it's taking over the world yet.</dd>
+            <dt>mechanism</dt><dd>There are two measuring sticks for the same small startup. The wrong one reads the current needle (cold, tiny) and concludes it's nothing, which is judging a larval startup by an established one's standards. The right one projects where the needle could go if the crank is turned. The first leads founders to dismiss their own company, as Gates nearly did when he returned to Harvard.</dd>
+            
+            
+            <dt>aha</dt><dd>Both questions look at the same needle and reach opposite verdicts. One sees a newborn as useless, and the other sees what it can grow into.</dd>
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_z4le9mds-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_z4le9mds-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_z4le9mds-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_z4le9mds-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_z4le9mds-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_z4le9mds-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_z4le9mds-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_z4le9mds-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_z4le9mds-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_z4le9mds-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="device_works" disabled>
+        <legend>device_works <small>(n/a)</small></legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_z4le9mds-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_z4le9mds-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_z4le9mds-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_z4le9mds-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_z4le9mds-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: n/a</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_z4le9mds-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_z4le9mds-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_z4le9mds-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_z4le9mds-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_z4le9mds-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_z4le9mds-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_z4le9mds-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_z4le9mds-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_z4le9mds-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_z4le9mds-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_z4le9mds-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_z4le9mds-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_z4le9mds-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_z4le9mds-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_z4le9mds-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_nvgjvi7g" data-deck="ref-opus-4-8-dont-scale">
+      <header><span class="n">17/20</span><h2>Why Founders Resist</h2><span class="meta">ref-opus-4-8-dont-scale · s_nvgjvi7g · outline</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_nvgjvi7g.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_nvgjvi7g.rest.png" alt="resting screenshot of Why Founders Resist"></a>
+          <div class="thumbs"><a href="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_nvgjvi7g.i1.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/shots/s_nvgjvi7g.i1.png" alt="interacted state 1"></a></div>
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>content (no plan)</dt><dd class="md">If recruiting users by hand works so well, why don't founders do it? The resistance is the heart of the story.
+
+- **Temperament:** many founders are shy hackers who'd rather build than talk to strangers. Cranking the engine feels uncomfortable and exhausting.
+- **The numbers look pathetic:** signing up users one by one yields tiny absolute totals. It feels like it can't possibly matter.
+
+Both instincts are traps. The discomfort and the small numbers are not signs you're doing it wrong — they're the normal texture of the earliest days.</dd>
+            
+            
+            
+            
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_nvgjvi7g-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_nvgjvi7g-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_nvgjvi7g-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_nvgjvi7g-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_nvgjvi7g-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_nvgjvi7g-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_nvgjvi7g-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_nvgjvi7g-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_nvgjvi7g-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_nvgjvi7g-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 1</span>
+      </fieldset><fieldset class="crit" data-crit="device_works">
+        <legend>device_works</legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_nvgjvi7g-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_nvgjvi7g-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_nvgjvi7g-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_nvgjvi7g-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_nvgjvi7g-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_nvgjvi7g-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_nvgjvi7g-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_nvgjvi7g-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_nvgjvi7g-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_nvgjvi7g-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_nvgjvi7g-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_nvgjvi7g-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_nvgjvi7g-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_nvgjvi7g-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_nvgjvi7g-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_nvgjvi7g-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_nvgjvi7g-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_nvgjvi7g-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_nvgjvi7g-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_nvgjvi7g-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_o58ghhzt" data-deck="dont-scale">
+      <header><span class="n">18/20</span><h2>A startup idea comes in pairs</h2><span class="meta">dont-scale · s_o58ghhzt · figure</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_o58ghhzt.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_o58ghhzt.rest.png" alt="resting screenshot of A startup idea comes in pairs"></a>
+          
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>claim</dt><dd>A startup idea is a pair: what you'll build plus the unscalable things you'll do to start it. Done well, the second part becomes permanent company DNA.</dd>
+            <dt>mechanism</dt><dd>The idea is a vector, not a single number. Component 1 is the product (the engine). Component 2 is the unscalable starting work (the crank). Both are needed to get running. Afterward, the crank habits, aggressive acquisition and delighting users, carry on into the larger company rather than being thrown away.</dd>
+            
+            
+            <dt>aha</dt><dd>The crank isn't thrown away once the engine catches. The habits it built keep running inside the company.</dd>
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_o58ghhzt-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_o58ghhzt-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_o58ghhzt-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_o58ghhzt-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_o58ghhzt-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_o58ghhzt-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_o58ghhzt-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_o58ghhzt-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_o58ghhzt-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_o58ghhzt-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="device_works" disabled>
+        <legend>device_works <small>(n/a)</small></legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_o58ghhzt-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_o58ghhzt-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_o58ghhzt-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_o58ghhzt-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_o58ghhzt-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: n/a</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_o58ghhzt-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_o58ghhzt-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_o58ghhzt-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_o58ghhzt-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_o58ghhzt-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_o58ghhzt-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_o58ghhzt-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_o58ghhzt-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_o58ghhzt-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_o58ghhzt-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_o58ghhzt-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_o58ghhzt-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_o58ghhzt-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_o58ghhzt-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_o58ghhzt-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_4qynvpk9" data-deck="dont-scale">
+      <header><span class="n">19/20</span><h2>A warning sign</h2><span class="meta">dont-scale · s_4qynvpk9 · static</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_4qynvpk9.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_4qynvpk9.rest.png" alt="resting screenshot of A warning sign"></a>
+          
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>claim</dt><dd>Any growth plan that leaves out the founders' effort should make you suspicious.</dd>
+            <dt>mechanism</dt><dd>A simple test applied to a plan: find who is turning the crank. If the answer is 'nobody, the launch or partner does it', the plan treats the startup as a projectile and fails the test. Extraordinary effort, not just an extraordinary first move, is what passes.</dd>
+            
+            
+            <dt>aha</dt><dd>Once you ask who is turning the crank, the plan with no effort in it stands out right away.</dd>
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_4qynvpk9-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_4qynvpk9-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_4qynvpk9-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_4qynvpk9-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_4qynvpk9-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_4qynvpk9-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_4qynvpk9-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_4qynvpk9-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_4qynvpk9-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_4qynvpk9-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="device_works" disabled>
+        <legend>device_works <small>(n/a)</small></legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_4qynvpk9-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_4qynvpk9-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_4qynvpk9-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_4qynvpk9-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_4qynvpk9-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: n/a</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_4qynvpk9-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_4qynvpk9-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_4qynvpk9-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_4qynvpk9-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_4qynvpk9-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_4qynvpk9-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_4qynvpk9-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_4qynvpk9-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_4qynvpk9-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_4qynvpk9-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_4qynvpk9-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_4qynvpk9-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_4qynvpk9-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_4qynvpk9-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_4qynvpk9-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<article class="card" data-id="s_8fnoytzz" data-deck="dont-scale">
+      <header><span class="n">20/20</span><h2>Powered aircraft, not projectiles</h2><span class="meta">dont-scale · s_8fnoytzz · instrument</span></header>
+      <div class="grid">
+        <div class="shots">
+          <a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_8fnoytzz.rest.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_8fnoytzz.rest.png" alt="resting screenshot of Powered aircraft, not projectiles"></a>
+          <div class="thumbs"><a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_8fnoytzz.i1.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_8fnoytzz.i1.png" alt="interacted state 1"></a><a href="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_8fnoytzz.i2.png" target="_blank"><img loading="lazy" src="results/2026-10-04-baseline-opus-5-5/scores/dont-scale/shots/s_8fnoytzz.i2.png" alt="interacted state 2"></a></div>
+        </div>
+        <div class="side">
+          <dl class="intent">
+            <dt>claim</dt><dd>Startups are powered aircraft, not projectiles. No amount of launch velocity replaces an engine that keeps running.</dd>
+            <dt>mechanism</dt><dd>A projectile gets one impulse (the big launch or a big partnership) and then only decays, coming down whatever the starting speed. A powered aircraft keeps generating thrust: a core of happy users whose enthusiasm keeps driving growth. The inputs are initial impulse versus sustained thrust. The output is whether altitude is held.</dd>
+            <dt>operate</dt><dd>A 'launch size' slider (small launch → huge launch with partnership) and an 'engine' toggle (off/on, where on means a core of happy users).</dd>
+            <dt>changes</dt><dd>With the engine off, a bigger launch makes the arc taller, but it always lands back at zero. With the engine on, even a tiny launch climbs and keeps climbing. The two flight paths draw over the same timeline.</dd>
+            <dt>aha</dt><dd>Pushing the launch slider to maximum never keeps the cannonball up. Turning the engine on keeps even the smallest launch flying.</dd>
+          </dl>
+          <div class="inputs"><fieldset class="crit" data-crit="claim_at_rest">
+        <legend>claim_at_rest</legend>
+        <div class="opts"><label title="No claim, a contradictory claim, or the slide is unreadable at rest."><input type="radio" name="s_8fnoytzz-claim_at_rest" value="1"><span>1</span></label><label title="Right topic, wrong or missing point: the reader names the subject but not the assertion, or reads a weaker / different claim."><input type="radio" name="s_8fnoytzz-claim_at_rest" value="2"><span>2</span></label><label title="Same core assertion as intended; a secondary nuance or qualifier is lost."><input type="radio" name="s_8fnoytzz-claim_at_rest" value="3"><span>3</span></label><label title="The claim read from the resting slide states the intended claim's full assertion — including its causal or relational part — with nothing important missing or added."><input type="radio" name="s_8fnoytzz-claim_at_rest" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_8fnoytzz-claim_at_rest" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="mechanism_shown">
+        <legend>mechanism_shown</legend>
+        <div class="opts"><label title="The mechanism is absent, or only named in a sentence."><input type="radio" name="s_8fnoytzz-mechanism_shown" value="1"><span>1</span></label><label title="Mostly text. Any figure is decorative, or just lays out labelled boxes / components without showing how one drives the other. Tidy boxes-with-words are a 2."><input type="radio" name="s_8fnoytzz-mechanism_shown" value="2"><span>2</span></label><label title="The mechanism is depicted with real visual structure (axes, arrows, flows, linked states); one link is only stated in text."><input type="radio" name="s_8fnoytzz-mechanism_shown" value="3"><span>3</span></label><label title="The mechanism is DRAWN: a viewer can trace inputs → relation → output in the figure itself, without needing the sentences."><input type="radio" name="s_8fnoytzz-mechanism_shown" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_8fnoytzz-mechanism_shown" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 4</span>
+      </fieldset><fieldset class="crit" data-crit="device_works">
+        <legend>device_works</legend>
+        <div class="opts"><label title="No control, a control that does nothing, or it breaks the slide."><input type="radio" name="s_8fnoytzz-device_works" value="1"><span>1</span></label><label title="Something responds, but not the planned change: the effect is cosmetic (a highlight, a label swap), hard to see, or the 'aha' is not reachable."><input type="radio" name="s_8fnoytzz-device_works" value="2"><span>2</span></label><label title="Works: the planned change happens and is visible. Minor issues — weak affordance, small or subtle change, only part of the planned range."><input type="radio" name="s_8fnoytzz-device_works" value="3"><span>3</span></label><label title="Doing the planned operation produces the planned change immediately and legibly; the control is discoverable at rest; the 'aha' is reachable by a first-time viewer."><input type="radio" name="s_8fnoytzz-device_works" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_8fnoytzz-device_works" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="fidelity">
+        <legend>fidelity</legend>
+        <div class="opts"><label title="The core claim contradicts the source, or there are multiple fabrications."><input type="radio" name="s_8fnoytzz-fidelity" value="1"><span>1</span></label><label title="At least one fabricated number, name, quote or claim, OR a material distortion of the source. (Any fabrication caps the score at 2.)"><input type="radio" name="s_8fnoytzz-fidelity" value="2"><span>2</span></label><label title="Faithful. Minor simplification or paraphrase the source's author would accept; any illustrative values are clearly marked as illustrative."><input type="radio" name="s_8fnoytzz-fidelity" value="3"><span>3</span></label><label title="Every number, name, quote and claim on the slide traces to the source; framing is faithful, nothing distorted."><input type="radio" name="s_8fnoytzz-fidelity" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_8fnoytzz-fidelity" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 3</span>
+      </fieldset><fieldset class="crit" data-crit="craft">
+        <legend>craft</legend>
+        <div class="opts"><label title="Broken: overlapping or cut-off text, illegible, chaotic."><input type="radio" name="s_8fnoytzz-craft" value="1"><span>1</span></label><label title="Tidy but flat (everything the same weight), or large dead zones, cramped clusters, small/low-contrast text, awkward alignment."><input type="radio" name="s_8fnoytzz-craft" value="2"><span>2</span></label><label title="Clear hierarchy and balanced layout; at most one minor issue (a cramped corner, one small label)."><input type="radio" name="s_8fnoytzz-craft" value="3"><span>3</span></label><label title="A clear single entry point and deliberate hierarchy; space is used on purpose; nothing cramped, tiny, or stranded. Would hold up printed as a poster."><input type="radio" name="s_8fnoytzz-craft" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_8fnoytzz-craft" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset><fieldset class="crit" data-crit="not_generic">
+        <legend>not_generic</legend>
+        <div class="opts"><label title="A template slide: 3+ defaults, content interchangeable."><input type="radio" name="s_8fnoytzz-not_generic" value="1"><span>1</span></label><label title="The layout is defined by a default (card grid, hero tagline, stat tiles), or 2+ named defaults are present."><input type="radio" name="s_8fnoytzz-not_generic" value="2"><span>2</span></label><label title="At most one minor default (e.g. a small eyebrow label) that does not define the layout."><input type="radio" name="s_8fnoytzz-not_generic" value="3"><span>3</span></label><label title="No named defaults. The visual form is specific to this idea — you could not swap in another topic's text."><input type="radio" name="s_8fnoytzz-not_generic" value="4"><span>4</span></label>
+        <label title="can't tell"><input type="radio" name="s_8fnoytzz-not_generic" value="unknown"><span>?</span></label></div>
+        <span class="judge" hidden>judge: 2</span>
+      </fieldset></div>
+          <textarea placeholder="notes (what made you score it this way?)"></textarea>
+        </div>
+      </div>
+    </article>
+<textarea id="out" readonly></textarea>
+</main>
+<div class="bar"><span id="status">0 / 120 ratings</span>
+<button id="reveal">Reveal judge scores</button><button id="copy" class="primary">Copy as JSON</button></div>
+<script>
+(function(){
+  var KEY = "mindsizer-calibration-2026-10-04-baseline-opus-5-5";
+  var run = "2026-10-04-baseline-opus-5-5";
+  function collect(){
+    var cards = Array.prototype.slice.call(document.querySelectorAll(".card"));
+    var n = 0;
+    var slides = cards.map(function(c){
+      var scores = {};
+      c.querySelectorAll("fieldset.crit").forEach(function(f){
+        var v = f.querySelector("input:checked");
+        if (f.disabled) { scores[f.dataset.crit] = "n/a"; return; }
+        scores[f.dataset.crit] = v ? (v.value === "unknown" ? "unknown" : Number(v.value)) : null;
+        if (v) n++;
+      });
+      return { deck: c.dataset.deck, id: c.dataset.id, scores: scores, notes: c.querySelector("textarea").value };
+    });
+    return { n: n, data: { run: run, rater: document.getElementById("rater").value, ratedAt: new Date().toISOString(), slides: slides } };
+  }
+  function save(){
+    var r = collect();
+    document.getElementById("status").textContent = r.n + " / 120 ratings";
+    try { localStorage.setItem(KEY, JSON.stringify(r.data)); } catch (e) {}
+  }
+  function restore(){
+    var raw = null;
+    try { raw = localStorage.getItem(KEY); } catch (e) {}
+    if (!raw) return;
+    try {
+      var d = JSON.parse(raw);
+      document.getElementById("rater").value = d.rater || "";
+      d.slides.forEach(function(s){
+        var c = document.querySelector('.card[data-id="' + s.id + '"][data-deck="' + s.deck + '"]');
+        if (!c) return;
+        Object.keys(s.scores).forEach(function(k){
+          var v = s.scores[k];
+          if (v === null || v === "n/a") return;
+          var i = c.querySelector('fieldset[data-crit="' + k + '"] input[value="' + v + '"]');
+          if (i) i.checked = true;
+        });
+        c.querySelector("textarea").value = s.notes || "";
+      });
+    } catch (e) {}
+  }
+  document.addEventListener("change", save);
+  document.addEventListener("input", save);
+  document.getElementById("reveal").addEventListener("click", function(){
+    document.querySelectorAll(".judge").forEach(function(j){ j.hidden = !j.hidden; });
+  });
+  document.getElementById("copy").addEventListener("click", function(){
+    var json = JSON.stringify(collect().data, null, 2);
+    var out = document.getElementById("out");
+    out.value = json; out.style.display = "block";
+    var done = function(){ document.getElementById("status").textContent = "copied ✓ (also shown below)"; };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(json).then(done, function(){ out.select(); done(); });
+    else { out.select(); try { document.execCommand("copy"); } catch (e) {} done(); }
+  });
+  restore(); save();
+})();
+</script>
+</body></html>

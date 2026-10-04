@@ -1,0 +1,1655 @@
+{
+  "deck": "examples/dont-scale.deck.html",
+  "outline": "examples/dont-scale.outline.md",
+  "sourceId": "dont-scale",
+  "deckTitle": "Hand-Cranking the Startup: Why the Unscalable Is the Job",
+  "judge": {
+    "model": "claude-opus-5-5",
+    "effort": "medium"
+  },
+  "scoredAt": "2026-10-04T09:23:53.959Z",
+  "slides": [
+    {
+      "id": "s_2sv7wjjp",
+      "title": "Startups Don't Start Themselves",
+      "kind": "outline",
+      "instrument": true,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 17,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [
+            {
+              "text": "REVS",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 12
+            },
+            {
+              "text": "reset",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 11
+            }
+          ],
+          "checked": 17,
+          "minRatio": 4.01
+        }
+      },
+      "controls": 2,
+      "intent": {
+        "title": "Startups Don't Start Themselves",
+        "markdown": "Here's the mental model that changes everything: a startup is not a seed you plant and water. At the very beginning it has no momentum of its own. The founders are the engine that gets it moving — by sheer manual force — until it can finally run on its own.\n\nNothing about the early days is automatic. The growth you eventually want to be self-sustaining has to first be created by hand.\n\n> Like **hand-cranking an old car engine** — you spin it by force until the motor catches and runs on its own. No crank, no ride."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 4,
+          "judged": 4,
+          "read_claim": "A startup has no momentum of its own, so its founders have to push it forward by hand, like cranking an old car engine, until growth becomes self-sustaining.",
+          "read_evidence": [
+            "Title (top left): \"Startups Don't Start Themselves\"",
+            "Body: \"A startup has no momentum of its own. The founders are the engine — turning it over by hand until the motor catches and runs by itself.\"",
+            "Pull quote (bottom left): \"Like hand-cranking an old car engine — spin it by force until the motor catches and runs on its own. No crank, no ride.\"",
+            "Diagram label (top right): \"MANUAL FORCE → SELF-SUSTAINING\"",
+            "Dial state (right): \"0 REVS\", \"STALLED — NO MOTION\", button \"TURN THE CRANK\""
+          ],
+          "evidence": [
+            "Title: \"Startups Don't Start Themselves\"",
+            "Body: \"A startup has no momentum of its own. The founders are the engine — turning it over by hand until the motor catches and runs by itself.\"",
+            "Pull quote: \"Like hand-cranking an old car engine — spin it by force until the motor catches and runs on its own. No crank, no ride.\"",
+            "Diagram label: \"MANUAL FORCE → SELF-SUSTAINING\""
+          ],
+          "reasoning": "The reader's claim keeps the full causal chain: there's no inherent momentum, so the founders have to push by hand until growth sustains itself. It also keeps the hand-crank analogy. The only things missing are the 'not a seed you plant and water' contrast and the line 'nothing about the early days is automatic.' Both just restate the same point, so nothing important is lost."
+        },
+        "mechanism_shown": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "Right panel shows a flywheel/dial: a center counter reading \"0\" and \"REVS\", a crank handle line, and tick marks around the wheel, with a \"CATCH\" label at the top-right",
+            "Header reads \"MANUAL FORCE → SELF-SUSTAINING\"",
+            "Resting status: \"STALLED — NO MOTION\"; after cranking: \"20\" REVS with a cyan arc trail and \"CRANKING — BY HAND\"; later \"45\" REVS with a longer arc moving toward the top",
+            "Interaction 2 goes back to \"0\" / \"STALLED — NO MOTION\" (it looks like a reset or decay)",
+            "None of the screenshots shows the wheel reaching \"CATCH\" or running on its own"
+          ],
+          "reasoning": "The figure does show the input side: pressing the crank drives revs up from 0 to 20 to 45, the wheel rotates, and an arc builds toward the \"CATCH\" mark. That is a real, traceable relation between hand force and momentum. The key output, where the engine catches and keeps running without help, never appears in these screenshots. It is only promised by the \"CATCH\" label and the \"→ SELF-SUSTAINING\" header text. The drop back to 0 in interaction 2 may show that momentum stalls without cranking, but it could also just be the reset."
+        },
+        "device_works": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "At rest the gauge reads '0 REVS', the status reads 'STALLED — NO MOTION', and a 'CATCH' label sits at the top-right of the arc. The '↻ TURN THE CRANK' button is large and obvious.",
+            "Five clicks on TURN THE CRANK moved the counter through 16, 29, 40 and 51. The status changed to 'CRANKING — BY HAND' and a cyan arc grew clockwise from the lower left toward the top.",
+            "After I stopped clicking and waited 1.5 s, the counter dropped from 51 to 20. In another run it fell from 37 to 3 and then to '0' with 'STALLED — NO MOTION'. Momentum dies off as soon as you stop cranking.",
+            "Six clicks in a row climbed 16 → 26 → 35 → 43 → 44 → 45. Each click added less as the count rose, and the arc stopped around the 11 o'clock position, well short of 'CATCH'.",
+            "Holding the mouse down on the button for 4000 ms did nothing; the counter stayed at '0'."
+          ],
+          "reasoning": "The crank clearly works. Each click turns the wheel, raises the rev count and grows the arc, and stopping lets it decay back to 'STALLED'. That shows the 'no momentum of its own' half of the idea well. The main point, though, is that the motor catches and runs by itself. Within the pace of clicks I could make, the revs leveled off at about 45–51 and never reached 'CATCH', so I never saw the self-sustaining state. A first-time viewer may run into the same wall.",
+          "aha_reached": false,
+          "drives": [
+            [
+              {
+                "clickAt": [
+                  878,
+                  598
+                ]
+              },
+              {
+                "clickAt": [
+                  878,
+                  598
+                ]
+              },
+              {
+                "clickAt": [
+                  878,
+                  598
+                ]
+              },
+              {
+                "clickAt": [
+                  878,
+                  598
+                ]
+              },
+              {
+                "clickAt": [
+                  878,
+                  598
+                ]
+              },
+              {
+                "wait": 1500
+              }
+            ],
+            [
+              {
+                "hold": {
+                  "at": [
+                    878,
+                    598
+                  ],
+                  "ms": 4000
+                }
+              },
+              {
+                "clickAt": [
+                  878,
+                  598
+                ]
+              },
+              {
+                "clickAt": [
+                  878,
+                  598
+                ]
+              },
+              {
+                "clickAt": [
+                  878,
+                  598
+                ]
+              },
+              {
+                "wait": 3000
+              },
+              {
+                "wait": 4000
+              }
+            ],
+            [
+              {
+                "clickAt": [
+                  878,
+                  598
+                ]
+              },
+              {
+                "clickAt": [
+                  878,
+                  598
+                ]
+              },
+              {
+                "clickAt": [
+                  878,
+                  598
+                ]
+              },
+              {
+                "clickAt": [
+                  878,
+                  598
+                ]
+              },
+              {
+                "clickAt": [
+                  878,
+                  598
+                ]
+              },
+              {
+                "clickAt": [
+                  878,
+                  598
+                ]
+              }
+            ]
+          ]
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "\"A startup has no momentum of its own.\" and \"No crank, no ride.\" are absolute. The source hedges: \"There may be a handful that just grew by themselves, but usually it takes some sort of push.\" This is a mild overstatement that drops the exception.",
+            "\"The founders are the engine — turning it over by hand\" mixes up the metaphor. In the source the startup is the engine and the founders work the crank. The meaning still gets across, but the roles are slightly off."
+          ],
+          "evidence": [
+            "Title \"Startups Don't Start Themselves\" matches the source: \"startups take off because the founders make them take off.\"",
+            "Body text \"turning it over by hand until the motor catches and runs by itself\" follows the source's crank metaphor: \"Once the engine was going, it would keep going, but there was a separate and laborious process to get it going.\"",
+            "Callout \"Like hand-cranking an old car engine — spin it by force until the motor catches and runs on its own\" is a close paraphrase of \"the cranks that car engines had before they got electric starters.\"",
+            "The gauge values (\"0\", \"20\", \"45\" REVS, \"CATCH\", \"STALLED — NO MOTION\", \"CRANKING — BY HAND\") are clearly a toy interactive control, not claims from the source."
+          ],
+          "reasoning": "There are no fabricated numbers, names or quotes. The core claim and the hand-crank analogy come straight from the source's opening section. The slide drops the source's 'handful that grew by themselves' caveat and garbles the engine/crank roles a little. These are minor simplifications the author would probably accept, but they keep the slide from fully faithful framing."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "Clear entry point: large serif title \"Startups Don't Start Themselves\" top-left, with \"Themselves\" in cyan italic for emphasis",
+            "Three deliberate levels on the left: small tracked eyebrow \"THE MENTAL MODEL — 01 / 08\", the headline, then body text \"A startup has no momentum of its own...\" with bold and italic emphasis",
+            "Pull quote anchored bottom-left with a cyan rule: \"Like hand-cranking an old car engine — spin it by force until the motor catches and runs on its own. No crank, no ride.\"",
+            "Left column has a large empty band between the body text (ends ~y=350) and the quote (starts ~y=585), about 230px tall",
+            "Right panel: the crank dial is centered under the label \"MANUAL FORCE → SELF-SUSTAINING\", with the primary CTA \"TURN THE CRANK\" as a solid cyan button",
+            "Small, faint labels: \"CATCH\" (~9px), \"REVS\" (12px, 4.01:1), \"reset\" (11px, 4.01:1), and the status \"STALLED — NO MOTION\" in gray small caps",
+            "The \"0\" counter inside the dial is overlapped by a cyan dot sitting just below it"
+          ],
+          "reasoning": "The hierarchy is clear: the headline is the entry point, followed by the body text, the quote, and then the interactive dial with its strong cyan CTA. The two-column split is deliberate. But it has more than one minor issue. There's a large dead band in the left column between the body text and the bottom-anchored quote, and the dial labels (\"CATCH\", \"REVS\", \"reset\") are tiny and faint, so they won't read at presentation distance. Polished, but it falls short of a clean 3."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "default explainer split — a prose column on the left (headline, body paragraph, pull quote) and a figure panel on the right, divided by a vertical hairline at x≈550",
+            "readout line restating state — \"STALLED — NO MOTION\" sits above the button and says in words what the dial already shows with \"0 REVS\" and a still crank"
+          ],
+          "evidence": [
+            "Left column holds the headline \"Startups Don't Start Themselves\", the paragraph \"A startup has no momentum of its own. The founders are the engine — turning it over by hand until the motor catches...\", and a bordered italic quote at the bottom: \"Like hand-cranking an old car engine — spin it by force until the motor catches and runs on its own. No crank, no ride.\"",
+            "Right panel holds the dial labeled \"MANUAL FORCE → SELF-SUSTAINING\", a radial tick ring with \"CATCH\" marked in cyan, a center counter \"0 REVS\" and a cyan crank arm.",
+            "Below the dial, the line \"STALLED — NO MOTION\" restates the 0-rev state. Under it are the button \"↻ TURN THE CRANK\" and the link \"RESET\".",
+            "\"01 / 08\" at top left is a page counter next to the theme's micro-label \"THE MENTAL MODEL\". It works as navigation, not decoration, so I did not count it.",
+            "The pull quote repeats the paragraph's crank metaphor (\"turning it over by hand until the motor catches\" vs \"spin it by force until the motor catches\"). That repeats the text, not the figure, so it doesn't strictly match pattern 8. It is still redundant."
+          ],
+          "reasoning": "The figure itself fits the idea: a hand crank with tick marks leading to a \"CATCH\" threshold, plus a rev counter, models manual force turning into self-sustaining motion. The control is one action button tied to that figure, not a detached row of pills. But the layout is the stock text-left, figure-right explainer split, with the prose split into a paragraph and a quote that says the same thing again. The status line \"STALLED — NO MOTION\" is a textbook readout that repeats the dial's state. Two named defaults are present, and one of them sets the layout, so this can't score 3 despite the strong figure."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_2sv7wjjp.rest.png",
+        "interacted": [
+          "shots/s_2sv7wjjp.i1.png",
+          "shots/s_2sv7wjjp.i2.png",
+          "shots/s_2sv7wjjp.i3.png"
+        ]
+      }
+    },
+    {
+      "id": "s_fa0nqri8",
+      "title": "The First Unscalable Move: Recruit Users by Hand",
+      "kind": "outline",
+      "instrument": true,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 19,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [
+            {
+              "text": "Wait for them",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 11
+            }
+          ],
+          "checked": 19,
+          "minRatio": 4.01
+        }
+      },
+      "controls": 3,
+      "intent": {
+        "title": "The First Unscalable Move: Recruit Users by Hand",
+        "markdown": "If founders must manually push, what does that actually look like? Most often, it's getting users **one at a time, in person**.\n\n- You don't wait for users to discover you — you go to them.\n- Stripe's founders would walk people through setup on the spot ('the Collison installation').\n- Airbnb's founders went door-to-door in New York to sign up hosts.\n\nThis feels backwards. It looks like the opposite of building a scalable business. That's exactly why it works — and why almost no one does it."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 3,
+          "judged": 3,
+          "read_claim": "Early-stage founders should get their first users by personally recruiting them one at a time and in person, the way Stripe and Airbnb did, even though that doesn't scale.",
+          "read_evidence": [
+            "Title: \"The First Unscalable Move: Recruit Users by Hand\"",
+            "Large left-column headline: \"Get users one at a time, in person.\"",
+            "STRIPE: \"The “Collison installation” — founders walked each new user through setup on the spot, right then and there.\"",
+            "AIRBNB: \"Founders went door-to-door in New York, signing up hosts one knock at a time.\"",
+            "Bottom-left: \"It looks like the opposite of a scalable business. That’s exactly why it works — and why almost no one does it.\"",
+            "Right panel: the toggle is set to \"RECRUIT BY HAND\", with lines running from \"FOUNDER\" to 4 of 12 user circles and a counter reading \"4 WALKED THROUGH · IN PERSON\""
+          ],
+          "evidence": [
+            "Reader claim: \"personally recruiting them one at a time and in person, the way Stripe and Airbnb did, even though that doesn't scale\"",
+            "Reader evidence: \"It looks like the opposite of a scalable business. That’s exactly why it works — and why almost no one does it.\"",
+            "Reader evidence: \"Get users one at a time, in person.\"",
+            "Reader evidence: STRIPE \"Collison installation\" and AIRBNB \"door-to-door in New York\""
+          ],
+          "reasoning": "The reader's claim matches the main point: recruit users by hand, one at a time and in person, with Stripe and Airbnb as examples. It also keeps the idea that this doesn't scale. But it softens the causal twist into \"even though,\" while the slide says the unscalability is exactly why it works and why almost no one does it. The \"you go to them instead of waiting\" framing is also implied rather than stated. The core claim is intact and a secondary nuance is lost."
+        },
+        "mechanism_shown": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "Resting state 'RECRUIT BY HAND': a 'FOUNDER' node with four teal lines running to four filled user dots in a grid of 12 circles, counter '4' with 'WALKED THROUGH · IN PERSON', button 'WALK ONE THROUGH →'",
+            "After switching to 'WAIT FOR THEM': no lines, all 12 circles empty, counter '0' with 'SIGNED UP AFTER BROADCAST', button 'BROADCAST LAUNCH'",
+            "Interaction 2 looks the same as interaction 1: still '0', with no visible broadcast effect drawn",
+            "Header: 'INSTRUMENT · TWO WAYS TO LAND YOUR FIRST 12 USERS'"
+          ],
+          "reasoning": "The figure draws the mechanism: each user is filled only when the founder has a line to them, and the counter goes up one at a time. You can follow founder → personal link → converted user without reading the text. Comparing the two modes shows the contrast with waiting, though only as an empty grid and a '0' — the broadcast never visibly reaches anyone. 'Why it works' and 'why almost no one does it' appear only in the text, and the screenshots don't show a click actually adding a user."
+        },
+        "device_works": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "At rest the RECRUIT BY HAND tab is active, with 4 filled dots joined to FOUNDER by lines and the counter reading \"4 WALKED THROUGH · IN PERSON\"",
+            "The first click on \"WALK ONE THROUGH →\" lit a 5th dot, added a 5th line and moved the counter to \"5\". The second click took it to 6.",
+            "Clicking \"WAIT FOR THEM\" cleared every connection. The counter reads \"0 SIGNED UP AFTER BROADCAST\" and the button changes to \"BROADCAST LAUNCH\".",
+            "Clicking \"BROADCAST LAUNCH\" briefly showed a faint ring spreading out from FOUNDER that stopped short of the dot grid. Then it faded, no dots filled, and the counter stayed at \"0\". A second click gave the same result."
+          ],
+          "reasoning": "The intended operation is to compare the two ways of getting users. Each \"walk one through\" click wins exactly one user, visibly and right away, while broadcasting reaches no one. Both buttons are labeled and easy to find, and the contrast between them makes the point: going one at a time works, and a broadcast gets you nothing. The weaknesses are that the slide starts already partly filled at 4 and the broadcast ring is faint and short-lived, but the key insight still comes through.",
+          "aha_reached": true,
+          "drives": [
+            [
+              {
+                "click": "section[data-slide-id] > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(4) > button"
+              },
+              {
+                "click": "section[data-slide-id] > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(4) > button"
+              },
+              {
+                "click": "section[data-slide-id] > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(1)"
+              },
+              {
+                "wait": 1500
+              },
+              {
+                "wait": 3000
+              }
+            ],
+            [
+              {
+                "click": "section[data-slide-id] > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(1)"
+              },
+              {
+                "clickAt": [
+                  704,
+                  640
+                ]
+              },
+              {
+                "wait": 2500
+              },
+              {
+                "clickAt": [
+                  704,
+                  640
+                ]
+              },
+              {
+                "wait": 2500
+              }
+            ]
+          ]
+        },
+        "fidelity": {
+          "score": 2,
+          "judged": 2,
+          "fabrications": [
+            "\"and why almost no one does it\" — the source never says almost no founders recruit by hand. It says \"Nearly all startups have to,\" and that some founders resist because of shyness or laziness. The slide's claim is unsupported and cuts against the source's framing.",
+            "\"That's exactly why it works\" — the source never says manual recruiting works because it's unscalable. It says it works because of compound growth and because founders have to push startups into motion. The causal claim is invented."
+          ],
+          "distortions": [
+            "The 'Wait for them' toy produces exactly 0 signups after a broadcast launch. The source says a launch delivers \"some initial core of users,\" not zero. This passes as an illustrative exaggeration, but it overstates the source.",
+            "The Airbnb item drops the source's other half, \"helping existing ones improve their listings.\" This is a minor omission."
+          ],
+          "evidence": [
+            "Left column, Stripe item: \"The 'Collison installation' — founders walked each new user through setup on the spot, right then and there.\" The source says: \"When anyone agreed to try Stripe they'd say 'Right then, give me your laptop' and set them up on the spot.\" This is faithful, with \"each new user\" slightly overgeneralizing \"anyone [who] agreed.\"",
+            "Left column, Airbnb item: \"Founders went door-to-door in New York, signing up hosts one knock at a time.\" The source says: \"going door to door in New York, recruiting new users and helping existing ones improve their listings.\" Calling the users \"hosts\" is a reasonable inference, and \"one knock at a time\" is a flourish. The slide leaves out helping existing users improve their listings.",
+            "Headline \"Get users one at a time, in person.\" matches the source's \"recruit users manually... You have to go out and get them.\"",
+            "Question \"If founders must personally push the startup to get going...\" paraphrases \"startups take off because the founders make them take off... it takes some sort of push.\"",
+            "Bottom-left kicker: \"It looks like the opposite of a scalable business. That's exactly why it works — and why almost no one does it.\"",
+            "Instrument: \"TWO WAYS TO LAND YOUR FIRST 12 USERS\". The 'Wait for them' / 'Broadcast launch' mode shows \"0 SIGNED UP AFTER BROADCAST\" and the 'Recruit by hand' mode counts \"4 WALKED THROUGH · IN PERSON\". These are clearly toy simulation values."
+          ],
+          "reasoning": "The Stripe example, the Airbnb example, and the headline all trace to the source with acceptable paraphrase, and the instrument's numbers are clearly illustrative. The kicker line, however, makes two claims the source doesn't support: that manual recruiting works because it is unscalable, and that almost no one does it. The second sits against the source's statement that nearly all startups have to do it. Because this is presented as a substantive conclusion rather than a metaphor, it counts as a fabricated claim and caps the score at 2."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "Clear title at the top: \"The First Unscalable Move: Recruit Users by Hand\" in large serif type, with \"by Hand\" set in cyan italic",
+            "Secondary headline \"Get users one at a time, in person.\" is large, with the cyan italic carrying the emphasis, so there are deliberate levels",
+            "Left column has a large empty area from about y=370 to y=630, between the \"AIRBNB\" entry and the closing quote \"It looks like the opposite of a scalable business...\"",
+            "The labels are very small monospace text: \"INSTRUMENT · TWO WAYS TO LAND YOUR FIRST 12 USERS\", \"WALKED THROUGH · IN PERSON\", \"FOUNDER\", and the \"WAIT FOR THEM\" tab (flagged at 11px, 4.01:1)",
+            "In the diagram, the founder node sits far left and the 3×4 grid is pushed right, leaving the left and lower parts of the panel empty; the counter \"4\" in the bottom-right corner is detached from the grid"
+          ],
+          "reasoning": "The hierarchy is good. The title leads, the cyan italic headline comes second, and the instrument panel is a strong visual counterweight. Space is the weak point: the left column has a large empty stretch between the examples and the closing quote. Several labels are about 11px tracked monospace in low contrast, which will be hard to read from presentation distance. This is more than one minor issue, so it falls just short of a 3."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "numbered eyebrow label — 'MOVE 01 · THE HAND-CRANK' above the title, top-left",
+            "default explainer split — prose column on the left (question, headline, Stripe/Airbnb notes, closing quote), instrument panel on the right",
+            "segmented pill control — the two-option toggle 'WAIT FOR THEM' / 'RECRUIT BY HAND' sits at the top of the panel, separate from the dot field",
+            "readout / stat-tile — a large cyan '4' with the caption 'WALKED THROUGH · IN PERSON' in the bottom-right of the panel, which repeats the count of filled dots"
+          ],
+          "evidence": [
+            "Top-left eyebrow: 'MOVE 01 · THE HAND-CRANK'",
+            "Left column holds the text: 'If founders must personally push…', 'Get users one at a time, in person.', 'STRIPE' and 'AIRBNB' notes, and the italic closing line 'It looks like the opposite of a scalable business…'",
+            "Right panel is labeled 'INSTRUMENT · TWO WAYS TO LAND YOUR FIRST 12 USERS'. Below that label are two side-by-side buttons, 'WAIT FOR THEM' and 'RECRUIT BY HAND' (the second is filled cyan)",
+            "The figure shows a 'FOUNDER' node with lines running to 4 filled dots in a 3×4 grid of 12 circles. This fits the idea: one person, one connection at a time",
+            "The 'WALK ONE THROUGH →' button adds users one at a time, which ties the action to the mechanism",
+            "Bottom-right: a large '4' over 'WALKED THROUGH · IN PERSON'. You can already count the 4 filled dots in the figure, so the number repeats it"
+          ],
+          "reasoning": "The figure fits the idea well. A founder node linked by single lines to each user, filled one click at a time, shows 'one at a time, in person' directly. The 'WALK ONE THROUGH' button is tied to that mechanism. Everything around the figure is template, though. The layout is the stock prose-left / figure-right split. There is a numbered eyebrow ('MOVE 01'), a detached segmented toggle at the top of the panel, and a large-number readout that restates the dot count. That makes 3 or 4 named defaults, which puts the slide at a 2 even though the core diagram is specific to the idea."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_fa0nqri8.rest.png",
+        "interacted": [
+          "shots/s_fa0nqri8.i1.png",
+          "shots/s_fa0nqri8.i2.png"
+        ]
+      }
+    },
+    {
+      "id": "s_nvgjvi7g",
+      "title": "Why Founders Resist",
+      "kind": "outline",
+      "instrument": true,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 17,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [
+            {
+              "text": "Resistance 01 — Temperament",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 11
+            },
+            {
+              "text": "Feels like",
+              "ratio": 3.44,
+              "need": 4.5,
+              "fontPx": 10
+            },
+            {
+              "text": "Resistance 02 — The numbers",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 11
+            },
+            {
+              "text": "Feels like",
+              "ratio": 3.44,
+              "need": 4.5,
+              "fontPx": 10
+            }
+          ],
+          "checked": 17,
+          "minRatio": 3.44
+        }
+      },
+      "controls": 1,
+      "intent": {
+        "title": "Why Founders Resist",
+        "markdown": "If recruiting users by hand works so well, why don't founders do it? The resistance is the heart of the story.\n\n- **Temperament:** many founders are shy hackers who'd rather build than talk to strangers. Cranking the engine feels uncomfortable and exhausting.\n- **The numbers look pathetic:** signing up users one by one yields tiny absolute totals. It feels like it can't possibly matter.\n\nBoth instincts are traps. The discomfort and the small numbers are not signs you're doing it wrong — they're the normal texture of the earliest days."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 4,
+          "judged": 4,
+          "read_claim": "Founders resist recruiting users by hand for two reasons: it feels uncomfortable and the early numbers look pathetic. Both are traps, because discomfort and tiny totals are normal in a startup's earliest days and don't mean the founder is doing it wrong.",
+          "read_evidence": [
+            "\"Why Founders Resist\" (headline, top left)",
+            "\"Two instincts pull them off the crank — and both feel like proof they should stop.\" (subtitle)",
+            "\"It feels uncomfortable\" (left column heading)",
+            "\"It looks pathetic\" (right column heading)",
+            "\"Both instincts are traps. The discomfort and the small numbers aren't signs you're doing it wrong — they're the normal texture of the earliest days.\" (bottom takeaway line)"
+          ],
+          "evidence": [
+            "\"Why Founders Resist\" (headline)",
+            "\"It feels uncomfortable\" / \"It looks pathetic\" (two column headings)",
+            "\"Both instincts are traps. The discomfort and the small numbers aren't signs you're doing it wrong — they're the normal texture of the earliest days.\""
+          ],
+          "reasoning": "The reader got the full assertion: two reasons founders resist (discomfort and pathetic-looking numbers), and that both are traps because they're the normal texture of early days. The relational part, that these signals don't mean you're doing it wrong, is there. One small nuance is missing: the temperament detail about shy hackers who would rather build than talk to strangers. That's minor next to the core claim, and the discomfort point covers most of it."
+        },
+        "mechanism_shown": {
+          "score": 1,
+          "judged": 1,
+          "evidence": [
+            "Two text columns: \"RESISTANCE 01 — TEMPERAMENT\" / \"It feels uncomfortable\" and \"RESISTANCE 02 — THE NUMBERS\" / \"It looks pathetic\", each with a prose paragraph",
+            "Each column has a \"FEELS LIKE\" quote: \"If it's this uncomfortable, it can't really be my job.\" and \"These numbers are too small to ever add up.\"",
+            "Bottom sentence: \"Both instincts are traps... they're the normal texture of the earliest days.\" with a button \"▸ READ THE SIGNAL\"",
+            "After interaction 1 the screenshot looks the same as the resting one; only the button shade changes slightly"
+          ],
+          "reasoning": "The slide is two columns of text split by a thin divider line. It has no figure, arrows, axes or chart showing how the instincts lead to quitting, or why small numbers are normal (for example, a compounding curve). The mechanism (instinct → false signal → quitting, which is a trap) is only stated in sentences. Clicking the button did not show any drawn relation. If you cover the sentences, nothing is left to read."
+        },
+        "device_works": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "At rest, a bright cyan button labelled \"▸ READ THE SIGNAL\" sits at the bottom right. Each column shows a \"FEELS LIKE\" quote, \"If it's this uncomfortable, it can't really be my job.\" and \"These numbers are too small to ever add up.\", with empty space below.",
+            "After one click, both \"FEELS LIKE\" quotes are greyed out and struck through. A cyan \"ACTUALLY\" line appears under each one: \"Discomfort is the normal texture of the earliest days.\" and \"Small is exactly where compounding has to begin.\"",
+            "After that click, the button changes to an outlined \"▸ BACK TO THE INSTINCT\". Clicking it again restores the original state, so the toggle works both ways."
+          ],
+          "reasoning": "The slide is about seeing that both instincts are traps, and one click does exactly that: it strikes through each instinct and puts the reframe right under it. The change is immediate, easy to read in both columns, and the button can be undone. The prominent cyan button is easy to find. It falls short of a 4 because the interaction is a simple text reveal: it shows the reframe but doesn't let the viewer explore anything. The reframes also repeat the footer line \"normal texture of the earliest days\", which weakens the payoff.",
+          "aha_reached": true,
+          "drives": [
+            [
+              {
+                "click": "section[data-slide-id] > div:nth-of-type(5) > button"
+              },
+              {
+                "wait": 1200
+              },
+              {
+                "click": "section[data-slide-id] > div:nth-of-type(5) > button"
+              },
+              {
+                "wait": 1200
+              }
+            ]
+          ]
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "'Most founders are shy hackers' overgeneralizes. The source says some founders resist, partly from shyness. It never says most founders are shy. The slide also drops 'laziness', which is half of the source's first reason.",
+            "'ACTUALLY — Discomfort is the normal texture of the earliest days' is not the source's answer. The source's answer is that 'at least one founder (usually the CEO) will have to spend a lot of time on sales and marketing.' In other words, it really is your job. The slide softens this into reassurance and leaves out the source's direct point.",
+            "'So why do so few founders do it?' overstates the source, which only says founders resist and that 'Nearly all startups have to'.",
+            "'It looks pathetic' is stronger wording than the source's 'seem so small'. It is still within a reasonable paraphrase."
+          ],
+          "evidence": [
+            "Two cards, 'RESISTANCE 01 — TEMPERAMENT' and 'RESISTANCE 02 — THE NUMBERS'. These match the source's two reasons: 'One is a combination of shyness and laziness' and 'the absolute numbers seem so small at first.'",
+            "'Most founders are shy hackers who'd rather build than talk to strangers.' The source says: 'They'd rather sit at home writing code than go out and talk to a bunch of strangers and probably be rejected by most of them.'",
+            "'Signing users up one at a time yields tiny absolute totals.' This matches the source's 'the absolute numbers seem so small at first.'",
+            "'Small is exactly where compounding has to begin.' This fits the source's 'The mistake they make is to underestimate the power of compound growth.'",
+            "'Cranking the engine by hand' uses the source's own metaphor of the engine crank.",
+            "The 'FEELS LIKE' quotes are framed as founders' inner voice, not as quotes from the author. The source's version is 'This can't be how the big, famous startups got started, they think.'",
+            "The screenshot after the interaction is the same as the resting one. No extra content is revealed."
+          ],
+          "reasoning": "There are no invented numbers, names or attributed quotes. The two-reason structure and the compound-growth answer follow the source. The weaker spots are the overgeneralized 'Most founders are shy hackers' and the temperament 'ACTUALLY' line. That line, together with the footer's 'normal texture' framing, replaces the source's actual answer (one founder must spend a lot of time on sales) with an idea the source doesn't contain. These are paraphrase-level drifts, not material reversals, so the slide is faithful with minor problems."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "The title 'Why Founders Resist' at top left is the clear entry point: large serif type with 'Resist' in cyan italic",
+            "Clear levels: eyebrow 'THE MENTAL MODEL · HAND-CRANKING THE STARTUP', then the title, then two serif column heads 'It feels uncomfortable' / 'It looks pathetic', then body text, then the quotes",
+            "Big empty bands in both columns: one between the body text (ends ~y=360) and the divider (~y=433), another below the quotes (~y=490) down to the footer rule (~y=600). That's roughly 100px of nothing in each column",
+            "Small, faint labels: 'RESISTANCE 01 — TEMPERAMENT' at 11px (4.01:1) and 'FEELS LIKE' at 10px (3.44:1), gray letter-spaced text that is hard to read from presentation distance",
+            "The quotes \"If it's this uncomfortable, can't really be my job.\" are set at body weight. They are the emotional payoff, but they get no more emphasis than the descriptions above them",
+            "The footer takeaway 'Both instincts are traps…' with cyan italic 'they're the normal texture of the earliest days.' and the 'READ THE SIGNAL' button anchor the bottom well"
+          ],
+          "reasoning": "The hierarchy is deliberate. There is one strong entry point, the two columns mirror each other, and the takeaway sits in a clear footer. But each column has large dead bands, both under the body text and under the quotes, so the middle of the slide feels thin and stretched to fill the frame instead of being composed. The 10–11px low-contrast labels make it worse at presentation distance. That is more than one minor issue."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "numbered eyebrow labels — top of each column: \"RESISTANCE 01 — TEMPERAMENT\" and \"RESISTANCE 02 — THE NUMBERS\". The numbers are decoration; nothing on the slide is ordered.",
+            "uniform two-up grid (a card grid without the card borders) — two same-size columns, each with eyebrow + serif title + blurb + \"FEELS LIKE\" quote, split by a hairline divider. The shape is the same as the card-grid default, and it sets the layout.",
+            "a single small button detached from any figure — \"▸ READ THE SIGNAL\" at bottom right. It isn't attached to any visual it could change."
+          ],
+          "evidence": [
+            "Header is an eyebrow plus headline plus subtitle: \"THE MENTAL MODEL · HAND-CRANKING THE STARTUP\", \"Why Founders Resist\" (with \"Resist\" in cyan italic), and \"Recruiting users by hand works. So why do so few founders do it?...\"",
+            "Left column: \"It feels uncomfortable\" / \"Most founders are shy hackers who'd rather build than talk to strangers...\" / FEELS LIKE \"If it's this uncomfortable, it can't really be my job.\"",
+            "Right column: \"It looks pathetic\" / \"Signing users up one at a time yields tiny absolute totals...\" / FEELS LIKE \"These numbers are too small to ever add up.\"",
+            "Bottom takeaway: \"Both instincts are traps... they're the normal texture of the earliest days.\"",
+            "There is no figure, diagram or visual model anywhere. The slide is all text. Each column has a lot of empty space below the quote (about y 500–600)."
+          ],
+          "reasoning": "The slide avoids the loudest defaults: no gradients, emoji, icons, stat tiles or rounded cards. Still, its whole structure is a common template: an eyebrow and headline, two matching columns, and a takeaway line. The columns use decorative numbered eyebrows and identical title/blurb/quote content. Nothing in the visual form is specific to the idea. 'Resistance' and 'tiny numbers that compound' could have been shown visually, for example as a small curve of growing user counts or a force pulling against a crank. Instead it is prose in two boxes, and the text could be swapped for any other 'two reasons why' topic without changing the layout. The two-column grid with numbered eyebrows sets the layout, and the detached button is another default."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_nvgjvi7g.rest.png",
+        "interacted": [
+          "shots/s_nvgjvi7g.i1.png"
+        ]
+      }
+    },
+    {
+      "id": "s_s65qftb4",
+      "title": "The Math Founders Underestimate",
+      "kind": "outline",
+      "instrument": true,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 31,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [],
+          "checked": 31,
+          "minRatio": 6.65
+        }
+      },
+      "controls": 3,
+      "intent": {
+        "title": "The Math Founders Underestimate",
+        "markdown": "Those tiny numbers feel like failure because founders judge them as a snapshot instead of a rate. The thing that matters isn't *how many* users today — it's *how fast the number compounds*.\n\nAt 10% growth per week, 100 users becomes millions within about two years. The early total is supposed to look small; the slope is what you're building.\n\n> Like **a single fold of paper** — one fold seems trivial, but fold it 42 times and it would reach the moon. Compounding hides enormous outcomes inside unimpressive beginnings."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 3,
+          "judged": 3,
+          "read_claim": "At 10% weekly compound growth, 100 users becomes about 2.0M in two years even though the early numbers look flat, so founders should judge their growth rate instead of today's user count.",
+          "read_evidence": [
+            "Title: \"The Math Founders Underestimate\"",
+            "Subtitle: \"Judge the number as a rate, not a snapshot.\"",
+            "Chart header: \"100 users → after 2 years 2.0M\"",
+            "Chart point labels: \"100\", \"1.2k\", \"14k\", \"169k\", \"2.0M\", with \"WK 0\", \"1 YR\", \"2 YR\" on the x-axis",
+            "Caption under the chart: \"Linear view: the early slope looks like nothing — yet the count keeps doubling.\"",
+            "Left column: \"The early total is supposed to look small. The slope is the thing you're actually building.\"",
+            "Eyebrow at top: \"Compound growth · 10% per week\""
+          ],
+          "evidence": [
+            "Subtitle: \"Judge the number as a rate, not a snapshot.\"",
+            "Chart header: \"100 users → after 2 years 2.0M\"",
+            "Eyebrow: \"Compound growth · 10% per week\"",
+            "Left column: \"The early total is supposed to look small. The slope is the thing you're actually building.\"",
+            "Caption: \"Linear view: the early slope looks like nothing — yet the count keeps doubling.\""
+          ],
+          "reasoning": "The reader got the full core claim. At 10% weekly compounding, 100 users grows to millions in about two years, so founders should judge the growth rate rather than today's count, because a small early number is expected. The paper-folding analogy and the framing that small numbers 'feel like failure' were not carried over. Both are secondary nuances."
+        },
+        "mechanism_shown": {
+          "score": 4,
+          "judged": 4,
+          "evidence": [
+            "Resting chart: curve hugs the baseline with points labelled \"100\", \"1.2k\", \"14k\", \"169k\", then shoots up to \"2.0M\" at \"2 YR\". That draws the 'tiny early numbers become huge' idea directly.",
+            "Controls: a \"Weekly growth rate\" slider set to \"10%\" and a \"Linear\" / \"Log\" toggle. The input (rate) drives the output (the curve and its \"2.0M\" end value).",
+            "After interaction: the rate is \"15%\", the view is \"Log\", the end value is \"205M\", and the line becomes straight through \"3.8k\", \"143k\", \"5.4M\". This shows that the rate is constant, which is the slide's 'rate, not snapshot' point.",
+            "Caption says \"Log view: the rate has been constant all along — one steady climb.\" The chart already shows this without the caption.",
+            "The paper-fold analogy (\"Fold one sheet of paper 42 times\") is text only, with no drawing."
+          ],
+          "reasoning": "With the sentences covered, a viewer can still follow the mechanism: the weekly rate (input) compounds over weeks along the x-axis, and the output is the labelled user count. The linear view shows a flat start and a late spike, and the log view shows that the same rate gives a straight line. Moving the slider changes the outcome on screen, so the cause-and-effect is drawn rather than just stated. The only weak spot is the fold analogy, which is text only, but it is a side note and not the core mechanism."
+        },
+        "device_works": {
+          "score": 4,
+          "judged": 4,
+          "evidence": [
+            "At rest: slider labeled \"Weekly growth rate\" at \"10%\", the readout says \"100 users → after 2 years 2.0M\", and the Linear curve sits flat at \"100\", \"1.2k\", \"14k\" before shooting up to \"169k\" and then \"2.0M\"",
+            "Dragging the slider left to \"6%\" dropped the readout to \"43k\" and the curve redrew right away, with points at \"455\", \"2.1k\" and \"9.4k\"",
+            "Dragging it right to \"15%\" raised the readout to \"205M\", with points at \"3.8k\", \"143k\" and \"5.4M\". The curve stays flat even longer and then turns sharply upward at the end",
+            "Clicking \"Log\" turned the curve into a straight line, and the caption changed to \"Log view: the rate has been constant all along — one steady climb.\"",
+            "Bug: the kicker at the top-left still reads \"Compound growth · 10% per week\" after the rate is changed to 6% or 15%"
+          ],
+          "reasoning": "The slider and the Linear/Log toggle are easy to find, and both change the chart immediately and clearly. Moving the rate from 6% to 15% changes the 2-year result from 43k to 205M, while the start of the curve still looks like almost nothing. That makes the point that the growth rate matters more than today's user count. The Log view turns the curve into a straight line, which reinforces the idea of a constant rate. The only flaw is that the header doesn't update when the rate changes. This is a minor issue that doesn't block the main insight.",
+          "aha_reached": true,
+          "drives": [
+            [
+              {
+                "drag": {
+                  "from": [
+                    547,
+                    560
+                  ],
+                  "to": [
+                    500,
+                    560
+                  ]
+                }
+              },
+              {
+                "drag": {
+                  "from": [
+                    500,
+                    560
+                  ],
+                  "to": [
+                    605,
+                    560
+                  ]
+                }
+              },
+              {
+                "click": "#s65-tg > button:nth-of-type(2)"
+              }
+            ]
+          ]
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "The slide leaves out the source's caveat that 'growth has to slow down eventually' and that you'll 'be doing different things' at scale. This is a minor simplification.",
+            "The '×42' paper-folding fact is an outside addition shown next to the source's argument. It is an analogy, not something the slide attributes to Graham, and it does not misstate the source."
+          ],
+          "evidence": [
+            "The chart labels at 10%/week ('100', '1.2k', '14k', '169k', '2.0M' across 'WK 0', '1 YR', '2 YR') match the math: 100×1.1^52 ≈ 14.2k and 100×1.1^104 ≈ 2.0M. This agrees with the source's 'After a year you'll have 14,000 users, and after 2 years you'll have 2 million.'",
+            "The midpoint labels '1.2k' (week 26) and '169k' (week 78) are also correct for 10% weekly growth.",
+            "After the interaction, the slider reads '15%' and the chart shows '205M', '3.8k', '143k' and '5.4M'. These are correct for 15% weekly growth (100×1.15^104 ≈ 205M). They come from the user moving the slider, so they are calculated values, not claims from the source.",
+            "'Tiny numbers feel like failure because founders read them as a snapshot instead of a rate' closely paraphrases the source: 'the absolute numbers seem so small at first… The mistake they make is to underestimate the power of compound growth. We encourage every startup to measure their progress by weekly growth rate.'",
+            "The '×42' callout in the bottom-left says 'Fold one sheet of paper 42 times and it would reach the Moon.' This does not appear in the source. It is an outside analogy, and it is roughly correct (0.1mm × 2^42 ≈ 440,000 km)."
+          ],
+          "reasoning": "Every number that comes from the source (100 users, 10% per week, 14k after 1 year, 2M after 2 years) is shown correctly, and the in-between values are mathematically right. The framing matches Graham's point about compound growth. The only material not from the source is the paper-folding analogy, which is accurate and clearly an illustration. Dropping the 'growth slows eventually' caveat is a small simplification. The slide is faithful, but it does not reach 4 because of the outside analogy and the dropped caveat."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "The title \"The Math Founders Underestimate\" at top left is the clear entry point, with the eyebrow \"Compound growth · 10% per week\" and subtitle \"Judge the number as a rate, not a snapshot.\" making three levels.",
+            "The chart's key result \"2.0M\" (top left of the chart, next to \"100 users → after 2 years\") is set in the same size and weight as body text, so the headline number gets no emphasis.",
+            "The data-point labels \"100\", \"1.2k\", \"14k\", \"169k\" and the axis labels \"WK 0\", \"1 YR\", \"2 YR\" are tiny monospace text, roughly 9–10px, which won't be readable from presentation distance.",
+            "The left column has a large empty gap between \"The slope is the thing you're actually building.\" (~y=370) and the callout \"×42 Fold one sheet of paper 42 times…\" (~y=590).",
+            "The bottom-right area below the controls (\"Weekly growth rate\" slider, \"Linear\"/\"Log\" buttons) is empty from about y=580 to y=720.",
+            "The \"Linear\"/\"Log\" buttons are small default-styled browser controls that clash with the rest of the slide's design."
+          ],
+          "reasoning": "The top of the slide has a clear hierarchy, but below the divider almost everything is the same weight. Even the payoff number \"2.0M\" looks like body text. The chart labels are too small to read from a distance, and there are large empty areas in the left column and the bottom right. It's tidy, but flat, with dead space and small text."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "default explainer split — prose column on the left ('Tiny numbers feel like failure because founders read them as a snapshot…') and a chart panel on the right, used as a generic layout rather than one shaped by the idea",
+            "detached segmented/pill buttons — the 'Linear' / 'Log' toggle sits as a small pair of buttons beneath the chart, apart from the chart itself",
+            "readout restating state — 'Linear view: the early slope looks like nothing — yet the count keeps doubling.' describes the current view mode in words, and '10%' next to the slider repeats the slider value; the header '100 users → after 2 years 2.0M' / 'starting at 100 104 weeks' also restates the parameters",
+            "body copy restating the figure — 'The early total is supposed to look small. The slope is the thing you're actually building.' says what the flat-then-steep curve already shows"
+          ],
+          "evidence": [
+            "Left column at x≈58–430: two prose paragraphs; right column at x≈480–1222: area chart with labeled points '100', '1.2k', '14k', '169k', '2.0M'",
+            "Below the chart: 'Weekly growth rate' slider with the readout '10%' and a 'View' control with the buttons 'Linear' (active, cyan) and 'Log'",
+            "Caption under the chart: 'Linear view: the early slope looks like nothing — yet the count keeps doubling.'",
+            "Bottom-left callout with a cyan left rule: '×42 Fold one sheet of paper 42 times and it would reach the Moon…'. This is a minor stat-tile-like aside that is not tied to the chart",
+            "The slide's own controls are browser-default widgets: a blue range slider and gray/white buttons, which also clash with the theme. No gradients, emoji, or icons appear."
+          ],
+          "reasoning": "The chart itself fits the topic: the long flat stretch followed by a steep rise is the actual argument, and the labeled points make the compounding easy to read. Everything around it, though, follows the standard explainer template. There is prose on the left and a figure on the right. The controls (a slider and a two-button toggle) sit below the chart, separate from it. Several captions restate in words what the controls are set to and what the curve shows. The ×42 paper-folding aside is decoration, not part of how compounding is shown. Four of the named defaults are clearly present, which falls under score 2's '2+ named defaults' rule. Only the chart is specific to the idea; you could swap another topic's text into the rest of the layout."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_s65qftb4.rest.png",
+        "interacted": [
+          "shots/s_s65qftb4.i1.png"
+        ]
+      }
+    },
+    {
+      "id": "s_vekib1on",
+      "title": "Fragile Things Get Misjudged",
+      "kind": "outline",
+      "instrument": true,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 20,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [
+            {
+              "text": "· THE MENTAL MODEL",
+              "ratio": 3.44,
+              "need": 4.5,
+              "fontPx": 11
+            },
+            {
+              "text": "Pick the measuring standard",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 10
+            },
+            {
+              "text": "WRONG",
+              "ratio": 4.36,
+              "need": 4.5,
+              "fontPx": 9
+            },
+            {
+              "text": "VERDICT:",
+              "ratio": 3.42,
+              "need": 4.5,
+              "fontPx": 11
+            },
+            {
+              "text": "An acorn.",
+              "ratio": 3.03,
+              "need": 4.5,
+              "fontPx": 10
+            }
+          ],
+          "checked": 20,
+          "minRatio": 3.03
+        }
+      },
+      "controls": 2,
+      "intent": {
+        "title": "Fragile Things Get Misjudged",
+        "markdown": "Because early numbers are tiny, outsiders (and founders themselves) judge a startup by the standards of established companies — and conclude it's a toy. But nearly every startup is extremely fragile at the start. That fragility is normal, not fatal.\n\nThe right question isn't 'how big is this now?' It's 'how big could this get if the founders did the right things?'\n\n> Like **judging an oak by the acorn** — measured as it is today, it looks like nothing. Measured by what it could become, it's a forest."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 3,
+          "judged": 3,
+          "read_claim": "Startups are fragile at first, and that's normal, so judge one by how big it could get (its trajectory), not by how big it is now. Measured by its current size, it looks like a toy.",
+          "read_evidence": [
+            "Fragile Things Get Misjudged",
+            "Fragility is the default state — so the real test isn't its size today, it's its trajectory.",
+            "WRONG How big is this now?",
+            "RIGHT How big could this get if the founders did the right things?",
+            "VERDICT: A TOY",
+            "AN ACORN.",
+            "NOW"
+          ],
+          "evidence": [
+            "Fragility is the default state — so the real test isn't its size today, it's its trajectory.",
+            "WRONG How big is this now? | RIGHT How big could this get if the founders did the right things?",
+            "VERDICT: A TOY | AN ACORN.",
+            "Reader: 'Measured by its current size, it looks like a toy.'"
+          ],
+          "reasoning": "The reader got the main point: fragility is normal, and you should ask how big a startup could get instead of how big it is now. They also picked up that judging by current size makes it look like a toy. What's missing is the cause behind the misjudgment: early numbers are tiny, and outsiders, even the founders, hold the startup to the standards of established companies. The acorn-to-forest analogy is only partly there."
+        },
+        "mechanism_shown": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "The figure on the right is labelled \"THE SAME STARTUP, MEASURED\" and shows the verdict \"VERDICT: A TOY\".",
+            "An acorn icon sits on a baseline. Beside it is a vertical tick scale marked \"NOW\" near the bottom, and the caption reads \"AN ACORN.\"",
+            "The control is \"PICK THE MEASURING STANDARD\" with two options: \"WRONG How big is this now?\" (selected) and \"RIGHT How big could this get if the founders did the right things?\"",
+            "The screenshot after interaction 1 looks the same as the resting screenshot. The \"WRONG\" option is still highlighted, the verdict still says \"A TOY\", and no oak, forest, or trajectory appears."
+          ],
+          "reasoning": "The figure shows one side of the idea: an acorn measured against a scale at \"NOW\" gets the verdict \"a toy\". That links an input (the acorn), a yardstick (the scale), and an output (the verdict). But the main point of the slide is the contrast with the 'could become' standard, and the figure never shows it: no oak or growth path ever appears, and the interaction changed nothing on screen. On what was shown, the 'trajectory' half of the idea exists only in the text, so the depiction is thin. It is more than labelled boxes, but it falls short of a full drawn relation."
+        },
+        "device_works": {
+          "score": 4,
+          "judged": 4,
+          "evidence": [
+            "At rest the 'WRONG How big is this now?' button is selected (highlighted cyan border). The chart shows only a small acorn on the ground line next to a 'NOW' tick, the caption 'AN ACORN.', and the header 'VERDICT: A TOY'.",
+            "Clicking 'RIGHT How big could this get if the founders did the right things?' grows the drawing right away. A cyan sapling with a dashed tree canopy rises from the acorn, a 'COULD BE' marker appears at the top of the scale, faint trees show up on both sides, the header changes to 'VERDICT: A FOREST' and the caption becomes 'AN ACORN. — I.E. A FOREST.'",
+            "Clicking 'WRONG' again returns it to the acorn and 'VERDICT: A TOY', so the toggle works in both directions.",
+            "The control is easy to find at rest: the two buttons sit under the heading 'PICK THE MEASURING STANDARD'."
+          ],
+          "reasoning": "The planned operation is switching between the two measuring standards, and it produces the planned change right away. The same acorn becomes a projected tree or forest, the size scale gets a 'COULD BE' mark, and the verdict flips from 'toy' to 'forest'. This matches the acorn-to-oak metaphor and the 'how big could this get' message, and the buttons are clearly labeled. One weakness: the 'COULD BE' height on the scale is fairly modest, so the size gap between now and the potential could be more dramatic. Still, a first-time viewer gets the 'aha' immediately.",
+          "aha_reached": true,
+          "drives": [
+            [
+              {
+                "click": "#s_vekib1on_qPot"
+              },
+              {
+                "wait": 1500
+              },
+              {
+                "click": "#s_vekib1on_qNow"
+              },
+              {
+                "wait": 1500
+              }
+            ]
+          ]
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "\"That fragility is normal, not fatal\" softens the source. The source stresses that fragility is dangerous: for Airbnb, \"about 30 days of going out and engaging in person with users made the difference between success and failure.\" The source's point is that fragility is normal and shouldn't be misjudged, not that it isn't fatal.",
+            "\"How big is this now?\" turns the source's wrong question (\"is this company taking over the world?\") into a question about current size. It is close in spirit but not the same.",
+            "\"call it a toy\" / \"VERDICT: A TOY\": the source never uses \"toy\". Its image is someone saying \"there's no way this tiny creature could ever accomplish anything\". This is acceptable paraphrase, but the slide presents the word as the verdict.",
+            "\"extremely fragile\" slightly overstates the source's \"fragile initially\"."
+          ],
+          "evidence": [
+            "Left body: \"nearly every startup is extremely fragile at first\" matches the source's \"Almost all startups are fragile initially\", though the slide adds \"extremely\".",
+            "Left body: \"judge a startup by the yardstick of established companies\" matches the source: \"They unconsciously judge larval startups by the standards of established ones.\"",
+            "Left body: \"outsiders — and founders themselves\" matches the source's \"inexperienced founders and investors\" and \"The big danger is that you'll dismiss your startup yourself.\"",
+            "RIGHT button: \"How big could this get if the founders did the right things?\" closely follows the source's question: \"how big could this company get if the founders did the right things?\"",
+            "WRONG button: \"How big is this now?\" paraphrases the source's wrong question, \"is this company taking over the world?\"",
+            "Chart: \"VERDICT: A TOY\" and the \"AN ACORN.\" / \"A FOREST.\" text are visual metaphors invented by the slide; the source's metaphor is a newborn baby.",
+            "The italic line \"so the real test isn't its size today, it's its trajectory\" is an interpretive summary of the source's question about potential."
+          ],
+          "reasoning": "The slide's core claims trace to the source's \"Fragile\" section: almost all startups are fragile, they get judged by the standards of established companies, founders dismiss their own startups, and the right question is how big it could get if the founders did the right things. There are no invented numbers, names or quotes. The acorn/forest and toy imagery is the slide's own metaphor and doesn't claim to come from the source. The main weakness is the \"normal, not fatal\" framing and the reworded wrong question. Both are mild simplifications rather than reversals."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "Title \"Fragile Things Get Misjudged\" in large serif, with the cyan italic \"Misjudged\", is the clear entry point, top left",
+            "Right panel \"THE SAME STARTUP, MEASURED\" takes up about 55% of the width. Its only content is a small acorn icon and a thin \"NOW\" scale near the bottom. Roughly the top 60% of the panel (y≈220–560) is empty",
+            "Small monospace labels at around 9–11px: \"PICK THE MEASURING STANDARD\", \"WRONG\", \"VERDICT:\", \"AN ACORN.\", \"NOW\", several of them faint (contrast 3.03–4.36:1)",
+            "Left column has a sensible order: body text, then the italic pull quote \"Fragility is the default state — so the real test isn't its size today, it's its trajectory.\", then two option cards",
+            "Gap between the pull quote and \"PICK THE MEASURING STANDARD\" (y≈385–450), with the left column ending at y≈600 while the panel runs to y≈675"
+          ],
+          "reasoning": "The type hierarchy works: a clear title, then body text, then an emphasized pull quote, then the interactive choices. But the main visual panel is mostly dead space in its resting state. A tiny acorn sits at the bottom of a large empty box, so the area meant to be the focal visual has almost nothing in it. Many labels are tiny and faint (9–11px, low contrast), which would be hard to read at presentation distance. That makes this tidy but flawed, not a balanced layout."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "default explainer split — prose column on the left (body paragraph, italic pull-quote, control buttons) and a figure panel on the right ('THE SAME STARTUP, MEASURED')",
+            "readout line restating state — 'VERDICT: A TOY' in the panel header plus the 'AN ACORN.' caption bottom-left of the panel"
+          ],
+          "evidence": [
+            "Left column: 'Tiny early numbers tempt outsiders — and founders themselves — to judge a startup by the yardstick of established companies, and call it a toy...' followed by the italic 'Fragility is the default state — so the real test isn't its size today, it's its trajectory.'",
+            "Right panel: header 'THE SAME STARTUP, MEASURED' with 'VERDICT: A TOY' at top right; an acorn glyph on a baseline, a vertical tick ruler labeled 'NOW', and the caption 'AN ACORN.'",
+            "The control is two stacked option boxes, 'WRONG How big is this now?' and 'RIGHT How big could this get if the founders did the right things?', under 'PICK THE MEASURING STANDARD'. They sit in the left column, away from the figure.",
+            "No card grid, emoji, gradients, filler icons, stat tiles, or numbered eyebrows. The 'FRAGILITY IS NORMAL, NOT FATAL · THE MENTAL MODEL' eyebrow is the theme's micro-label style."
+          ],
+          "reasoning": "The figure is specific to the idea. It shows an acorn measured against a ruler with a 'NOW' tick, which is a strong metaphor for judging something by its current size instead of its trajectory. You could not swap another topic's text into it. The surrounding layout, though, is the default explainer split: a prose column with a pull-quote and a control on the left, and a figure panel on the right. The control is detached from the figure. It is not a pill row, since the two framed choices carry content, but it is still a selector separated from the thing it changes. 'VERDICT: A TOY' and 'AN ACORN.' put the current state into words, which counts as a readout. In the resting state the panel is mostly empty, with a tiny acorn at the bottom. That emptiness may be intentional, to make the acorn look small, but it leaves the figure looking thin. The body paragraph does not just restate the figure, so it is not counted. That leaves two named defaults present: the split layout and the readout. Under the anchors that is a 2, even though the metaphor itself is well chosen."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_vekib1on.rest.png",
+        "interacted": [
+          "shots/s_vekib1on.i1.png"
+        ]
+      }
+    },
+    {
+      "id": "s_trkk8jdf",
+      "title": "Delight: Be Insanely Great, Not Just Build It",
+      "kind": "outline",
+      "instrument": true,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 27,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [
+            {
+              "text": "Polished product · zero care",
+              "ratio": 4.02,
+              "need": 4.5,
+              "fontPx": 10
+            },
+            {
+              "text": "early · buggy · incomplete",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 10
+            },
+            {
+              "text": "Rough product",
+              "ratio": 4.02,
+              "need": 4.5,
+              "fontPx": 10
+            },
+            {
+              "text": "the lever only you can pull",
+              "ratio": 4.01,
+              "need": 4.5,
+              "fontPx": 11
+            },
+            {
+              "text": "/100",
+              "ratio": 3.44,
+              "need": 4.5,
+              "fontPx": 15
+            }
+          ],
+          "checked": 27,
+          "minRatio": 3.44
+        }
+      },
+      "controls": 1,
+      "intent": {
+        "title": "Delight: Be Insanely Great, Not Just Build It",
+        "markdown": "Manual effort isn't only about acquiring users — it's about overwhelming the ones you have. Take extraordinary, unscalable measures to delight them: hand-written notes, personal attention, a level of care big companies literally cannot afford to give.\n\nNotice the reframe: aim for an insanely great *experience*, not necessarily an insanely great *product*. Attentiveness can cover for software that's still early, buggy, and incomplete — and that close contact is also your best feedback loop for making the product genuinely good.\n\n> Like **a tiny family restaurant** where the owner remembers your name — the food may be simple, but the care makes it unforgettable in a way no chain can match."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 3,
+          "judged": 3,
+          "read_claim": "A startup with a rough product can still give users an insanely great experience by adding unscalable personal care, because big companies with polished products give none and can't match it.",
+          "read_evidence": [
+            "\"Aim for an insanely great experience — not necessarily a great product.\" (headline, top left)",
+            "\"PERCEIVED EXPERIENCE = PRODUCT + CARE\" (label above the bars)",
+            "\"BIG COMPANY\" bar: \"POLISHED PRODUCT · ZERO CARE\"; \"YOU (STARTUP)\" bar: \"ROUGH PRODUCT\" + \"HAND-WRITTEN NOTES · PERSONAL ATTENTION\" reaching past the \"INSANELY GREAT\" dashed line",
+            "\"92/100 INSANELY GREAT — Care covers the gaps the software still has\" (bottom left)",
+            "\"You can't move product fast — but you can pour in care for free.\" (right column)",
+            "\"THE MOVE TAKE EXTRAORDINARY, UNSCALABLE MEASURES TO OVERWHELM THE USERS YOU ALREADY HAVE\" (footer)"
+          ],
+          "evidence": [
+            "Reader's claim: \"A startup with a rough product can still give users an insanely great experience by adding unscalable personal care\"",
+            "\"Aim for an insanely great experience — not necessarily a great product.\"",
+            "\"Care covers the gaps the software still has\"",
+            "\"BIG COMPANY ... POLISHED PRODUCT · ZERO CARE\" vs startup \"HAND-WRITTEN NOTES · PERSONAL ATTENTION\"",
+            "\"TAKE EXTRAORDINARY, UNSCALABLE MEASURES TO OVERWHELM THE USERS YOU ALREADY HAVE\""
+          ],
+          "reasoning": "The reader got the core reframe: aim for a great experience rather than a great product. They also got the causal mechanism, that unscalable care covers for a rough product, and the contrast that big companies can't match it. Two secondary points are missing from the claim. One is the feedback-loop point, that close contact with users helps make the product genuinely good. The other is the framing that manual effort is about overwhelming the users you already have, not just acquiring new ones. That framing appears in the reader's evidence but not in their stated claim."
+        },
+        "mechanism_shown": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "Formula label above the figure: \"PERCEIVED EXPERIENCE = PRODUCT + CARE\"",
+            "Two stacked bars against a shared dashed threshold marked \"INSANELY GREAT\": the \"BIG COMPANY\" bar is a long grey segment, \"POLISHED PRODUCT · ZERO CARE\", with only a small teal sliver past the line. The \"YOU (STARTUP)\" bar is a short grey \"ROUGH PRODUCT\" segment plus a long cyan \"HAND-WRITTEN NOTES · PERSONAL ATTENTION\" segment.",
+            "In the resting state the startup bar's cyan segment ends past the dashed threshold, with a score of \"92/100\"",
+            "After the \"DRAG: UNSCALABLE CARE\" slider is moved further right, the cyan segment fills to the bar's right edge and the score becomes \"98/100\"",
+            "Label above the startup bar: \"EARLY · BUGGY · INCOMPLETE\"; caption beside the slider: \"THE LEVER ONLY YOU CAN PULL\""
+          ],
+          "reasoning": "The figure draws the relation itself. Two inputs (a product segment and a care segment) stack into a total bar that is measured against a shared \"insanely great\" line, and the slider lets the viewer change the care input and watch the output bar and score change. With the sentences covered, you can still see that a short product segment plus a long care segment reaches the same line as a long product segment with no care. The weak link is that the big company's care segment can't move, so the claim that big companies can't add care is only stated in text (\"can't afford to remember your name\"). The figure also doesn't show the feedback-loop idea at all."
+        },
+        "device_works": {
+          "score": 4,
+          "judged": 4,
+          "evidence": [
+            "At rest the slider sits under the label \"◀ DRAG: UNSCALABLE CARE ▶\". The startup bar shows a cyan segment, \"HAND-WRITTEN NOTES · PERSONAL ATTENTION\", that reaches past the dashed \"INSANELY GREAT\" line. The score reads \"92/100 INSANELY GREAT\".",
+            "Dragging the slider all the way left shrinks the cyan segment to a thin sliver after \"ROUGH PRODUCT\". The score drops to \"32/100\", and the verdict changes to \"FORGETTABLE\" in orange with \"A buggy product with no human attention. Nobody remembers it — and you lose your feedback loop too.\"",
+            "At a middle position the segment is partly filled and dimmed, showing \"HAND-WRITTEN NOTES · PERSON\" cut off. The score reads \"58/100 FORGETTABLE\", which is still short of the dashed line.",
+            "Dragging to the far right fills the segment bright cyan all the way to the bar's end, past the Big Company bar (\"POLISHED PRODUCT · ZERO CARE\"). The score reads \"98/100 INSANELY GREAT\" with \"Care covers the gaps the software still has\"."
+          ],
+          "reasoning": "The care slider changes the startup's experience bar right away, along with the score and the verdict. The bar clearly crosses the 'insanely great' line that the big company only just reaches, which makes the slide's point: care can make up for a rough product. The control is labeled but small, and at rest it is already set to the 'great' state, so you only see the contrast after dragging it down. Even so, the main idea comes across clearly to a first-time viewer.",
+          "aha_reached": true,
+          "drives": [
+            [
+              {
+                "drag": {
+                  "from": [
+                    168,
+                    493
+                  ],
+                  "to": [
+                    62,
+                    493
+                  ]
+                }
+              },
+              {
+                "drag": {
+                  "from": [
+                    62,
+                    493
+                  ],
+                  "to": [
+                    110,
+                    493
+                  ]
+                }
+              },
+              {
+                "drag": {
+                  "from": [
+                    110,
+                    493
+                  ],
+                  "to": [
+                    186,
+                    493
+                  ]
+                }
+              }
+            ]
+          ]
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "\"matches what the big player can't be bothered to give\": the source says Tim Cook doesn't send a hand-written note because \"He can't.\" That is about what a big company is unable to do, not what it can't be bothered to do. The slide turns inability into indifference.",
+            "\"You can't move product fast\": the source never says this. It encourages getting \"something in front of users as soon as it has a quantum of utility\" and says you \"can tweak the design faster\" when you build things yourself.",
+            "\"pour in care for free\": the source calls this work laborious and extraordinary. It says founders have \"nothing to lose\", not that care costs nothing.",
+            "\"POLISHED PRODUCT · ZERO CARE\" for big companies is stronger than the source, which only says a big company can't match a startup's level of service."
+          ],
+          "evidence": [
+            "Headline \"Aim for an insanely great experience — not necessarily a great product.\" matches the source: \"It's not the product that should be insanely great, but the experience of being your user.\"",
+            "\"EARLY · BUGGY · INCOMPLETE\" matches the source: \"an early, incomplete, buggy product, if you make up the difference with attentiveness.\"",
+            "\"HAND-WRITTEN NOTES · PERSONAL ATTENTION\" matches Wufoo's \"hand-written thank you note\" and the Tim Cook passage.",
+            "\"That same close contact is also your sharpest feedback loop\" matches: \"The feedback you get from engaging directly with your earliest users will be the best you ever get.\"",
+            "\"THE MOVE: TAKE EXTRAORDINARY, UNSCALABLE MEASURES TO OVERWHELM THE USERS YOU ALREADY HAVE\" paraphrases \"You should take extraordinary measures not just to acquire users, but also to make them happy.\"",
+            "The \"92/100\" and \"98/100\" readouts change with the slider, so they are clearly a toy gauge, not claims from the source.",
+            "The family restaurant line on the right is clearly presented as an analogy."
+          ],
+          "reasoning": "The core message is faithful to the source. It quotes \"insanely great\", says the experience matters more than the product, notes that the product is early and buggy and that attention makes up the difference, uses hand-written notes as the example, and links close contact to feedback. I found no fabricated names or numbers, and the scores are clearly an interactive toy. The panel explaining why the gap is yours adds some framing the source doesn't support: big companies \"can't be bothered\", care is \"free\", and startups \"can't move product fast\". These are small paraphrase problems rather than material distortions of the main claim. That keeps the slide at 3 instead of 4."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "The headline \"Aim for an insanely great experience — not necessarily a great product.\" sits at top left in large serif type, with \"great experience\" in cyan italic. It is a clear single entry point.",
+            "There are deliberate levels: the headline, then the serif pull quote at right (\"Like a tiny family restaurant...\"), then mono-caps labels (\"BIG COMPANY\", \"YOU (STARTUP)\", \"WHY THE GAP IS YOURS\"), then body text.",
+            "Many labels are tiny letter-spaced mono caps at about 10–11px: \"POLISHED PRODUCT · ZERO CARE\", \"ROUGH PRODUCT\", \"EARLY · BUGGY · INCOMPLETE\", \"THE LEVER ONLY YOU CAN PULL\" and \"INSANELY GREAT\" above the bars. Several of them are also low-contrast gray (around 4:1).",
+            "The caption under the score, \"Care covers the gaps the software still has — and matches what the big player can't be bothered to give.\", is small gray text and its last word \"give.\" wraps onto a line by itself.",
+            "The headline takes up only the left half, which leaves the top right empty. Under the score cluster \"92/100\", there is also empty space between it and the right column.",
+            "The footer \"THE MOVE TAKE EXTRAORDINARY, UNSCALABLE MEASURES...\" is small spaced caps and stretches across most of the width."
+          ],
+          "reasoning": "The hierarchy works: one headline, a secondary pull quote and a structured bar graphic, all on a two-column grid that is used on purpose. However, the slide leans heavily on 10–11px gray mono-caps labels. Many of them carry meaning (the bar segment labels, the threshold marker, the slider hint) and would be hard to read at presentation distance. That is more than one minor issue, and the small text, a stranded word and some dead space at top right add up. So it falls short of a 3."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "default explainer split — interactive figure on the left (~60%), with a prose column on the right: a pull-quote ('Like a tiny family restaurant…') sitting above a 'WHY THE GAP IS YOURS' paragraph",
+            "readout panel — '92/100 INSANELY GREAT' plus the caption 'Care covers the gaps the software still has…' under the slider describe the slider's state in words and numbers",
+            "body copy restating the figure — 'Big companies max the product and can't afford to remember your name… you can pour in care for free' repeats what the two stacked bars already show (big company = polished product with zero care; startup = rough product plus a large care segment)"
+          ],
+          "evidence": [
+            "Left: 'PERCEIVED EXPERIENCE = PRODUCT + CARE' above two horizontal stacked bars, 'BIG COMPANY' ('POLISHED PRODUCT · ZERO CARE') and 'YOU (STARTUP)' ('ROUGH PRODUCT' + cyan 'HAND-WRITTEN NOTES · PERSONAL ATTENTION'), with a dashed 'INSANELY GREAT' threshold line",
+            "A slider labeled '◀ DRAG: UNSCALABLE CARE ▶' sits right under the bars, and the cyan care segment visibly fills most of the startup bar, so the control is attached to the thing it changes",
+            "Below the slider: a large '92' in cyan, then '/100', then 'INSANELY GREAT' with a two-line caption — a stat-style readout of the slider's value",
+            "Right column: italic-accented serif pull-quote with a cyan left rule, then a hairline, then the micro-label 'WHY THE GAP IS YOURS' over a body paragraph",
+            "Footer: 'THE MOVE  TAKE EXTRAORDINARY, UNSCALABLE MEASURES TO OVERWHELM THE USERS YOU ALREADY HAVE'",
+            "No emoji, icons, gradients, card grid or numbered eyebrows"
+          ],
+          "reasoning": "The core figure is specific to the idea. Two bars built as product + care, compared against an 'insanely great' threshold, with a care slider that pushes the startup bar past the big company's, show the claim directly. You could not swap in another topic's text. But the frame around that figure is the standard explainer setup: figure on the left, prose column on the right, a numeric readout under the control, and a body paragraph that partly repeats what the bars already show. The 92/100 readout and the restating paragraph are two named defaults, plus the split layout. The figure is strong, but the layout is still template-like, so this lands at 2 rather than 3."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_trkk8jdf.rest.png",
+        "interacted": [
+          "shots/s_trkk8jdf.i1.png"
+        ]
+      }
+    },
+    {
+      "id": "s_fah1hxd3",
+      "title": "Start a Fire in a Small Space",
+      "kind": "outline",
+      "instrument": true,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 27,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [
+            {
+              "text": "◄ narrow — one market",
+              "ratio": 3.99,
+              "need": 4.5,
+              "fontPx": 9
+            },
+            {
+              "text": "spread wide — everywhere ►",
+              "ratio": 3.99,
+              "need": 4.5,
+              "fontPx": 9
+            }
+          ],
+          "checked": 27,
+          "minRatio": 3.99
+        }
+      },
+      "controls": 7,
+      "intent": {
+        "title": "Start a Fire in a Small Space",
+        "markdown": "Hand-cranking only works if your effort is concentrated. Trying to delight everyone everywhere spreads you too thin to reach critical mass. So begin in a deliberately narrow market, dominate it, then expand.\n\nFacebook launched only at Harvard — a small enough world to fully win before moving on.\n\n> Like **building a campfire** — you get a small pile of kindling blazing hot first, *then* add the big logs. Scatter the flame across wet wood and it just dies out."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 4,
+          "judged": 4,
+          "read_claim": "When effort is fixed, putting all of it into one narrow market pushes that market past the point where growth catches on, while spreading it across many markets leaves each one too weak to get there, so win one market first and expand after.",
+          "read_evidence": [
+            "Title: \"Start a Fire in a Small Space\"",
+            "Body: \"Hand-cranking only works when effort is concentrated. Try to delight everyone everywhere and you spread too thin to ever reach critical mass. Win one narrow market — then add logs.\"",
+            "Chart header: \"HEAT PER FRONT · FIXED EFFORT, DIVIDED\" and \"IGNITION = 30\"",
+            "Single tall bar well above dashed \"IGNITION LINE\", selector set to \"1\", axis labels \"NARROW — ONE MARKET\" to \"SPREAD WIDE — EVERYWHERE\"",
+            "Readout: \"IGNITES — One market — all heat in one place. It catches.\" with \"100 HEAT / MARKET\"",
+            "Example box: \"FACEBOOK — Launched at Harvard only — a world small enough to fully win before moving on.\""
+          ],
+          "evidence": [
+            "Title: \"Start a Fire in a Small Space\"",
+            "Body: \"Hand-cranking only works when effort is concentrated. Try to delight everyone everywhere and you spread too thin to ever reach critical mass. Win one narrow market — then add logs.\"",
+            "Chart: \"HEAT PER FRONT · FIXED EFFORT, DIVIDED\", single bar above \"IGNITION LINE\", readout \"IGNITES — One market — all heat in one place. It catches.\"",
+            "Example: \"FACEBOOK — Launched at Harvard only — a world small enough to fully win before moving on.\""
+          ],
+          "reasoning": "The reader got the full causal argument: with fixed effort, concentrating it in one market gets past critical mass, while spreading it out leaves every market below that threshold, so you win one first and then expand. The 'dominate, then expand' sequence is there as 'win one market first and expand after.' The Facebook/Harvard example shows up in the reader's evidence, though it isn't in the claim itself. It's only an illustration, so leaving it out doesn't lose anything important."
+        },
+        "mechanism_shown": {
+          "score": 4,
+          "judged": 4,
+          "evidence": [
+            "Chart header: \"HEAT PER FRONT · FIXED EFFORT, DIVIDED\" with \"IGNITION = 30\" and a dashed \"IGNITION LINE\"",
+            "At rest the selector \"1\" is active and a single tall bar rises well above the ignition line; the readout says \"IGNITES\" / \"100 HEAT / MARKET\"",
+            "After selecting \"8\", eight short grey bars all sit below the ignition line; the readout says \"DIES OUT\" / \"Effort scattered across 8 fronts — every one below ignition.\" / \"13\"",
+            "Selector scale is labelled \"◄ NARROW — ONE MARKET\" to \"SPREAD WIDE — EVERYWHERE ►\""
+          ],
+          "reasoning": "The figure draws the mechanism directly. The input is the number of fronts (the 1–8 selector). The relation is fixed effort divided across those fronts, shown as bar heights shrinking as the count grows. The output is whether the bars clear the ignition threshold line, and the bars change colour from cyan to grey when they fall below it. Even with the sentences covered, a viewer can follow how splitting effort pushes each bar under the line. One small weakness: the 'dominate, then expand' sequence, which is the 'add logs' step, appears only in the text, not in the figure. Still, the central concentration mechanism is fully drawn and interactive."
+        },
+        "device_works": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "At rest, the button row \"1 2 3 4 5 6 8\" is visible under the chart, with the end labels \"◄ NARROW — ONE MARKET\" and \"SPREAD WIDE — EVERYWHERE ►\". Button \"1\" is selected and shows one tall bar well above the dashed \"IGNITION LINE\", with \"IGNITES / One market — all heat in one place. It catches.\" and \"100 HEAT / MARKET\".",
+            "Clicking \"2\" shows two shorter bars that are still above the line, with \"2 markets, each still above the line. Blazing.\" and \"50\".",
+            "Clicking \"4\" shows four grey bars below the ignition line, with a dimmed flame icon, \"DIES OUT / Effort scattered across 4 fronts — every one below ignition.\" and \"25\".",
+            "Clicking \"8\" shows eight small grey bars and \"13\" heat per market, with the \"DIES OUT\" status."
+          ],
+          "reasoning": "Choosing how many markets to split a fixed amount of effort across works as intended. The heat bars shrink, drop below the ignition line, turn grey, and the status changes from \"IGNITES\" to \"DIES OUT\" right away and clearly. That makes the concentration point visible to a first-time viewer. Two things hold it back. With 2 markets the status still says \"Blazing\", which weakens the 'one narrow market' message. Also, the 'dominate, then expand / add the logs' step is never modeled; the control only splits effort, it never builds outward after a win.",
+          "aha_reached": true,
+          "drives": [
+            [
+              {
+                "click": "#s_fah1hxd3_scale > button:nth-of-type(2)"
+              },
+              {
+                "click": "#s_fah1hxd3_scale > button:nth-of-type(4)"
+              },
+              {
+                "click": "#s_fah1hxd3_scale > button:nth-of-type(7)"
+              }
+            ]
+          ]
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "\"Hand-cranking only works when effort is concentrated\" overstates the source. The source presents narrow focus as one option: \"Sometimes the right unscalable trick is to focus on a deliberately narrow market.\" The slide turns this into a universal requirement. It also joins the crank metaphor to the fire metaphor, which the source never does.",
+            "\"Try to delight everyone everywhere and you spread too thin\": in the source, narrowing the market is about reaching critical mass, not about spreading delight too thin. Linking it to 'delight' is the slide's own reading."
+          ],
+          "evidence": [
+            "Title \"Start a Fire in a Small Space\" and \"Win one narrow market — then add logs\" match the source's Fire section: \"It's like keeping a fire contained at first to get it really hot before adding more logs.\"",
+            "The FACEBOOK box says \"Launched at Harvard only — a world small enough to fully win before moving on.\" This matches the source: \"At first it was just for Harvard students. In that form it only had a potential market of a few thousand people, but because they felt it was really for them, a critical mass of them signed up.\"",
+            "\"critical mass\" is the source's own wording: \"It's always worth asking if there's a subset of the market in which you can get a critical mass of users quickly.\"",
+            "The chart shows \"IGNITION = 30\" and \"HEAT PER FRONT · FIXED EFFORT, DIVIDED\", with 100 heat at 1 market and 13 at 8 markets (100/8 rounded). It is plainly a toy model of dividing a fixed effort. It is not presented as data from the source, though nothing on the slide labels it \"illustrative\".",
+            "The campfire blockquote (\"get a small pile of kindling blazing hot, then add the big logs. Scatter the flame across wet wood and it dies\") expands the source's fire metaphor without contradicting it."
+          ],
+          "reasoning": "Every specific factual claim checks out against the source: Facebook started at Harvard only, the fire/logs metaphor, and critical mass. The chart numbers are obviously a toy model, not invented source data. The main weakness is that the slide turns \"sometimes\" into \"only works when\" and blends in the crank and delight themes. That is a moderate overstatement, but it does not change the core point, so the slide is faithful with minor simplification."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "The title \"Start a Fire in a Small Space\" is set in large serif type with \"Small Space\" in cyan italic, which makes it a clear entry point at top left.",
+            "There are deliberate levels: a small tracked kicker \"ANALOGY · CONCENTRATION\", the title, a body paragraph with bold \"concentrated\" and \"critical mass\", an italic pull-quote with a cyan rule, and a chart panel on the right.",
+            "Left column: a large empty zone of about 220px sits between the quote (ends near y≈330) and the \"FACEBOOK\" card (starts near y≈568). Nothing fills it, and the card looks stranded at the bottom.",
+            "Chart labels are tiny, about 9px: \"HEAT PER FRONT · FIXED EFFORT, DIVIDED\", \"IGNITION = 30\", \"◄ NARROW — ONE MARKET\", \"SPREAD WIDE — EVERYWHERE ►\" and \"HEAT / MARKET\". Two of them fail contrast at 3.99:1.",
+            "The chart has one tall bar centred at the position labelled \"4\" while the selected button is \"1\", so the bar doesn't line up with the selector and wastes horizontal space. The button row also jumps \"6\" to \"8\".",
+            "The chart panel has a gap between the selector labels (y≈535) and the \"IGNITES\" footer (y≈620)."
+          ],
+          "reasoning": "The headline sets up a clear hierarchy and the two-column split is sensible. But the left column has a large dead zone that leaves the Facebook card stranded, and the chart relies on several tiny low-contrast mono labels that won't read at presentation distance. The single bar sitting off-centre from its selector also feels unplanned. These are more than one minor issue, so this is a 2."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "default explainer split — prose column on the left (\"Hand-cranking only works when effort is concentrated...\", campfire pull-quote, Facebook box) with a figure panel on the right (bar chart)",
+            "row of segmented/pill buttons as the only control — \"1 2 3 4 5 6 8\" button row under the chart, sitting apart from the bars it changes",
+            "readout panel restating state — bottom strip \"IGNITES / One market — all heat in one place. It catches.\" plus \"100 HEAT / MARKET\"",
+            "filler icon — the small cyan flame pictogram beside \"IGNITES\""
+          ],
+          "evidence": [
+            "Left column: body paragraph, an italic quote with a cyan left rule (\"Like building a campfire...\"), and a bordered \"FACEBOOK\" callout box at the bottom left",
+            "Right panel: \"HEAT PER FRONT · FIXED EFFORT, DIVIDED\", a single tall cyan bar above a dashed \"IGNITION LINE\", \"IGNITION = 30\"",
+            "Control: seven equal rectangular buttons labelled \"1 2 3 4 5 6 8\", with \"1\" filled cyan, and captions \"◄ NARROW — ONE MARKET\" / \"SPREAD WIDE — EVERYWHERE ►\"",
+            "Readout: \"IGNITES\", \"One market — all heat in one place. It catches.\", \"100\", \"HEAT / MARKET\", which repeats what the bar crossing the line already shows",
+            "The eyebrow \"ANALOGY · CONCENTRATION\" belongs to the theme's micro-label style, so it is not counted"
+          ],
+          "reasoning": "The core figure fits the idea well: fixed effort split into bars, measured against an ignition threshold, shows the concentration argument directly. The packaging around it, though, is the standard explainer template. Prose sits on the left and the chart on the right. A detached segmented button row is the only control. A readout strip restates the state in words and as a number, with a decorative flame icon beside it. That makes four named defaults, and the split layout plus button row decide the overall look. Apart from the chart itself, you could drop most of another topic's content into this frame."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_fah1hxd3.rest.png",
+        "interacted": [
+          "shots/s_fah1hxd3.i1.png"
+        ]
+      }
+    },
+    {
+      "id": "s_rb9s0oum",
+      "title": "The Idea Is a Vector, Not a Point",
+      "kind": "outline",
+      "instrument": true,
+      "gate": {
+        "overflowPx": 0,
+        "consoleErrors": 0,
+        "passed": true
+      },
+      "craftMetrics": {
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "textBoxes": 29,
+        "overlaps": [],
+        "outsideFrame": [],
+        "clipped": [],
+        "contrast": {
+          "fails": [
+            {
+              "text": "/ 08 — SYNTHESIS",
+              "ratio": 3.66,
+              "need": 4.5,
+              "fontPx": 11
+            }
+          ],
+          "checked": 29,
+          "minRatio": 3.66
+        }
+      },
+      "controls": 3,
+      "intent": {
+        "title": "The Idea Is a Vector, Not a Point",
+        "markdown": "Pulling it all together: a startup idea isn't just *what you'll build*. It's a vector with two parts — **what you'll build** plus **the unscalable things you'll do to get it started**.\n\n- Hardware founders can assemble the first units by hand ('pull a Meraki').\n- B2B founders can act as consultants, building for a single user, or do tasks manually before automating them.\n- Beware the strategies that omit real effort — the Big Launch, the big-company partnership. Any plan that lets you skip the cranking is suspect.\n\nIdeally, those early unscalable habits don't disappear once you scale — they become permanent DNA: a company that stays unusually attentive because that's how it learned to live."
+      },
+      "criteria": {
+        "claim_at_rest": {
+          "score": 3,
+          "judged": 3,
+          "read_claim": "A startup idea has two parts, like a vector: the product you build and the unscalable work you do by hand to get it started. If you leave out the unscalable part, the idea shrinks back to a flat point.",
+          "read_evidence": [
+            "Title: \"The Idea Is a Vector, Not a Point\"",
+            "Subtitle: \"It's a vector with two components — the product, plus the unscalable things you'll do to get it started. Drop the second component and the idea collapses back into a flat point.\"",
+            "Chart axes: \"WHAT YOU'LL BUILD →\" (x) and \"↑ UNSCALABLE TO START\" (y), with a cyan arrow rising from 0 to the upper right",
+            "Dashed vertical line labeled \"UNSCALABLE COMPONENT\"; marker on the x-axis labeled \"*IDEA AS A POINT*\"",
+            "Left list: \"y  The unscalable work to start — recruit by hand, delight one user. The part most founders omit.\""
+          ],
+          "evidence": [
+            "Title: \"The Idea Is a Vector, Not a Point\"",
+            "Subtitle: \"It's a vector with two components — the product, plus the unscalable things you'll do to get it started. Drop the second component and the idea collapses back into a flat point.\"",
+            "Axes: \"WHAT YOU'LL BUILD →\" and \"↑ UNSCALABLE TO START\"",
+            "List: \"The unscalable work to start — recruit by hand, delight one user. The part most founders omit.\""
+          ],
+          "reasoning": "The reader got the core claim: an idea is a vector made of what you build plus the unscalable things you do to get started. The reader also picked up the warning that dropping the unscalable part is a mistake, which matches the slide's caution about skipping real effort. Some secondary points are missing. The reader doesn't mention the specific examples for hardware and B2B founders, the named traps (the Big Launch, big-company partnerships), or the idea that early unscalable habits become permanent company DNA."
+        },
+        "mechanism_shown": {
+          "score": 3,
+          "judged": 3,
+          "evidence": [
+            "The x-axis is labelled \"WHAT YOU'LL BUILD →\" and the y-axis \"↑ UNSCALABLE TO START\". A cyan arrow runs from the origin \"0\" to the upper right.",
+            "A dotted vertical drop line from the arrow tip is labelled \"UNSCALABLE COMPONENT\", and a point on the x-axis is labelled \"\"IDEA AS A POINT\"\". Together they show the vector breaking into its two components and collapsing to a point.",
+            "There are strategy toggles for \"HARDWARE / ASSEMBLE BY HAND\", \"B2B / CONSULT FOR ONE\" and \"BIG LAUNCH / PARTNERSHIP\", with the readout \"VECTOR · HAS LIFT\".",
+            "After interactions 1 and 2, the screenshots are identical to the resting state. HARDWARE is still selected and the arrow has not moved. No state for B2B or Big Launch is ever shown."
+          ],
+          "reasoning": "The core relation is drawn. Two axes combine into a resultant vector, and the dotted projection shows the unscalable component. You can see that the idea minus that component is just a point on the x-axis, without reading any text. However, the strategy controls never visibly change the figure, so the claim that Big Launch or partnership plans 'omit real effort' (no lift) appears only in text. The 'permanent DNA' idea is also text only, so one link is stated rather than drawn."
+        },
+        "device_works": {
+          "score": 1,
+          "judged": 1,
+          "evidence": [
+            "At rest, 'HARDWARE ASSEMBLE BY HAND' is highlighted, the caption reads 'VECTOR · HAS LIFT / Assemble the first units yourself — pull a Meraki.', and the diagonal vector points up-right.",
+            "Clicking 'BIG LAUNCH PARTNERSHIP' at (350,428) and waiting 800ms changed nothing. HARDWARE stayed highlighted, the caption stayed the same and the vector did not move.",
+            "Clicking 'B2B CONSULT FOR ONE' at (240,428) also changed nothing.",
+            "Clicking the CSS selectors for button 3 and button 2, with a 1500ms wait, changed nothing either. The screenshots match the resting state pixel for pixel.",
+            "The diagram has a '*IDEA AS A POINT*' marker on the x-axis, which suggests the Big Launch option was meant to flatten the vector into that point. That never happens."
+          ],
+          "reasoning": "There are three clearly labelled strategy buttons, and the intended 'aha' is that 'Big Launch' would collapse the vector onto the flat 'idea as a point'. I tried both coordinate clicks and selector clicks, and none of the buttons changed the highlight, the caption or the vector. The controls do nothing visible, so the 'aha' cannot be reached.",
+          "aha_reached": false,
+          "drives": [
+            [
+              {
+                "clickAt": [
+                  350,
+                  428
+                ]
+              },
+              {
+                "wait": 800
+              },
+              {
+                "clickAt": [
+                  240,
+                  428
+                ]
+              },
+              {
+                "wait": 800
+              }
+            ],
+            [
+              {
+                "click": "section[data-slide-id] > div > div:nth-of-type(5) > div:nth-of-type(3) > div:nth-of-type(2) > button:nth-of-type(3)"
+              },
+              {
+                "wait": 1500
+              },
+              {
+                "click": "section[data-slide-id] > div > div:nth-of-type(5) > div:nth-of-type(3) > div:nth-of-type(2) > button:nth-of-type(2)"
+              }
+            ]
+          ]
+        },
+        "fidelity": {
+          "score": 3,
+          "judged": 3,
+          "fabrications": [],
+          "distortions": [
+            "\"Done long enough, the unscalable doesn't vanish at scale — it becomes permanent DNA\" drops the source's hedge \"In the best case\" and states the outcome as a general rule. It also adds a \"done long enough\" condition that the source does not give.",
+            "\"The part most founders omit\" is a mild overstatement. The source says founders resist or ignore manual recruiting and that a strategy which omits the effort is suspect. It never says most founders leave it out.",
+            "\"collapses back into a flat point\" recasts PG's \"scalar\" as a \"point\". This is acceptable as a metaphor, but it is not his wording."
+          ],
+          "evidence": [
+            "Title \"The Idea Is a Vector, Not a Point\" and subtitle \"It's a vector with two components — the product, plus the unscalable things you'll do to get it started\" match the source's Vector section: think of ideas as \"pairs of what you're going to build, plus the unscalable thing(s) you're going to do initially.\"",
+            "The y-axis line \"recruit by hand, delight one user\" draws on the source's Recruit, Delight and Consult sections (\"pick a single user and act as if they were consultants\").",
+            "The HARDWARE / ASSEMBLE BY HAND state reads \"Assemble the first units yourself — pull a Meraki.\" The source says \"we call 'pulling a Meraki'... assembling their routers themselves.\"",
+            "The BIG LAUNCH / PARTNERSHIP chip and the \"⚑ SUSPECT\" label in the extracted text trace to the source: the Big Launch \"usually doesn't work\", partnerships \"usually don't work\", and \"Any strategy that omits the effort is ipso facto suspect.\"",
+            "The bottom-left note \"it becomes permanent DNA: a company that stays unusually attentive\" traces to the source's \"both components of the vector contribute to your company's DNA... change the company permanently for the better... you'll keep doing it when you have a lot.\"",
+            "The screenshots show no numbers, dates or quotes beyond the source."
+          ],
+          "reasoning": "The slide's central claim, the Meraki example and the warning about launches and partnerships all trace closely to the source. Nothing is fabricated. However, the DNA claim loses its 'in the best case' condition, and 'most founders omit' is a small overstatement. Both are minor paraphrases that the author would probably accept, so the slide is faithful but not exact."
+        },
+        "craft": {
+          "score": 2,
+          "judged": 2,
+          "evidence": [
+            "The large serif title \"The Idea Is a Vector, Not a Point\" with \"Vector\" in cyan italic is clearly the entry point at the top left",
+            "The cyan vector arrow in the right-hand chart is the second focal point and fills most of the right half",
+            "The left column has a large empty gap between the \"y\" item (ends ~y=275) and \"PLOT A REAL STRATEGY →\" (~y=390). There is a second gap of about 100px between the \"VECTOR · HAS LIFT\" callout (~y=510) and the bottom footnote (~y=620)",
+            "The chart area has empty space at the top left above the arrow, which reads as plot whitespace, so it is acceptable",
+            "There is a lot of small text: the axis labels \"UNSCALABLE COMPONENT\", \"*IDEA AS A POINT*\", \"WHAT YOU'LL BUILD →\" and \"↑ UNSCALABLE TO START\" look like ~9–10px tracked monospace. The button labels \"HARDWARE / ASSEMBLE BY HAND\" are ~10px. The footnote \"Done long enough, the unscalable doesn't vanish at scale…\" is ~12px",
+            "The eyebrow \"/ 08 — SYNTHESIS\" fails the contrast check (3.66:1 at 11px)",
+            "The secondary gray text \"The part everyone already sees.\" and \"The part most founders omit.\" is faint"
+          ],
+          "reasoning": "The hierarchy is clear: the title comes first, then the vector chart, then the left-column explanation. The two-column split looks deliberate. However, the left column feels stranded: it has two noticeable dead bands between its clusters. Many labels (axis labels, button text, footnote, faint gray asides) are too small or too faint to read at presentation distance. That is more than one minor issue, so the slide falls below a 3."
+        },
+        "not_generic": {
+          "score": 2,
+          "judged": 2,
+          "present": [
+            "default explainer split — prose/legend/controls column on the left (x/y legend, 'PLOT A REAL STRATEGY →' buttons, closing paragraph), vector chart panel on the right",
+            "segmented/pill button row as the control — 'HARDWARE ASSEMBLE BY HAND' / 'B2B CONSULT FOR ONE' / 'BIG LAUNCH PARTNERSHIP' sit in the left column, away from the chart they change",
+            "readout panel — 'VECTOR · HAS LIFT' / 'Assemble the first units yourself — pull a Meraki.' restates the selected option's state in words",
+            "numbered eyebrow — '08 — SYNTHESIS' in the top micro-label (minor, and the label style comes from the theme)"
+          ],
+          "evidence": [
+            "Top-left eyebrow: 'THE MENTAL MODEL / 08 — SYNTHESIS'",
+            "Left column: x/y legend circles 'What you'll build — the product' and 'The unscalable work to start'",
+            "Three rectangular toggle buttons under 'PLOT A REAL STRATEGY →', with the first selected in cyan fill",
+            "Readout block with a cyan left rule: 'VECTOR · HAS LIFT' plus a sentence",
+            "Right half: axes 'WHAT YOU'LL BUILD →' and '↑ UNSCALABLE TO START', a cyan arrow, a dashed 'UNSCALABLE COMPONENT' projection, and a point marker labeled 'IDEA AS A POINT' on the x-axis",
+            "Bottom-left paragraph about 'permanent DNA'"
+          ],
+          "reasoning": "The figure itself fits the idea well. The title says 'Vector, Not a Point', and the chart shows exactly that: the idea as a point sits on the x-axis, and the arrow rises off it along the unscalable axis. That part could not be reused for another topic. But the layout around it is the standard explainer split: text, legend and controls on the left, chart on the right. The control is a row of segmented buttons placed away from the chart, and below it a 'VECTOR · HAS LIFT' readout repeats the selected state in words. That makes 2+ named defaults, and they set the left half's structure. The figure is specific, but the frame is a template, so this is a 2."
+        }
+      },
+      "shots": {
+        "rest": "shots/s_rb9s0oum.rest.png",
+        "interacted": [
+          "shots/s_rb9s0oum.i1.png",
+          "shots/s_rb9s0oum.i2.png"
+        ]
+      }
+    }
+  ],
+  "deckCriteria": {
+    "coherence": {
+      "score": 3,
+      "judged": 3,
+      "evidence": [
+        "Slide 1: kicker \"THE MENTAL MODEL · 01 / 08\" in small mono caps, serif title with an italic cyan accent (\"Themselves\"), a left-rule italic analogy callout (\"Like hand-cranking an old car engine…\"), and a cyan pill button (\"TURN THE CRANK\")",
+        "Slide 2: same kicker (\"MOVE 01 · THE HAND-CRANK\"), serif title with an italic accent (\"by Hand\"), a left text column and a framed right figure panel, a toggle (\"WAIT FOR THEM / RECRUIT BY HAND\"), and a big-number readout (\"4\")",
+        "Slide 3: the same title style (\"Why Founders Resist\"), two columns of mono-labelled \"RESISTANCE 01 / 02\", and a cyan CTA (\"NAME THE SIGNAL\")",
+        "Slide 4: a sans-serif bold title (\"The Math Founders Underestimate\") with no kicker and no italic accent; the slider and \"Linear | Log\" toggle are drawn in a different, plainer style",
+        "Slide 5: kicker, serif title with italic \"Misjudged\", a framed right panel holding a balance/scale figure, and stacked question cards",
+        "Slide 6: kicker \"DELIGHT · UNSCALABLE CARE\", serif title with an italic accent, horizontal bars, a slider, a big number (\"92\"), and a left-rule analogy callout (\"Like a tiny family restaurant…\")",
+        "Slide 7: framed right figure with a dashed \"IGNITION LINE\", a numbered step strip, and a big readout (\"100\"); the italic analogy (\"Like building a campfire…\") comes back",
+        "Slide 8: \"THE MENTAL MODEL · 08 / 08\" closes the frame, with segmented chip buttons and a vector plot whose axes are the product and the unscalable work"
+      ],
+      "reasoning": "Seven of the eight slides use the same grammar: a mono kicker, a serif title with an italic cyan keyword, prose on the left and a framed interactive figure on the right, a big-number readout, mono-caps labels, cyan pill buttons, and an italic analogy callout behind a left rule. Slide 4 is a clear outlier: it uses a sans-serif title and no kicker, and its controls are drawn in a different style. The recurring idea is that early effort is manual: a crank on slide 1, recruiting by hand on slide 2, a fire that ignites on slide 7, and the 'unscalable component' axis on slide 8. That idea shows up in the figures, not just the text, but each figure still uses its own metaphor (dial, network, scale, bars, bar chart, vector), so the motif develops in an uneven way. Overall this is a consistent kit with one outlier.",
+      "motif_slides": [
+        "1. Startups Don't Start Themselves",
+        "2. The First Unscalable Move: Recruit Users by Hand",
+        "6. Delight: Be Insanely Great, Not Just Build It",
+        "7. Start a Fire in a Small Space",
+        "8. The Idea Is a Vector, Not a Point"
+      ]
+    },
+    "quiz": {
+      "score": 0.625,
+      "correct": 5,
+      "partial": 2,
+      "total": 8,
+      "lenient": 0.75,
+      "items": [
+        {
+          "id": "q1",
+          "q": "What does the car-engine crank metaphor say about how startups take off?",
+          "kind": "mechanism",
+          "ref": "Startups don't usually take off on their own. The founders have to push them through a separate, laborious start-up phase, like hand-cranking an engine, and after that the engine keeps running by itself.",
+          "answer": "A startup has no momentum of its own, so the founders have to be the engine. Like hand-cranking an old car engine, they turn it over by force until the motor catches and runs by itself. Self-sustaining growth has to be created by manual force at first: no crank, no ride.",
+          "from": "Slide 1",
+          "grade": "correct",
+          "why": "Gets the key idea: founders have to force a laborious start-up phase, like hand-cranking, until the startup runs on its own."
+        },
+        {
+          "id": "q2",
+          "q": "Why does the essay argue that recruiting users one by one is worth it even though the numbers seem tiny at first?",
+          "kind": "mechanism",
+          "ref": "Because of compound growth. If you keep up a steady weekly growth rate like 10%, small absolute gains build into huge numbers (about 14,000 users after one year and 2 million after two), so manual recruiting can get you to scale.",
+          "answer": "Founders should judge the number as a rate, not a snapshot, because what matters is how fast it compounds. At 10% a week, 100 users become about 2.0M in two years (205M at 15%). The early total is supposed to look small, and the slope is what you're actually building.",
+          "from": "Slides 3, 4 (and 2)",
+          "grade": "correct",
+          "why": "Explains compound growth at 10% a week, with small numbers reaching about 2M in two years."
+        },
+        {
+          "id": "q3",
+          "q": "What mistake do inexperienced founders and investors make when they judge early startups, and what question should they ask instead?",
+          "kind": "relation",
+          "ref": "They judge fragile, larval startups by the standards of established companies and dismiss them. Instead they should ask how big the company could get if the founders did the right things.",
+          "answer": "They judge a tiny, fragile startup by the standards of established companies and call it a toy, asking 'How big is this now?' The right question is 'How big could this get if the founders did the right things?', which judges its trajectory rather than its current size.",
+          "from": "Slide 5",
+          "grade": "correct",
+          "why": "Names judging larval startups by big-company standards and gives the right question: how big could it get if the founders did the right things."
+        },
+        {
+          "id": "q4",
+          "q": "How can a small startup give better customer service than a big company, and why do founders often fail to see this?",
+          "kind": "relation",
+          "ref": "Being small lets founders give personal attention that big companies can't, like hand-written thank-you notes. Founders miss this because their standards for service were set by the big companies they've been customers of, and because engineers aren't trained in customer service.",
+          "answer": "Big companies max out the product but can't afford to remember your name, while a startup can pour in care for free (handwritten notes, personal attention) to cover the gaps in a rough product. The deck doesn't really explain why founders fail to see this, though it says most founders are shy hackers who find this kind of work uncomfortable.",
+          "from": "Slides 6, 3",
+          "grade": "partial",
+          "why": "Covers how being small allows personal attention, but misses that founders' standards come from big companies; 'shy hackers' only loosely matches 'engineers aren't trained in customer service'."
+        },
+        {
+          "id": "q5",
+          "q": "In a startup's early months, how does the meaning of 'insanely great' shift, and why does over-engaging with users improve the product?",
+          "kind": "mechanism",
+          "ref": "What should be insanely great is the experience of being a user, not the product, so attentiveness can make up for a buggy, incomplete product. Engaging directly with early users also gives the best feedback, which drives the iteration that makes the product good.",
+          "answer": "The deck says to aim for an insanely great experience, not necessarily a great product, with care making up for an early, buggy, incomplete product. It says the same close contact with users is your sharpest feedback loop, but it doesn't explain in more detail how that improves the product.",
+          "from": "Slide 6",
+          "grade": "correct",
+          "why": "Gets the shift to a great user experience that makes up for a buggy product, and names close user contact as the best feedback loop."
+        },
+        {
+          "id": "q6",
+          "q": "Why might a startup deliberately start in a narrow market, as Facebook did with Harvard?",
+          "kind": "mechanism",
+          "ref": "Like keeping a fire contained so it gets hot, a narrow market lets you reach critical mass quickly because the users feel the product is really for them. You can then expand from there.",
+          "answer": "Hand-cranking only works when effort is concentrated, and spreading a fixed effort across many markets leaves each one below the ignition line (100 heat in one market versus 13 across 8). Facebook launched at Harvard only, a world small enough to fully win before moving on, like getting kindling blazing before adding the big logs.",
+          "from": "Slide 7",
+          "grade": "correct",
+          "why": "Uses the concentrated-fire/kindling idea to explain reaching critical mass in a narrow market before expanding, though it leaves out that users feel the product is for them."
+        },
+        {
+          "id": "q7",
+          "q": "What benefits come from doing things manually that you plan to automate later, or from building hardware yourself, as Meraki and Pebble did?",
+          "kind": "mechanism",
+          "ref": "It lets you launch faster and avoid obstacles like large minimum factory orders. You also learn exactly what to build or automate, and in hardware you can tweak the design faster, because you've done the work yourself.",
+          "answer": "The deck only says that for hardware you should assemble the first units yourself ('pull a Meraki'), which gives the idea its unscalable 'lift'. Done long enough, this becomes permanent DNA that keeps the company unusually attentive. Pebble and automating manual work later are not covered.",
+          "from": "Slide 8",
+          "grade": "incorrect",
+          "why": "Leaves out the key benefits: launching faster, avoiding minimum factory orders, and learning what to build or automate."
+        },
+        {
+          "id": "q8",
+          "q": "Why does the essay reject the 'Big Launch' and big-company partnerships, and what does it mean to think of startup ideas as vectors rather than scalars?",
+          "kind": "relation",
+          "ref": "Startups are like powered aircraft, not projectiles: success depends on sustained effort and on how happy you make your first users, not on initial velocity, and strategies that skip the effort are suspect. A startup idea should be seen as a pair: what you'll build plus the unscalable things you'll do to get started, and ideally those things become a permanent part of the company's DNA.",
+          "answer": "The deck shows a 'broadcast launch' (waiting for users) bringing in 0 signups, versus recruiting them by hand, and 'Big launch / partnership' appears as a strategy option, but its reasoning isn't shown. A startup idea is a vector with two components, the product plus the unscalable things you'll do to get it started; drop the second and the idea collapses into a flat point.",
+          "from": "Slides 2, 8",
+          "grade": "partial",
+          "why": "Gets the vector idea (product plus unscalable things), but leaves out why the Big Launch is rejected (powered aircraft vs. projectile) and the permanent-DNA point."
+        }
+      ]
+    }
+  },
+  "summary": {
+    "slides": 8,
+    "means": {
+      "claim_at_rest": 3.38,
+      "mechanism_shown": 2.88,
+      "device_works": 3.13,
+      "fidelity": 2.88,
+      "craft": 2,
+      "not_generic": 2
+    },
+    "passRate": {
+      "claim_at_rest": 1,
+      "mechanism_shown": 0.75,
+      "device_works": 0.88,
+      "fidelity": 0.88,
+      "craft": 0,
+      "not_generic": 0
+    },
+    "unknown": {
+      "claim_at_rest": 0,
+      "mechanism_shown": 0,
+      "device_works": 0,
+      "fidelity": 0,
+      "craft": 0,
+      "not_generic": 0
+    },
+    "coherence": 3,
+    "quiz": 0.625,
+    "gatePassed": 8,
+    "keyQuestion": {
+      "gatePassed": 8,
+      "failedKey": 3,
+      "rate": 0.375,
+      "byCriterion": {
+        "mechanism_shown": 2,
+        "device_works": 1
+      },
+      "slideIds": [
+        "s_nvgjvi7g",
+        "s_vekib1on",
+        "s_rb9s0oum"
+      ]
+    }
+  },
+  "evalCost": {
+    "judgeCalls": 59,
+    "usage": {
+      "input": 142,
+      "output": 41602,
+      "cacheRead": 1976154,
+      "cacheCreate": 263096
+    },
+    "usd": 11.02,
+    "wallMs": 202454
+  }
+}

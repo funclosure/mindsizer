@@ -195,7 +195,7 @@ function main() {
   out.push(`## Judge noise`, "");
   if (existsSync(noisePath)) {
     const n = JSON.parse(readFileSync(noisePath, "utf8"));
-    out.push(`Each of ${n.decks.join(", ")} was scored twice by the full scorer (independent judge sessions). Per-criterion disagreement over ${n.rows[0]?.pairs ?? 0}-ish paired slides:`, "");
+    out.push(`Each of ${n.decks.join(", ")} was scored twice by the full scorer (independent judge sessions). Per-criterion disagreement (\`pairs\` = slides judged, not n/a or unknown, in both runs):`, "");
     out.push(`| criterion | pairs | same | ±1 | ±2+ | crossed pass line | mean abs Δ | flip rate | trustworthy? |`);
     out.push(`|---|---|---|---|---|---|---|---|---|`);
     for (const r of n.rows as NoiseRow[]) {
