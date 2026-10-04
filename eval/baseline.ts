@@ -2,10 +2,10 @@
 // eval/baseline.ts — run the CURRENT harness (plan → build) on every fetchable source, keep each
 // build's progress.jsonl next to its deck, then score every deck (plus the Opus 4.8 reference deck).
 //
-//   bun run eval:baseline [--run <name>] [--only id,id] [--no-build] [--no-score] [--jobs 2]
+//   bun run eval:baseline [--run <name>] [--only id,id] [--no-build] [--no-score] [--jobs 2] [--noise 2] [--score-jobs 3]
 //
 // All model roles run on MINDSIZER_MODEL (set by eval/opus55.env via the package script).
-import { existsSync, mkdirSync, copyFileSync, writeFileSync, readFileSync, appendFileSync } from "node:fs";
+import { existsSync, mkdirSync, copyFileSync, writeFileSync, readFileSync, appendFileSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
@@ -102,20 +102,38 @@ async function main() {
   if (!process.argv.includes("--no-build")) await pool(todo, JOBS, buildOne);
 
   if (!process.argv.includes("--no-score")) {
-    const jobs: string[][] = [];
-    for (const s of todo) {
-      const deck = join(RUN_DIR, `${s.id}.deck.html`);
-      if (!existsSync(deck)) continue;
-      jobs.push(["bun", "run", "eval/score.ts", deck, "--plan", join(RUN_DIR, `${s.id}.plan.md`), "--source", join(ROOT, "eval", ".cache", `${s.id}.txt`), "--source-id", s.id, "--out", join(RUN_DIR, "scores", s.id)]);
+    // Score every deck in the run dir that has a sibling <stem>.plan.md (the baseline builds, plus
+    // any extra builds such as a build from a committed plan), and the Opus 4.8 reference deck.
+    const ids = sources.map((s) => s.id).sort((a, b) => b.length - a.length);
+    const jobs: { name: string; cmd: (out: string) => string[] }[] = [];
+    for (const f of readdirSync(RUN_DIR).filter((f) => f.endsWith(".deck.html")).sort()) {
+      const stem = f.replace(/\.deck\.html$/, "");
+      const plan = join(RUN_DIR, `${stem}.plan.md`);
+      const sid = ids.find((id) => stem === id || stem.startsWith(`${id}-`));
+      if (!existsSync(plan) || !sid || (ONLY && !ONLY.includes(sid))) continue;
+      jobs.push({ name: stem, cmd: (out) => ["bun", "run", "eval/score.ts", join(RUN_DIR, f), "--plan", plan, "--source", join(ROOT, "eval", ".cache", `${sid}.txt`), "--source-id", sid, "--out", out] });
     }
     // cross-version reference: the committed Opus 4.8 deck (outline-only, no plan)
-    jobs.push(["bun", "run", "eval/score.ts", join(ROOT, "examples", "dont-scale.deck.html"), "--outline", join(ROOT, "examples", "dont-scale.outline.md"), "--source", join(ROOT, "eval", ".cache", "dont-scale.txt"), "--source-id", "dont-scale", "--out", join(RUN_DIR, "scores", "ref-opus-4-8-dont-scale")]);
-    await pool(jobs, 2, async (cmd) => {
-      const r = await run(cmd, join(RUN_DIR, "score.log"));
-      log({ step: "score", deck: cmd[3], code: r.code, ms: r.ms });
-    });
-    const rr = await run(["bun", "run", "eval/report.ts", "--run", RUN], join(RUN_DIR, "score.log"));
-    log({ step: "report", code: rr.code });
+    if (!ONLY || ONLY.includes("dont-scale")) {
+      jobs.push({ name: "ref-opus-4-8-dont-scale", cmd: (out) => ["bun", "run", "eval/score.ts", join(ROOT, "examples", "dont-scale.deck.html"), "--outline", join(ROOT, "examples", "dont-scale.outline.md"), "--source", join(ROOT, "eval", ".cache", "dont-scale.txt"), "--source-id", "dont-scale", "--out", out] });
+    }
+    // Quiz questions are generated once per source and cached; score one deck per source first so
+    // parallel scorings never race to write eval/questions/<id>.json.
+    const NOISE = Number(arg("noise") ?? 2); // re-score this many decks into scores-r2/ for judge noise
+    const runs = [
+      ...jobs.map((j) => ({ ...j, out: join(RUN_DIR, "scores", j.name) })),
+      ...jobs.slice(0, NOISE).map((j) => ({ ...j, out: join(RUN_DIR, "scores-r2", j.name) })),
+    ];
+    const first = runs.shift();
+    const scoreRun = async (r: typeof runs[number]) => {
+      const res = await run(r.cmd(r.out), join(RUN_DIR, "score.log"));
+      log({ step: "score", deck: r.name, out: r.out, code: res.code, ms: res.ms });
+    };
+    if (first) await scoreRun(first);
+    await pool(runs, Number(arg("score-jobs") ?? 3), scoreRun);
+    if (NOISE > 0) log({ step: "noise", code: (await run(["bun", "run", "eval/noise.ts", "--run", RUN], join(RUN_DIR, "score.log"))).code });
+    log({ step: "report", code: (await run(["bun", "run", "eval/report.ts", "--run", RUN], join(RUN_DIR, "score.log"))).code });
+    log({ step: "calibration", code: (await run(["bun", "run", "eval/calibration.ts", "--run", RUN], join(RUN_DIR, "score.log"))).code });
   }
 }
 

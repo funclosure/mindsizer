@@ -63,6 +63,7 @@ function craftText(m: ReturnType<typeof computeCraft>): string {
     `text boxes: ${m.textBoxes}`,
     `overlapping text pairs: ${m.overlaps.length}${m.overlaps.length ? " — " + m.overlaps.slice(0, 4).map((o) => `"${o.a}" × "${o.b}"`).join("; ") : ""}`,
     `text outside 1280×720: ${m.outsideFrame.length}`,
+    `text cut off by its container: ${m.clipped.length}${m.clipped.length ? " — " + m.clipped.slice(0, 4).map((c) => `"${c.text}" ${Math.round(c.hiddenFrac * 100)}% hidden`).join("; ") : ""}`,
     `WCAG AA contrast failures: ${m.contrast.fails.length} of ${m.contrast.checked} (min ratio ${m.contrast.minRatio ?? "n/a"})${m.contrast.fails.length ? " — " + m.contrast.fails.slice(0, 4).map((f) => `"${f.text}" ${f.ratio}:1 @${f.fontPx}px`).join("; ") : ""}`,
   ].join("\n");
 }
@@ -92,6 +93,8 @@ export async function scoreDeck(o: ScoreOptions): Promise<DeckScores> {
   let slides = parts.slides;
   if (o.onlySlides) slides = slides.filter((s) => o.onlySlides!.includes(s.id));
   const hasPlan = !!o.planPath;
+  const themeBriefPath = join(ROOT, "themes", outline?.meta.theme ?? "field", "brief.md");
+  const themeBrief = existsSync(themeBriefPath) ? readFileSync(themeBriefPath, "utf8").trim() : undefined;
   console.log(`scoring ${basename(o.deckPath)}: ${slides.length} slides, judge ${JUDGE_MODEL} (${JUDGE_EFFORT})`);
 
   const rests = new Map<string, RestCapture>();
@@ -173,7 +176,7 @@ export async function scoreDeck(o: ScoreOptions): Promise<DeckScores> {
         return { score, judged, capped: score !== judged ? cap.reasons : undefined, evidence: v.evidence, reasoning: v.reasoning };
       }),
       safe("not_generic", async () => {
-        const v = await judgeJson(notGenericSystem(), [text("Resting screenshot:"), image(rest.png)], NotGenericSchema);
+        const v = await judgeJson(notGenericSystem(undefined, themeBrief), [text("Resting screenshot:"), image(rest.png)], NotGenericSchema);
         return { score: toScore(v.score), judged: toScore(v.score), present: v.present, evidence: v.evidence, reasoning: v.reasoning };
       }),
     ]);

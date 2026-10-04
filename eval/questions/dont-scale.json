@@ -1,0 +1,55 @@
+{
+  "sourceId": "dont-scale",
+  "model": "claude-opus-5-5",
+  "createdAt": "2026-10-04T09:14:21.625Z",
+  "questions": [
+    {
+      "id": "q1",
+      "q": "What does the car-engine crank metaphor say about how startups take off?",
+      "ref": "Startups don't usually take off on their own. The founders have to push them through a separate, laborious start-up phase, like hand-cranking an engine, and after that the engine keeps running by itself.",
+      "kind": "mechanism"
+    },
+    {
+      "id": "q2",
+      "q": "Why does the essay argue that recruiting users one by one is worth it even though the numbers seem tiny at first?",
+      "ref": "Because of compound growth. If you keep up a steady weekly growth rate like 10%, small absolute gains build into huge numbers (about 14,000 users after one year and 2 million after two), so manual recruiting can get you to scale.",
+      "kind": "mechanism"
+    },
+    {
+      "id": "q3",
+      "q": "What mistake do inexperienced founders and investors make when they judge early startups, and what question should they ask instead?",
+      "ref": "They judge fragile, larval startups by the standards of established companies and dismiss them. Instead they should ask how big the company could get if the founders did the right things.",
+      "kind": "relation"
+    },
+    {
+      "id": "q4",
+      "q": "How can a small startup give better customer service than a big company, and why do founders often fail to see this?",
+      "ref": "Being small lets founders give personal attention that big companies can't, like hand-written thank-you notes. Founders miss this because their standards for service were set by the big companies they've been customers of, and because engineers aren't trained in customer service.",
+      "kind": "relation"
+    },
+    {
+      "id": "q5",
+      "q": "In a startup's early months, how does the meaning of 'insanely great' shift, and why does over-engaging with users improve the product?",
+      "ref": "What should be insanely great is the experience of being a user, not the product, so attentiveness can make up for a buggy, incomplete product. Engaging directly with early users also gives the best feedback, which drives the iteration that makes the product good.",
+      "kind": "mechanism"
+    },
+    {
+      "id": "q6",
+      "q": "Why might a startup deliberately start in a narrow market, as Facebook did with Harvard?",
+      "ref": "Like keeping a fire contained so it gets hot, a narrow market lets you reach critical mass quickly because the users feel the product is really for them. You can then expand from there.",
+      "kind": "mechanism"
+    },
+    {
+      "id": "q7",
+      "q": "What benefits come from doing things manually that you plan to automate later, or from building hardware yourself, as Meraki and Pebble did?",
+      "ref": "It lets you launch faster and avoid obstacles like large minimum factory orders. You also learn exactly what to build or automate, and in hardware you can tweak the design faster, because you've done the work yourself.",
+      "kind": "mechanism"
+    },
+    {
+      "id": "q8",
+      "q": "Why does the essay reject the 'Big Launch' and big-company partnerships, and what does it mean to think of startup ideas as vectors rather than scalars?",
+      "ref": "Startups are like powered aircraft, not projectiles: success depends on sustained effort and on how happy you make your first users, not on initial velocity, and strategies that skip the effort are suspect. A startup idea should be seen as a pair: what you'll build plus the unscalable things you'll do to get started, and ideally those things become a permanent part of the company's DNA.",
+      "kind": "relation"
+    }
+  ]
+}

@@ -187,16 +187,18 @@ function collectBoxesInPage(): any[] {
     if (cs.visibility === "hidden" || cs.display === "none") continue;
     const op = opacityChain(el);
     if (op < 0.05) continue;
-    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    // Per-line rects (a union box of a wrapped inline run would swallow its inline siblings).
+    let lines: { x0: number; y0: number; x1: number; y1: number }[] = [];
     for (const n of textNodes) {
       const r = document.createRange();
       r.selectNodeContents(n);
       for (const rc of Array.from(r.getClientRects()) as any[]) {
         if (rc.width < 1 || rc.height < 1) continue;
-        x0 = Math.min(x0, rc.left); y0 = Math.min(y0, rc.top); x1 = Math.max(x1, rc.right); y1 = Math.max(y1, rc.bottom);
+        lines.push({ x0: rc.left, y0: rc.top, x1: rc.right, y1: rc.bottom });
       }
     }
-    if (!Number.isFinite(x0)) continue;
+    if (!lines.length) continue;
+    const rawArea = lines.reduce((a, l) => a + (l.x1 - l.x0) * (l.y1 - l.y0), 0);
     // Clip by ancestors that hide overflow (below the section — clipping BY the section frame is
     // exactly the "text outside the frame" defect, so it is not applied) and skip sr-only/clipped text.
     let hidden = false;
@@ -205,10 +207,14 @@ function collectBoxesInPage(): any[] {
       if ((ps.clipPath && ps.clipPath !== "none") || (ps.clip && ps.clip !== "auto")) { hidden = true; break; }
       if (p !== el && (ps.overflowX !== "visible" || ps.overflowY !== "visible")) {
         const r = p.getBoundingClientRect();
-        x0 = Math.max(x0, r.left); y0 = Math.max(y0, r.top); x1 = Math.min(x1, r.right); y1 = Math.min(y1, r.bottom);
+        lines = lines.map((l) => ({ x0: Math.max(l.x0, r.left), y0: Math.max(l.y0, r.top), x1: Math.min(l.x1, r.right), y1: Math.min(l.y1, r.bottom) }));
       }
     }
-    if (hidden || x1 - x0 < 2 || y1 - y0 < 2) continue;
+    lines = lines.filter((l) => l.x1 - l.x0 >= 2 && l.y1 - l.y0 >= 2);
+    if (hidden || !lines.length) continue;
+    const visArea = lines.reduce((a, l) => a + (l.x1 - l.x0) * (l.y1 - l.y0), 0);
+    const x0 = Math.min(...lines.map((l) => l.x0)), y0 = Math.min(...lines.map((l) => l.y0));
+    const x1 = Math.max(...lines.map((l) => l.x1)), y1 = Math.max(...lines.map((l) => l.y1));
     const id = ids.size;
     ids.set(el, id);
     const ancestors: number[] = [];
@@ -221,6 +227,8 @@ function collectBoxesInPage(): any[] {
     out.push({
       id, ancestors,
       x: x0, y: y0, w: x1 - x0, h: y1 - y0,
+      rects: lines.map((l) => ({ x: l.x0, y: l.y0, w: l.x1 - l.x0, h: l.y1 - l.y0 })),
+      clippedFrac: rawArea > 0 ? Math.round((1 - visArea / rawArea) * 100) / 100 : 0,
       text: textNodes.map((n) => n.textContent).join(" ").replace(/\s+/g, " ").trim().slice(0, 60),
       color: c, fontPx, bold,
     });

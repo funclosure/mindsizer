@@ -70,11 +70,13 @@ export const GENERIC_PATTERNS = [
   "emoji",
   "filler icons (generic pictograms beside text that add no information)",
   // added after reviewing the baseline decks (see eval/RUBRIC.md § not_generic):
-  "uppercase letter-spaced monospace kicker/caption labels on every block",
-  "dot-grid or graph-paper background texture as default decoration",
-  "a big 'pull-quote' / thesis line in italic serif as the slide's main content",
+  // (a first draft also listed mono kicker labels, a dot-grid background and italic-serif accents —
+  // all three are prescribed by the `field` theme brief, so they now go to the judge as theme context)
+  "the default explainer split — a prose column on the left and a figure panel on the right — used regardless of the idea's shape",
+  "a paragraph of body copy that restates what the figure already shows",
+  "a row of small segmented/pill buttons as the only control, detached from the thing being manipulated",
+  "a 'readout' line or panel that restates the control's value or state in words",
   "stat tiles (giant number + tiny caption) not tied to the mechanism",
-  "a 'readout' panel that restates the control's value in words",
 ] as const;
 
 const SKEPTIC = `You are a skeptical evaluator of a single slide from an explanatory slide deck. You grade the rendered ARTIFACT you are shown — not the effort, not the intent, not the process that made it.
@@ -155,12 +157,12 @@ ${anchorText("craft")}
 ${VERDICT_FORMAT}`;
 
 // ——— not_generic ———
-export function notGenericSystem(patterns: readonly string[] = GENERIC_PATTERNS): string {
+export function notGenericSystem(patterns: readonly string[] = GENERIC_PATTERNS, themeBrief?: string): string {
   return `${SKEPTIC}
 Question: does this slide fall back on GENERIC DEFAULTS? Do not grade "AI slop" vaguely — check this specific list of named defaults and report which are present, with evidence:
 ${patterns.map((p, i) => `  ${i + 1}. ${p}`).join("\n")}
 A pattern counts only if it is clearly present. Then judge whether the slide's visual form is specific to its idea.
-${anchorText("not_generic")}
+${themeBrief ? `The deck's THEME prescribes the house style below. Whatever the theme prescribes (palette, fonts, micro-label style, background texture, accent treatment) is the deck's chosen identity — do NOT count it as a generic default; judge only what the slide author chose on top of it.\nTHEME BRIEF: ${themeBrief}\n` : ""}${anchorText("not_generic")}
 Reply with ONLY JSON: {"present": ["<pattern name> — <where/what>", ...], "evidence": ["..."], "reasoning": "...", "score": 1|2|3|4|"unknown"}`;
 }
 export const NotGenericSchema = VerdictSchema.extend({ present: z.array(z.string()) });

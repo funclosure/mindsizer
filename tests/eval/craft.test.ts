@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  clippedText, textIntersect,
   parseColor, luminance, contrastRatio, blend, aaThreshold, isLargeText, intersectArea, findOverlaps, outsideFrame,
   contrastFailures, computeCraft, craftCap, type TextBox,
 } from "../../eval/lib/craft";
@@ -77,6 +78,22 @@ describe("overlap detection", () => {
     expect(o.some((x) => x.a === "t0" && x.b === "t1")).toBe(true);
     expect(o.some((x) => x.a === "t0" && x.b === "t2")).toBe(false);
     expect(o.some((x) => x.b === "t3" || x.a === "t3")).toBe(false);
+  });
+});
+
+describe("per-line text rects", () => {
+  it("does not flag a wrapped inline run against the inline sibling on its first line", () => {
+    // <b>The crank</b> — the unscalable things you'll do to get it / going   (2 lines)
+    const bold = box({ id: 0, x: 100, y: 350, w: 72, h: 20 });
+    const rest = box({ id: 1, x: 100, y: 350, w: 370, h: 44, rects: [{ x: 176, y: 350, w: 294, h: 20 }, { x: 100, y: 372, w: 40, h: 20 }] });
+    expect(intersectArea(bold, rest)).toBeGreaterThan(1000); // the union boxes collide…
+    expect(textIntersect(bold, rest)).toBe(0);               // …the actual lines don't
+    expect(findOverlaps([bold, rest])).toHaveLength(0);
+  });
+  it("reports partly cut-off text but not fully hidden text", () => {
+    const r = clippedText([box({ id: 0, clippedFrac: 0.4 }), box({ id: 1, clippedFrac: 1 }), box({ id: 2, clippedFrac: 0 })]);
+    expect(r).toEqual([{ text: "t0", hiddenFrac: 0.4 }]);
+    expect(craftCap(computeCraft([box({ id: 0, clippedFrac: 0.4 })], 0, [])).cap).toBe(3);
   });
 });
 

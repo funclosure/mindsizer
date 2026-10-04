@@ -12,6 +12,8 @@ export interface TextBox extends Box {
   bg?: RGBA;             // effective background behind the box (opaque), if sampled
   fontPx: number;
   bold: boolean;
+  rects?: Box[];         // per-line rects (absent → the bounding box is the only rect)
+  clippedFrac?: number;  // share of the text's area hidden by an inner overflow container (0–1)
 }
 
 export const FRAME = { w: 1280, h: 720 };
@@ -88,10 +90,24 @@ export function intersectArea(a: Box, b: Box): number {
 
 export interface Overlap { a: string; b: string; areaPx: number; frac: number }
 
+/** Area two text runs share, summed over their per-line rects. */
+export function textIntersect(a: TextBox, b: TextBox): number {
+  const ra = a.rects?.length ? a.rects : [a];
+  const rb = b.rects?.length ? b.rects : [b];
+  let sum = 0;
+  for (const x of ra) for (const y of rb) sum += intersectArea(x, y);
+  return sum;
+}
+
+function textArea(t: TextBox): number {
+  return (t.rects?.length ? t.rects : [t]).reduce((s, r) => s + r.w * r.h, 0);
+}
+
 /**
- * Text boxes from DIFFERENT, non-nested elements that collide. A pair counts when the
- * intersection is ≥ `minFrac` of the smaller box and ≥ `minArea` px² (ignores hairline kerning
- * touches and descender/ascender grazes).
+ * Text runs from DIFFERENT, non-nested elements that collide. A pair counts when the
+ * intersection is ≥ `minFrac` of the smaller run and ≥ `minArea` px² (ignores hairline kerning
+ * touches and descender/ascender grazes). Uses per-line rects, so a wrapped inline run does not
+ * "overlap" the inline sibling that shares its first line.
  */
 export function findOverlaps(boxes: TextBox[], minFrac = 0.15, minArea = 40): Overlap[] {
   const out: Overlap[] = [];
@@ -100,13 +116,21 @@ export function findOverlaps(boxes: TextBox[], minFrac = 0.15, minArea = 40): Ov
       const a = boxes[i];
       const b = boxes[j];
       if (a.id === b.id || a.ancestors.includes(b.id) || b.ancestors.includes(a.id)) continue;
-      const area = intersectArea(a, b);
+      if (intersectArea(a, b) < minArea) continue; // cheap bounding-box reject
+      const area = textIntersect(a, b);
       if (area < minArea) continue;
-      const frac = area / Math.max(1, Math.min(a.w * a.h, b.w * b.h));
+      const frac = area / Math.max(1, Math.min(textArea(a), textArea(b)));
       if (frac >= minFrac) out.push({ a: a.text, b: b.text, areaPx: Math.round(area), frac: Math.round(frac * 100) / 100 });
     }
   }
   return out;
+}
+
+/** Text partly cut off by an inner overflow container (5–95% hidden; fully hidden text is intentional). */
+export function clippedText(boxes: TextBox[]): { text: string; hiddenFrac: number }[] {
+  return boxes
+    .filter((b) => (b.clippedFrac ?? 0) >= 0.05 && (b.clippedFrac ?? 0) <= 0.95)
+    .map((b) => ({ text: b.text, hiddenFrac: b.clippedFrac! }));
 }
 
 /** Text boxes that extend past the 1280×720 frame by more than `tolPx`. */
@@ -143,6 +167,7 @@ export interface CraftMetrics {
   textBoxes: number;
   overlaps: Overlap[];
   outsideFrame: { text: string; px: number }[];
+  clipped: { text: string; hiddenFrac: number }[];
   contrast: { checked: number; minRatio: number | null; fails: ContrastFail[] };
 }
 
@@ -153,6 +178,7 @@ export function computeCraft(boxes: TextBox[], overflowPx: number, consoleErrors
     textBoxes: boxes.length,
     overlaps: findOverlaps(boxes),
     outsideFrame: outsideFrame(boxes),
+    clipped: clippedText(boxes),
     contrast: contrastFailures(boxes),
   };
 }
@@ -169,6 +195,7 @@ export function craftCap(m: CraftMetrics): { cap: number; reasons: string[] } {
   if (m.consoleErrors.length) { cap = Math.min(cap, 2); reasons.push(`${m.consoleErrors.length} console error(s)`); }
   if (m.outsideFrame.length) { cap = Math.min(cap, 2); reasons.push(`${m.outsideFrame.length} text box(es) outside frame`); }
   if (m.overlaps.length) { cap = Math.min(cap, 3); reasons.push(`${m.overlaps.length} overlapping text pair(s)`); }
+  if (m.clipped.length) { cap = Math.min(cap, 3); reasons.push(`${m.clipped.length} cut-off text run(s)`); }
   if (m.contrast.fails.length >= 3) { cap = Math.min(cap, 3); reasons.push(`${m.contrast.fails.length} AA contrast failures`); }
   return { cap, reasons };
 }
