@@ -1,0 +1,53 @@
+building 9 slides…
+✓ loaded context (11 digest points)
+· progress → /home/user/mindsizer/examples/dont-scale.plan.build/progress.jsonl
+[#1] author… "Startups Don't Just Take Off"
+[#2] author… "The Trap: Expecting a Self-Running Machine"
+[#3] author… "The Real Model: You Are the Engine at First"
+[#4] author… "Why It Has to Be Unscalable"
+[#4] pass 1 · ovf 680 · +44s model
+[#3] pass 1 · ovf 179 · +48s model
+[#4] pass 2 · ovf 680 · +6s model
+[#2] pass 1 · ovf 313 · +49s model
+[#1] pass 1 · ovf 266 · +46s model
+[#4] pass 3 · ovf 0 · +3s model
+[#3] pass 2 · ovf 0 · +6s model
+[#2] pass 2 · ovf 0 · +6s model
+[#4] ✓ done · 58s (3 passes)
+[#5] author… "Recruit Users One by One"
+[#2] ✓ done · 1m02s (2 passes)
+[#6] author… "Delight Beyond What's Reasonable"
+[#1] pass 2 · ovf 0 · +9s model
+[#3] ✓ done · 1m04s (2 passes)
+[#7] author… "Cranking Is Also How You Learn"
+[#1] ✓ done · 1m09s (2 passes)
+[#8] author… "Start Narrow to Catch Fire"
+[#5] pass 1 · ovf 315 · +42s model
+[#6] pass 1 · ovf 495 · +39s model
+[#6] pass 2 · ovf 598 · +6s model
+[#7] pass 1 · ovf 24 · +52s model
+[#8] pass 1 · ovf 319 · +42s model
+[#6] pass 3 · ovf 0 · +13s model
+[#8] pass 2 · ovf 0 · +6s model
+[#5] pass 2 · ovf 0 · +32s model
+[#6] ✓ done · 1m07s (3 passes)
+[#9] author… "The Idea Is a Vector, Not a Point"
+[#8] ✓ done · 1m05s (2 passes)
+[#5] ✓ done · 1m18s (2 passes)
+[#7] pass 2 · ovf 0 · +32s model
+[#7] ✓ done · 1m31s (2 passes)
+[#9] pass 1 · ovf 308 · +35s model
+[#9] pass 2 · ovf 308 · +5s model
+[#9] pass 3 · ovf 308 · +5s model
+[#9] pass 4 · ovf 308 · +22s model
+[#9] ✓ done · 1m12s (4 passes)
+
+build complete — 9 slides in 3m36s  (work 10m26s · 2.9× parallel)
+  by step:  revise 24% · author 63% · render 9% · finalize 3%
+  peak in-flight: 4 · retries: 0 · reused: 0 · failed: 0
+  tokens (author):  801k in (619k cached · 77%) · 63k out
+  slowest:  #7 1m31s (2 passes) · #5 1m18s (2 passes) · #9 1m12s (4 passes)
+✓ sealed → eval/out/smoke.html
+✓ deck check passed (9 slides, 0 console errors)
+  cost (API-equiv · est):  ~$10.53 — Opus $10.53
+EXIT 0

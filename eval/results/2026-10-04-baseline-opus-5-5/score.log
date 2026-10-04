@@ -1,0 +1,149 @@
+scoring dont-scale-committed-plan.deck.html: 9 slides, judge claude-opus-5-5 (medium)
+[1] s_fw5hwzx6 rest captured · 2 controls · gate pass
+[3] s_r5g7exwu rest captured · 3 controls · gate pass
+[2] s_hta5er8j rest captured · 2 controls · gate pass
+[3] s_r5g7exwu claim 4 · mech 4 · device n/a · fid 3 · craft 2 · generic 2
+[4] s_0p7uw7ur rest captured · 1 controls · gate pass
+[2] s_hta5er8j claim 4 · mech 3 · device n/a · fid 3 · craft 2 · generic 2
+[5] s_1fmw6h66 rest captured · 4 controls · gate pass
+[4] s_0p7uw7ur claim 4 · mech 3 · device n/a · fid 3 · craft 2 · generic 3
+[6] s_71dy6v33 rest captured · 8 controls · gate pass
+[1] s_fw5hwzx6 claim 4 · mech 3 · device 4 · fid 3 · craft 2 · generic 2
+[7] s_uuyq9o85 rest captured · 2 controls · gate pass
+[5] s_1fmw6h66 claim 4 · mech 3 · device n/a · fid 2 · craft 2 · generic 2
+[8] s_yyelfkor rest captured · 5 controls · gate pass
+[7] s_uuyq9o85 claim 3 · mech 3 · device n/a · fid 3 · craft 2 · generic 2
+[9] s_nxwe77ju rest captured · 0 controls · gate pass
+[6] s_71dy6v33 claim 4 · mech 3 · device 4 · fid 3 · craft 2 · generic 2
+[9] s_nxwe77ju claim 4 · mech 3 · device n/a · fid 3 · craft 2 · generic 2
+[8] s_yyelfkor claim 3 · mech 3 · device 4 · fid 3 · craft 2 · generic 2
+deck coherence 3
+quiz 4/8 correct (+4 partial)
+✓ wrote eval/results/2026-10-04-baseline-opus-5-5/scores/dont-scale-committed-plan/scores.json · 60 judge calls · ~$9.71 · 142s
+scoring dont-scale-committed-plan.deck.html: 9 slides, judge claude-opus-5-5 (medium)
+[3] s_r5g7exwu rest captured · 3 controls · gate pass
+[1] s_fw5hwzx6 rest captured · 2 controls · gate pass
+[2] s_hta5er8j rest captured · 2 controls · gate pass
+[3] s_r5g7exwu claim 4 · mech 4 · device n/a · fid 3 · craft 2 · generic 2
+[4] s_0p7uw7ur rest captured · 1 controls · gate pass
+[2] s_hta5er8j claim 4 · mech 3 · device n/a · fid 3 · craft 3 · generic 2
+[5] s_1fmw6h66 rest captured · 4 controls · gate pass
+[4] s_0p7uw7ur claim 4 · mech 3 · device n/a · fid 3 · craft 2 · generic 2
+[6] s_71dy6v33 rest captured · 8 controls · gate pass
+[1] s_fw5hwzx6 claim 3 · mech 3 · device 4 · fid 3 · craft 2 · generic 2
+[7] s_uuyq9o85 rest captured · 2 controls · gate pass
+[5] s_1fmw6h66 claim 4 · mech 3 · device n/a · fid 3 · craft 2 · generic 2
+[8] s_yyelfkor rest captured · 5 controls · gate pass
+[7] s_uuyq9o85 claim 3 · mech 3 · device n/a · fid 3 · craft 2 · generic 2
+[9] s_nxwe77ju rest captured · 0 controls · gate pass
+[6] s_71dy6v33 claim 4 · mech 4 · device 4 · fid 3 · craft 2 · generic 2
+[9] s_nxwe77ju claim 3 · mech 3 · device n/a · fid 3 · craft 2 · generic 2
+[8] s_yyelfkor claim 4 · mech 3 · device 4 · fid 3 · craft 2 · generic 2
+deck coherence 3
+quiz 4/8 correct (+3 partial)
+✓ wrote eval/results/2026-10-04-baseline-opus-5-5/scores-r2/dont-scale-committed-plan/scores.json · 60 judge calls · ~$9.43 · 185s
+scoring dont-scale.deck.html: 12 slides, judge claude-opus-5-5 (medium)
+[1] s_47fohz9x rest captured · 3 controls · gate pass
+[2] s_3esimwaa rest captured · 2 controls · gate pass
+[3] s_n9tj8cgf rest captured · 1 controls · gate pass
+[1] s_47fohz9x claim 4 · mech 3 · device n/a · fid 3 · craft 2 · generic 2
+[4] s_r9egdmae rest captured · 0 controls · gate pass
+[3] s_n9tj8cgf claim 3 · mech 4 · device n/a · fid 3 · craft 2 · generic 3
+[5] s_aewjm1n7 rest captured · 9 controls · gate FAIL
+[4] s_r9egdmae claim 4 · mech 2 · device n/a · fid 2 · craft 2 · generic 2
+[6] s_qaarysva rest captured · 2 controls · gate pass
+[6] s_qaarysva claim 3 · mech 4 · device n/a · fid 3 · craft 2 · generic 2
+[7] s_z4le9mds rest captured · 0 controls · gate pass
+[2] s_3esimwaa claim 4 · mech 3 · device 3 · fid 3 · craft 2 · generic 2
+[8] s_8fnoytzz rest captured · 3 controls · gate pass
+[5] s_aewjm1n7 claim 4 · mech 3 · device 4 · fid 3 · craft 2 · generic 2
+[9] s_4qynvpk9 rest captured · 0 controls · gate pass
+[7] s_z4le9mds claim 4 · mech 3 · device n/a · fid 3 · craft 3 · generic 3
+[10] s_04d74bwe rest captured · 5 controls · gate pass
+[9] s_4qynvpk9 claim 4 · mech 3 · device n/a · fid 3 · craft 2 · generic 3
+[11] s_mlyvq9qq rest captured · 3 controls · gate pass
+[10] s_04d74bwe claim 4 · mech 3 · device n/a · fid 3 · craft 2 · generic 3
+[12] s_o58ghhzt rest captured · 3 controls · gate pass
+[11] s_mlyvq9qq claim 3 · mech 4 · device n/a · fid 3 · craft 2 · generic 2
+[8] s_8fnoytzz claim 4 · mech 4 · device 3 · fid 3 · craft 2 · generic 2
+[12] s_o58ghhzt claim 4 · mech 3 · device n/a · fid 3 · craft 2 · generic 2
+deck coherence 3
+quiz 4/8 correct (+4 partial)
+✓ wrote eval/results/2026-10-04-baseline-opus-5-5/scores/dont-scale/scores.json · 78 judge calls · ~$12.77 · 202s
+scoring dont-scale.deck.html: 8 slides, judge claude-opus-5-5 (medium)
+[3] s_nvgjvi7g rest captured · 1 controls · gate pass
+[2] s_fa0nqri8 rest captured · 3 controls · gate pass
+[1] s_2sv7wjjp rest captured · 2 controls · gate pass
+[3] s_nvgjvi7g claim 4 · mech 1 · device 3 · fid 3 · craft 2 · generic 2
+[4] s_s65qftb4 rest captured · 3 controls · gate pass
+[2] s_fa0nqri8 claim 3 · mech 3 · device 3 · fid 2 · craft 2 · generic 2
+[5] s_vekib1on rest captured · 2 controls · gate pass
+[1] s_2sv7wjjp claim 4 · mech 3 · device 3 · fid 3 · craft 2 · generic 2
+[6] s_trkk8jdf rest captured · 1 controls · gate pass
+[4] s_s65qftb4 claim 3 · mech 4 · device 4 · fid 3 · craft 2 · generic 2
+[7] s_fah1hxd3 rest captured · 7 controls · gate pass
+[5] s_vekib1on claim 3 · mech 2 · device 4 · fid 3 · craft 2 · generic 2
+[8] s_rb9s0oum rest captured · 3 controls · gate pass
+[6] s_trkk8jdf claim 3 · mech 3 · device 4 · fid 3 · craft 2 · generic 2
+[8] s_rb9s0oum claim 3 · mech 3 · device 1 · fid 3 · craft 2 · generic 2
+[7] s_fah1hxd3 claim 4 · mech 4 · device 3 · fid 3 · craft 2 · generic 2
+deck coherence 3
+quiz 5/8 correct (+2 partial)
+✓ wrote eval/results/2026-10-04-baseline-opus-5-5/scores/ref-opus-4-8-dont-scale/scores.json · 59 judge calls · ~$11.02 · 202s
+scoring dont-scale.deck.html: 8 slides, judge claude-opus-5-5 (medium)
+[2] s_fa0nqri8 rest captured · 3 controls · gate pass
+[1] s_2sv7wjjp rest captured · 2 controls · gate pass
+[3] s_nvgjvi7g rest captured · 1 controls · gate pass
+[3] s_nvgjvi7g claim 4 · mech 1 · device 3 · fid 3 · craft 2 · generic 2
+[4] s_s65qftb4 rest captured · 3 controls · gate pass
+[2] s_fa0nqri8 claim 3 · mech 3 · device 3 · fid 2 · craft 2 · generic 2
+[5] s_vekib1on rest captured · 2 controls · gate pass
+[1] s_2sv7wjjp claim 4 · mech 3 · device 3 · fid 3 · craft 2 · generic 2
+[6] s_trkk8jdf rest captured · 1 controls · gate pass
+[4] s_s65qftb4 claim 3 · mech 4 · device 3 · fid 3 · craft 2 · generic 2
+[7] s_fah1hxd3 rest captured · 7 controls · gate pass
+[5] s_vekib1on claim 3 · mech 2 · device 3 · fid 3 · craft 2 · generic 2
+[8] s_rb9s0oum rest captured · 3 controls · gate pass
+[6] s_trkk8jdf claim 3 · mech 3 · device 3 · fid 2 · craft 2 · generic 2
+[7] s_fah1hxd3 claim 3 · mech 3 · device 4 · fid 3 · craft 2 · generic 2
+[8] s_rb9s0oum claim 3 · mech 3 · device 1 · fid 3 · craft 2 · generic 2
+deck coherence 3
+quiz 5/8 correct (+2 partial)
+✓ wrote eval/results/2026-10-04-baseline-opus-5-5/scores-r2/ref-opus-4-8-dont-scale/scores.json · 59 judge calls · ~$11.10 · 158s
+scoring dont-scale.deck.html: 12 slides, judge claude-opus-5-5 (medium)
+[1] s_47fohz9x rest captured · 3 controls · gate pass
+[2] s_3esimwaa rest captured · 2 controls · gate pass
+[3] s_n9tj8cgf rest captured · 1 controls · gate pass
+[1] s_47fohz9x claim 4 · mech 3 · device n/a · fid 3 · craft 3 · generic 2
+[4] s_r9egdmae rest captured · 0 controls · gate pass
+[3] s_n9tj8cgf claim 3 · mech 4 · device n/a · fid 3 · craft 2 · generic 3
+[5] s_aewjm1n7 rest captured · 9 controls · gate FAIL
+[4] s_r9egdmae claim 4 · mech 2 · device n/a · fid 3 · craft 2 · generic 2
+[6] s_qaarysva rest captured · 2 controls · gate pass
+[6] s_qaarysva claim 4 · mech 4 · device n/a · fid 3 · craft 2 · generic 2
+[7] s_z4le9mds rest captured · 0 controls · gate pass
+[5] s_aewjm1n7 claim 4 · mech 3 · device 4 · fid 3 · craft 2 · generic 2
+[8] s_8fnoytzz rest captured · 3 controls · gate pass
+[2] s_3esimwaa claim 4 · mech 4 · device 4 · fid 3 · craft 2 · generic 2
+[9] s_4qynvpk9 rest captured · 0 controls · gate pass
+[7] s_z4le9mds claim 4 · mech 3 · device n/a · fid 3 · craft 2 · generic 3
+[10] s_04d74bwe rest captured · 5 controls · gate pass
+[9] s_4qynvpk9 claim 4 · mech 3 · device n/a · fid 3 · craft 2 · generic 3
+[11] s_mlyvq9qq rest captured · 3 controls · gate pass
+[10] s_04d74bwe claim 4 · mech 3 · device n/a · fid 3 · craft 2 · generic 2
+[12] s_o58ghhzt rest captured · 3 controls · gate pass
+[8] s_8fnoytzz claim 4 · mech 4 · device 3 · fid 3 · craft 2 · generic 2
+[11] s_mlyvq9qq claim 3 · mech 3 · device n/a · fid 3 · craft 2 · generic 2
+[12] s_o58ghhzt claim 4 · mech 3 · device n/a · fid 3 · craft 2 · generic 2
+deck coherence 4
+quiz 4/8 correct (+4 partial)
+✓ wrote eval/results/2026-10-04-baseline-opus-5-5/scores-r2/dont-scale/scores.json · 78 judge calls · ~$12.56 · 178s
+claim_at_rest    pairs 29 · same 24 · ±1 5 · ±2+ 0 · pass-flip 0 · ok
+mechanism_shown  pairs 29 · same 25 · ±1 4 · ±2+ 0 · pass-flip 0 · ok
+device_works     pairs 14 · same 9 · ±1 5 · ±2+ 0 · pass-flip 0 · NOISY
+fidelity         pairs 29 · same 26 · ±1 3 · ±2+ 0 · pass-flip 3 · ok
+craft            pairs 29 · same 26 · ±1 3 · ±2+ 0 · pass-flip 3 · ok
+not_generic      pairs 29 · same 27 · ±1 2 · ±2+ 0 · pass-flip 2 · ok
+✓ wrote noise.json (ref-opus-4-8-dont-scale, dont-scale, dont-scale-committed-plan)
+✓ wrote eval/results/2026-10-04-baseline-opus-5-5/REPORT.md
+✓ wrote eval/calibration.html (20 slides from 3 decks)

@@ -1,0 +1,74 @@
+
+$ bun run src/cli.ts plan /home/user/mindsizer/eval/.cache/dont-scale.txt --yes -o /home/user/mindsizer/eval/out/dont-scale.plan.md --source https://www.paulgraham.com/ds.html --source-label Paul Graham — Do Things That Don't Scale   # attempt 1
+digesting + planning…
+✓ digested (13 points)
+✓ wrote /home/user/mindsizer/eval/out/dont-scale.plan.md
+✓ wrote /home/user/mindsizer/eval/out/dont-scale.plan.context.json
+  cost (API-equiv · est):  ~$1.60 — Opus $1.60
+
+$ bun run src/cli.ts build /home/user/mindsizer/eval/out/dont-scale.plan.md -o /home/user/mindsizer/eval/results/2026-10-04-baseline-opus-5-5/dont-scale.deck.html   # attempt 1
+building 12 slides…
+✓ loaded context (13 digest points)
+· progress → /home/user/mindsizer/eval/out/dont-scale.plan.build/progress.jsonl
+[#1] author… "The big idea: startups don't start themselves"
+[#2] author… "Two separate jobs"
+[#3] author… "What turning the crank looks like"
+[#4] author… "Why founders skip the crank"
+[#4] pass 1 · ovf 148 · +33s model
+[#4] pass 2 · ovf 0 · +4s model
+[#3] pass 1 · ovf 104 · +56s model
+[#1] pass 1 · ovf 213 · +50s model
+[#3] pass 2 · ovf 0 · +5s model
+[#1] pass 2 · ovf 0 · +5s model
+[#3] ✓ done · 1m09s (2 passes)
+[#5] author… "Compounding: small numbers aren't small"
+[#4] ⟳ retry 1 (content-dud: The <style> tag is never closed, so the browser reads all the slide content as CSS and shows a blank slide. The leftover '/*x*/' looks like debug/probe scaffolding, even though the hidden content is on-topic.)
+[#1] ✓ done · 1m13s (2 passes)
+[#6] author… "Fragility: the engine can stall"
+[#2] pass 1 · ovf 298 · +57s model
+[#4] pass 1 · ovf 128 · +25s model
+[#2] pass 2 · ovf 0 · +8s model
+[#4] pass 2 · ovf 0 · +3s model
+[#4] ✓ done · 31s (2 passes)
+[#7] author… "Ask the right question"
+[#2] ✓ done · 1m47s (2 passes)
+[#8] author… "Powered aircraft, not projectiles"
+[#6] pass 1 · ovf 0 · +42s model
+[#5] pass 1 · ovf 357 · +52s model
+[#6] ✓ done · 47s (1 passes)
+[#9] author… "A warning sign"
+[#7] pass 1 · ovf 1144 · +42s model
+[#7] pass 2 · ovf 0 · +4s model
+[#7] ✓ done · 49s (2 passes)
+[#10] author… "Ways to turn the crank"
+[#8] pass 1 · ovf 249 · +59s model
+[#5] pass 2 · ovf 357 · +35s model
+[#9] pass 1 · ovf 73 · +40s model
+[#8] pass 2 · ovf 249 · +4s model
+[#5] pass 3 · ovf 357 · +7s model
+[#9] pass 2 · ovf 0 · +5s model
+[#9] ✓ done · 48s (2 passes)
+[#11] author… "Small is an advantage"
+[#8] pass 3 · ovf 0 · +32s model
+[#8] ✓ done · 1m38s (3 passes)
+[#12] author… "A startup idea comes in pairs"
+[#5] pass 4 · ovf 104 · +35s model
+[#5] ✓ done · 2m28s (4 passes)
+[#10] pass 1 · ovf 104 · +52s model
+[#11] pass 1 · ovf 0 · +44s model
+[#10] pass 2 · ovf 0 · +5s model
+[#11] ✓ done · 48s (1 passes)
+[#10] ✓ done · 1m14s (2 passes)
+[#12] pass 1 · ovf 369 · +44s model
+[#12] pass 2 · ovf 0 · +6s model
+[#12] ✓ done · 59s (2 passes)
+
+build complete — 12 slides in 4m38s  (work 14m12s · 3.1× parallel)
+  by step:  revise 18% · author 66% · render 13% · finalize 2%
+  peak in-flight: 4 · retries: 1 · reused: 0 · failed: 0
+  tokens (author):  1.0M in (800k cached · 77%) · 83k out
+  slowest:  #5 2m28s (4 passes) · #2 1m47s (2 passes) · #8 1m38s (3 passes)
+⚠ s_aewjm1n7: overflows the 16:9 frame by 104px
+✓ sealed → /home/user/mindsizer/eval/results/2026-10-04-baseline-opus-5-5/dont-scale.deck.html
+✓ deck check passed (12 slides, 0 console errors)
+  cost (API-equiv · est):  ~$15.10 — Opus $15.10
