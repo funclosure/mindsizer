@@ -1,0 +1,47 @@
+{
+  "dont-scale": {
+    "status": "ok",
+    "words": 2458,
+    "from": "examples/dont-scale.txt"
+  },
+  "meadows-leverage": {
+    "status": "unavailable",
+    "reason": "https://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/: HTTP 403 Forbidden for https://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/"
+  },
+  "olah-zoom-in": {
+    "status": "unavailable",
+    "reason": "https://distill.pub/2020/circuits/zoom-in/: HTTP 403 Forbidden for https://distill.pub/2020/circuits/zoom-in/"
+  },
+  "turing-cmi": {
+    "status": "unavailable",
+    "reason": "https://phil415.pbworks.com/f/TuringComputing.pdf: HTTP 403 Forbidden for https://phil415.pbworks.com/f/TuringComputing.pdf | https://www.csee.umbc.edu/courses/471/papers/turing.pdf: HTTP 403 Forbidden for https://www.csee.umbc.edu/courses/471/papers/turing.pdf | https://redirect.cs.umbc.edu/courses/471/papers/turing.pdf: HTTP 403 Forbidden for https://redirect.cs.umbc.edu/courses/471/papers/turing.pdf | https://doi.org/10.1093/mind/LIX.236.433: HTTP 403 Forbidden for https://doi.org/10.1093/mind/LIX.236.433"
+  },
+  "lovelace-note-g": {
+    "status": "unavailable",
+    "reason": "https://www.fourmilab.ch/babbage/sketch.html: HTTP 403 Forbidden for https://www.fourmilab.ch/babbage/sketch.html"
+  },
+  "chalmers-hard-problem": {
+    "status": "unavailable",
+    "reason": "https://consc.net/papers/facing.html: HTTP 403 Forbidden for https://consc.net/papers/facing.html"
+  },
+  "hubinger-reward-seeker": {
+    "status": "unavailable",
+    "reason": "https://alignment.anthropic.com/2026/reward-seeker/: HTTP 403 Forbidden for https://alignment.anthropic.com/2026/reward-seeker/"
+  },
+  "amodei-policy-exponential": {
+    "status": "unavailable",
+    "reason": "https://darioamodei.com/post/policy-on-the-ai-exponential: HTTP 403 Forbidden for https://darioamodei.com/post/policy-on-the-ai-exponential"
+  },
+  "chollet-measure": {
+    "status": "unavailable",
+    "reason": "https://arxiv.org/pdf/1911.01547: HTTP 403 Forbidden for https://arxiv.org/pdf/1911.01547 | https://arxiv.org/abs/1911.01547: HTTP 403 Forbidden for https://arxiv.org/abs/1911.01547"
+  },
+  "clark-predictive-brain": {
+    "status": "unavailable",
+    "reason": "yt-dlp produced no captions (exit 1): WARNING: [youtube] ('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')). Retrying (2/3)... / WARNING: [youtube] ('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')). Retrying (3/3)... / ERROR: [youtube] A1Ghrd7NBtk: Unable to download API page: ('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')) (caused by ProxyError(\"('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden'))\")); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+  },
+  "tao-ai-math": {
+    "status": "unavailable",
+    "reason": "yt-dlp produced no captions (exit 1): WARNING: [youtube] ('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')). Retrying (2/3)... / WARNING: [youtube] ('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')). Retrying (3/3)... / ERROR: [youtube] _sTDSO74D8Q: Unable to download API page: ('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')) (caused by ProxyError(\"('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden'))\")); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+  }
+}

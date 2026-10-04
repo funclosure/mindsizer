@@ -1,0 +1,2 @@
+{"at":"2026-10-04T09:04:07.058Z","step":"start","run":"2026-10-04-baseline-opus-5-5","sources":["dont-scale"],"model":"claude-opus-5-5"}
+{"at":"2026-10-04T09:06:14.795Z","id":"dont-scale","step":"plan","attempt":1,"code":0,"ms":127735}
