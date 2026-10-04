@@ -1,0 +1,118 @@
+{
+  "_note": "Eval source manifest. Source TEXTS are never committed (this repo is public) — fetch them into eval/.cache/ (gitignored). People/videos are drawn from llm-bento.com/people. `genre` and `stress` exist so the set covers different comprehension problems, not ten copies of one.",
+  "sources": [
+    {
+      "id": "dont-scale",
+      "title": "Do Things That Don't Scale",
+      "author": "Paul Graham",
+      "kind": "text",
+      "url": "https://www.paulgraham.com/ds.html",
+      "local": "examples/dont-scale.txt",
+      "genre": "essay / startup advice",
+      "stress": "anchor: the only source with prior decks (examples/dont-scale.deck.html, built on Opus 4.8) — cross-version reference"
+    },
+    {
+      "id": "meadows-leverage",
+      "title": "Leverage Points: Places to Intervene in a System",
+      "author": "Donella Meadows",
+      "person": "donella-meadows",
+      "kind": "text",
+      "url": "https://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/",
+      "genre": "systems thinking",
+      "stress": "a ranked list of 12 mechanisms — tempts a bullet dump; begs for stocks/flows instruments"
+    },
+    {
+      "id": "olah-zoom-in",
+      "title": "Zoom In: An Introduction to Circuits",
+      "author": "Chris Olah et al.",
+      "person": "chris-olah",
+      "kind": "text",
+      "url": "https://distill.pub/2020/circuits/zoom-in/",
+      "genre": "ML interpretability research",
+      "stress": "the source is itself a world-class explorable — a high bar; text-only fetch loses its figures"
+    },
+    {
+      "id": "turing-cmi",
+      "title": "Computing Machinery and Intelligence",
+      "author": "Alan Turing",
+      "person": "alan-turing",
+      "kind": "text",
+      "url": "https://doi.org/10.1093/mind/LIX.236.433",
+      "fetch_hint": "the DOI may be paywalled — find an open full-text copy of the 1950 paper",
+      "genre": "classic paper, argument + objections",
+      "stress": "nine objections-and-replies — structure-heavy, needs a navigable argument map"
+    },
+    {
+      "id": "lovelace-note-g",
+      "title": "Notes on the Analytical Engine (Note G)",
+      "author": "Ada Lovelace",
+      "person": "ada-lovelace",
+      "kind": "text",
+      "url": "https://www.fourmilab.ch/babbage/sketch.html",
+      "fetch_hint": "use Note G (the Bernoulli-number program) plus enough of the surrounding notes for context",
+      "genre": "historical technical / algorithm",
+      "stress": "a step-by-step computation — the natural test for a stepper instrument; 1843 prose"
+    },
+    {
+      "id": "chalmers-hard-problem",
+      "title": "Facing Up to the Problem of Consciousness",
+      "author": "David Chalmers",
+      "person": "david-chalmers",
+      "kind": "text",
+      "url": "https://consc.net/papers/facing.html",
+      "genre": "philosophy of mind",
+      "stress": "purely conceptual, no numbers — tests whether instruments stay epistemic, not decorative"
+    },
+    {
+      "id": "hubinger-reward-seeker",
+      "title": "Training a Misaligned Reward Seeker",
+      "author": "Evan Hubinger et al.",
+      "person": "evan-hubinger",
+      "kind": "text",
+      "url": "https://alignment.anthropic.com/2026/reward-seeker/",
+      "genre": "2026 alignment research post",
+      "stress": "recent, after many models' training data; empirical results with figures"
+    },
+    {
+      "id": "amodei-policy-exponential",
+      "title": "Policy on the AI Exponential",
+      "author": "Dario Amodei",
+      "person": "dario-amodei",
+      "kind": "text",
+      "url": "https://darioamodei.com/post/policy-on-the-ai-exponential",
+      "genre": "policy essay",
+      "stress": "exponential reasoning — compound-growth instruments; persuasion vs comprehension"
+    },
+    {
+      "id": "chollet-measure",
+      "title": "On the Measure of Intelligence",
+      "author": "François Chollet",
+      "person": "francois-chollet",
+      "kind": "text",
+      "url": "https://arxiv.org/abs/1911.01547",
+      "fetch_hint": "use the arXiv HTML or PDF full text",
+      "genre": "long technical paper (~60 pages)",
+      "stress": "LONG source — compression under a slide budget; formal definitions"
+    },
+    {
+      "id": "clark-predictive-brain",
+      "title": "How the Brain Shapes Reality — with Andy Clark",
+      "author": "Andy Clark (Royal Institution)",
+      "person": "andy-clark",
+      "kind": "video",
+      "url": "https://www.youtube.com/watch?v=A1Ghrd7NBtk",
+      "genre": "talk / interview transcript",
+      "stress": "spoken, digressive, no headings — tests digest on unstructured speech"
+    },
+    {
+      "id": "tao-ai-math",
+      "title": "The Potential for AI in Science and Mathematics",
+      "author": "Terence Tao",
+      "person": "terence-tao",
+      "kind": "video",
+      "url": "https://www.youtube.com/watch?v=_sTDSO74D8Q",
+      "genre": "lecture transcript",
+      "stress": "a mathematician speaking to a general audience; examples carry the argument"
+    }
+  ]
+}

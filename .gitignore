@@ -70,3 +70,7 @@ examples/out/
 /*.txt
 /*.bak.html
 /MINDSIZER_HARNESS_FINDINGS*.md
+
+# Eval: fetched source texts/transcripts (repo is public — never commit) + scratch build output
+eval/.cache/
+eval/out/
