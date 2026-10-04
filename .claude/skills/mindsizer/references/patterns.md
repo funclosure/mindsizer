@@ -1,5 +1,18 @@
 # Interaction patterns — pick the verb that IS the mechanism
 
+Prefer the light ones (switch off, pick, flip, reveal): one click, nothing to set up, and the
+reader sees *why*. Reach for a simulator (train) or a dense chart only when a quantity is the
+point. Every pattern needs one line next to the control saying what to watch.
+
+## pick: choose a case, watch what changes
+**When:** the same input means different things depending on the case (what is relevant
+depends on your plan; which rule applies depends on who you're talking to).
+**Needs:** a row of chips or a segmented control for 3–6 cases, and one output that re-sorts
+or re-highlights. In the reference, the implications of "it's going to be windy tomorrow" light
+up differently for sailing, skydiving or a picnic. Include one case where nothing applies,
+because the contrast teaches. The facts stay fixed; only their relevance moves.
+**Trap:** cases that differ only in wording. Each pick must visibly change the output.
+
 Each pattern lists when to use it, the minimum it needs, and the trap to avoid. The live
 versions are in `examples/channel.html` (section id in brackets).
 
@@ -9,7 +22,10 @@ versions are in `examples/channel.html` (section id in brackets).
 Show the state as bars, and history as a line chart. Start pre-run (e.g. 20 steps in) so the
 first view already shows the effect.
 **Trap:** fake precision. Label the model "illustrative" and keep its rule simple enough to
-state in one sentence. [#score]
+state in one sentence. Also, axes that rescale as the reader moves the control. Fix the axes at
+the control's full range (use a log axis for compounding), so the change the control exists to
+show is the change the eye sees. A toy model may show the shape of a claim from the source; it
+must not produce a new one. [#score]
 
 ```js
 // multiplicative-weights update: whatever beats the average grows
@@ -29,7 +45,10 @@ IntersectionObserver, which does the same thing; prefer the helper.
 **When:** the same thing behaves differently under two conditions (reward visible or not,
 before/after, with/without).
 **Needs:** a segmented control, and one figure whose content swaps. Keep everything else fixed
-so the difference is the only change. [#reproduction]
+so the difference is the only change. Draw the *cause* of the difference, not only the
+result: if one side has a loop, a need or a missing link, that is what appears or disappears.
+**Trap:** recolouring. If the only change is which items turn orange, the reader learns *that* it
+differs, which the prose already said, not *why*. [#reproduction]
 
 ## reveal: belief vs reality
 **When:** people (or agents) act on a wrong model of something.
@@ -38,9 +57,11 @@ usually small. The contrast in size IS the point. [#checker]
 
 ## slide: a position on a spectrum
 **When:** interpretations, trade-offs or settings sit along one axis.
-**Needs:** a range input with labelled ends, an output that updates (quote, value, picture),
+**Needs:** a range input with labelled ends (label every stop when there are 6 or fewer), an output that updates (quote, value, picture),
 and optionally chips that light up for what that position relies on. Say whose placement it
-is ("our reading"). [#readings]
+is ("our reading").
+**Trap:** dead range. Every stop must visibly change the output; if two look the same, change
+the scale or drop a stop. [#readings]
 
 ## try: the reader makes an instance
 **When:** the concept is a rule that turns input into output (encoding, a protocol, a parser,

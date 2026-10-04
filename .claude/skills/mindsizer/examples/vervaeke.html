@@ -1,0 +1,557 @@
+<title>Why Anything Matters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..600;1,8..60,400..500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* mindsizer page template. Reading column 640px, figures 980px, optional scrolly with a sticky figure.
+   Decide what --accent MEANS for this topic and use it only for that. */
+:root {
+  --bg: #f7f7f5; --surface: #eeeeeb; --fg: #18181b; --muted: #5d5d66; --faint: #8f8f99; --line: #dfdfe4;
+  --accent: #d4441c; --accent-text: #b2370f; --accent-soft: rgba(212, 68, 28, 0.12);
+  --display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121215; --surface: #1b1b20; --fg: #ececef; --muted: #a3a3ad; --faint: #6f6f7a; --line: #2b2b32;
+  --accent: #ff6a3c; --accent-text: #ff8a63; --accent-soft: rgba(255, 106, 60, 0.16); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #121215; --surface: #1b1b20; --fg: #ececef; --muted: #a3a3ad; --faint: #6f6f7a; --line: #2b2b32;
+  --accent: #ff6a3c; --accent-text: #ff8a63; --accent-soft: rgba(255, 106, 60, 0.16); color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 19px/1.6 var(--body); padding-inline: 20px; padding-block: 0 96px; -webkit-font-smoothing: antialiased; margin: 0; }
+a { color: var(--accent-text); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.col { max-width: 640px; margin-inline: auto; }
+.wide { max-width: 980px; margin-inline: auto; }
+section { padding-block: 72px 24px; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(30px, 4.4vw, 46px); font-weight: 750; line-height: 1.02; letter-spacing: -0.03em; }
+h3 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+p { margin: 0; }
+.prose { display: grid; gap: 18px; }
+.path { font: 500 13px/1.4 var(--mono); color: var(--accent-text); }
+.note { font: 14px/1.5 var(--display); color: var(--faint); }
+.takeaway { font: 700 clamp(22px, 2.8vw, 28px)/1.2 var(--display); letter-spacing: -0.02em; }
+.figure { display: grid; gap: 18px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+/* hero */
+.hero { padding-block: 64px 24px; display: grid; gap: 28px; }
+.kicker { font: 500 14px/1.4 var(--display); color: var(--muted); }
+.hero h1 { font-size: clamp(48px, 9vw, 100px); font-weight: 800; line-height: 0.92; letter-spacing: -0.04em; }
+.hero .dek { font-size: clamp(20px, 2.4vw, 24px); line-height: 1.45; color: var(--muted); max-width: 34ch; }
+
+/* controls */
+button, .seg label { font: 500 15px/1 var(--display); color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; cursor: pointer; }
+button:hover, .seg label:hover { border-color: var(--fg); }
+button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+button:disabled { opacity: 0.4; cursor: default; border-color: var(--line); }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 22px; padding: 3px; gap: 2px; max-width: 100%; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label { border: 0; padding: 8px 14px; }
+.seg input:checked + label { background: var(--fg); color: var(--bg); }
+.seg input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type=text] { flex: 1 1 260px; min-width: 0; font: 16px var(--display); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 12px 18px; }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+.switch { display: flex; gap: 14px; align-items: center; font: 17px/1.35 var(--display); cursor: pointer; }
+.switch input { appearance: none; width: 46px; height: 26px; border-radius: 999px; background: var(--line); position: relative; flex: none; cursor: pointer; transition: background 0.25s; }
+.switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--bg); transition: transform 0.25s; }
+.switch input:checked { background: var(--accent); }
+.switch input:checked::after { transform: translateX(20px); }
+
+/* data marks */
+.bars { display: grid; gap: 16px; }
+.bar { display: grid; grid-template-columns: minmax(130px, 220px) minmax(0, 1fr) 56px; gap: 16px; align-items: center; }
+.bar .lab { font: 600 17px/1.2 var(--display); }
+.bar .lab small { display: block; font-weight: 400; font-size: 13px; color: var(--faint); margin-top: 3px; }
+.bar .track { height: 26px; background: var(--surface); border-radius: 4px; overflow: hidden; }
+.bar .fill { height: 100%; background: var(--faint); border-radius: 4px; transition: width 0.35s ease, background 0.35s; }
+.bar.on .fill { background: var(--accent); }
+.bar .pct { font: 600 18px/1 var(--display); text-align: right; font-variant-numeric: tabular-nums; }
+.chart { width: 100%; height: auto; display: block; }
+.chart .axis { stroke: var(--line); stroke-width: 1; fill: none; }
+.chart text { fill: var(--faint); font: 12px var(--display); }
+.chart .ln { fill: none; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; }
+.stat b { display: block; font: 800 clamp(34px, 5vw, 48px)/1 var(--display); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.stat span { font: 14px/1.4 var(--display); color: var(--muted); }
+.listing { background: var(--surface); border-radius: 14px; padding: 22px 24px; font: 15px/1.9 var(--mono); overflow-x: auto; }
+.chip { font: 14px/1.3 var(--display); padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--faint); transition: all 0.3s; }
+.chip.lit { border-color: var(--accent); color: var(--fg); background: var(--accent-soft); }
+blockquote { margin: 0; font: italic 500 clamp(22px, 3vw, 30px)/1.3 var(--body); }
+/* an "object" box: only for things that ARE objects in the explanation (a grader, a store, a pillar) */
+.object { border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 6px; }
+.object.on { border-color: var(--accent); background: var(--accent-soft); }
+.objects { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+/* summary table for the closing section */
+.tablewrap { overflow-x: auto; }
+table.summary { border-collapse: collapse; width: 100%; font: 15px/1.4 var(--display); }
+table.summary th, table.summary td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.summary th { color: var(--faint); font-weight: 500; }
+
+/* scrolly */
+.scrolly { display: grid; grid-template-columns: minmax(0, 1fr); }
+.stick { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; background: var(--bg); padding-block: 14px; border-bottom: 1px solid var(--line); }
+.beat { min-height: 62vh; display: flex; align-items: center; padding-block: 24px; }
+.beat .card { display: grid; gap: 8px; max-width: 460px; opacity: 0.38; transition: opacity 0.3s; }
+.beat.active .card { opacity: 1; }
+.beat .when { font: 600 14px var(--mono); color: var(--accent-text); }
+.beat p { color: var(--muted); }
+@media (min-width: 980px) {
+  .scrolly { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 56px; }
+  .stick { order: 2; top: calc(env(safe-area-inset-top, 0px) + 10vh); align-self: start; border-bottom: 0; padding-block: 0; }
+  .beats { order: 1; }
+  .beat { min-height: 80vh; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+/* page-specific. Accent = what matters / what is relevant to the agent, everywhere on the page. */
+.argmap { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font: 600 15px/1.3 var(--display); }
+.argmap a { text-decoration: none; color: var(--fg); padding: 8px 12px; border-radius: 8px; background: var(--surface); }
+.argmap a:hover { background: var(--accent-soft); }
+.argmap .ar { color: var(--faint); }
+.object h3 { font-size: 21px; }
+.object p { font: 15px/1.45 var(--display); color: var(--muted); }
+.object .who { font: 13px/1.3 var(--display); color: var(--faint); }
+.switches { display: grid; gap: 12px; }
+.verdict { font: 700 21px/1.3 var(--display); min-height: 2.6em; }
+.verdict small { display: block; font: 400 16px/1.45 var(--display); color: var(--muted); margin-top: 6px; }
+.svgfig { width: 100%; height: auto; display: block; }
+.svgfig text { font: 600 14px var(--display); fill: var(--muted); }
+.svgfig .lbl-strong { fill: var(--fg); }
+.svgfig .t { transition: opacity 0.4s, transform 0.5s ease; }
+.svgfig circle, .svgfig rect, .svgfig path, .svgfig line { transition: opacity 0.4s, stroke 0.4s, fill 0.4s, transform 0.5s ease; }
+.items { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+.item { border-top: 3px solid var(--line); padding-top: 8px; font: 15px/1.35 var(--display); color: var(--muted); transition: border-color 0.3s, color 0.3s; }
+.item b { display: block; color: var(--fg); font-weight: 600; }
+.item.lit { border-color: var(--accent); color: var(--fg); }
+.item.lit span { color: var(--accent-text); }
+.big { font: 800 clamp(34px, 6vw, 56px)/1 var(--display); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.big sup { font-size: 0.5em; vertical-align: 0.9em; }
+.ends { display: flex; justify-content: space-between; font: 14px var(--display); color: var(--muted); gap: 12px; }
+.logscale { position: relative; height: 34px; background: var(--surface); border-radius: 4px; overflow: hidden; }
+.logscale .fill { position: absolute; inset: 0 auto 0 0; background: var(--accent); border-radius: 4px; transition: width 0.25s; }
+.logscale .mark { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--fg); }
+.marks { position: relative; height: 40px; font: 13px/1.25 var(--display); color: var(--muted); }
+.marks span { position: absolute; transform: translateX(-50%); white-space: nowrap; text-align: center; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.objects.four { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.objects .k { font: 600 13px/1.3 var(--display); color: var(--accent-text); }
+.readout { display: grid; gap: 4px; }
+.readout .st { font: 800 24px/1.1 var(--display); letter-spacing: -0.02em; }
+.readout .cap { font: 15px/1.45 var(--display); color: var(--muted); min-height: 2.9em; }
+.beat h3 { font-size: 26px; }
+.coda { font: italic 500 clamp(22px, 3vw, 28px)/1.4 var(--body); }
+.sources { display: grid; gap: 6px; font: 15px/1.5 var(--display); color: var(--muted); }
+.sources a { color: var(--muted); }
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; text-align: center; }
+.trio .object { justify-items: center; }
+.trio .arrowfig { font: 800 30px/1 var(--display); }
+@media (max-width: 560px) { .trio { grid-template-columns: 1fr; } }
+</style>
+
+<header class="hero col">
+  <div class="kicker">An explorable reading · John Vervaeke, “The Metaphysics of Mattering” (2024 talk)</div>
+  <h1>Why anything matters to you</h1>
+  <p class="dek">Meaning in life comes down to mattering: being bound to something real that you help shape. Vervaeke argues this binding is also the core of intelligence, and since it can't be reduced to logic or rules, relation itself, not things, may be what is most basic.</p>
+  <nav class="argmap" aria-label="The argument in five steps">
+    <a href="#dimensions">Meaning in life</a><span class="ar">→</span>
+    <a href="#wolf">Mattering</a><span class="ar">→</span>
+    <a href="#explosion">Relevance realization</a><span class="ar">→</span>
+    <a href="#relation">Relation comes first</a><span class="ar">→</span>
+    <a href="#sacred">The sacred</a>
+  </nav>
+  <p class="note">The argument of the talk in five steps. Click one to jump there. Orange on this page always marks the same thing: what matters to someone, or what is relevant to them.</p>
+</header>
+
+<!-- 1. dimensions: static -->
+<section class="col" id="dimensions">
+  <span class="path">meaning-in-life/</span>
+  <h2>Purpose is only one part of a meaningful life, and not the part that counts most</h2>
+  <div class="prose">
+    <p>Psychologists now study <em>meaning in life</em>, not the meaning <em>of</em> life. The question isn't a cosmic proposal. It's what keeps you going when you fail, when things feel futile, when people let you down and you let yourself down.</p>
+    <p>Martela and Steger (2016) drew the research together into three dimensions. Vervaeke notes that our culture likes to shrink meaning down to the first one, purpose. Costin and Vignoles (2020) then gave good evidence for a fourth, <strong>mattering</strong>, and found that it matters more than purpose.</p>
+  </div>
+</section>
+<div class="wide figure">
+  <div class="objects four">
+    <div class="object"><span class="k">Martela &amp; Steger, 2016</span><h3>Purpose</h3><p>You have an overarching goal you're working towards.</p></div>
+    <div class="object"><span class="k">Martela &amp; Steger, 2016</span><h3>Coherence</h3><p>Your world isn't absurd. It makes sense and hangs together.</p></div>
+    <div class="object"><span class="k">Martela &amp; Steger, 2016</span><h3>Significance</h3><p>A mix of two things: value, and realness.</p></div>
+    <div class="object on"><span class="k">Costin &amp; Vignoles, 2020</span><h3>Mattering</h3><p>The fourth dimension. In their experiments it mattered more than purpose.</p></div>
+  </div>
+  <p class="note">A later review by Martela and Steger replicated the finding, and showed significance and mattering are two sides of one shared phenomenon. That shared phenomenon is what the rest of the talk is about.</p>
+</div>
+
+<!-- 2. wolf: switch off -->
+<section class="col" id="wolf">
+  <span class="path">meaning-in-life/mattering/</span>
+  <h2>Mattering means being connected to something real that you make a difference to</h2>
+  <div class="prose">
+    <p>Philosopher Susan Wolf, in <em>Meaning in Life and Why It Matters</em>, argues meaning can't be reduced to mastering your environment, or even to morality: she gives examples of people living admirable lives who are very lonely. People say they want to be “connected to something larger than themselves”. But if you're chained to an ocean liner, that isn't it. It's a metaphor, and the work is to unpack it.</p>
+    <p>Vervaeke turns her answer into three diagnostic questions. All three answered, you have meaning in life. One missing, it's reduced. All missing, you're in trouble. Switch them off one at a time.</p>
+  </div>
+</section>
+<div class="wide figure" id="wolfFig">
+  <div class="switches">
+    <label class="switch"><input type="checkbox" id="qA" checked> There is something you want to exist even if you don't</label>
+    <label class="switch"><input type="checkbox" id="qB" checked> It is really real</label>
+    <label class="switch"><input type="checkbox" id="qC" checked> You make a difference to it</label>
+  </div>
+  <svg class="svgfig" id="wolfSvg" viewBox="0 0 900 230" role="img" aria-label="You and the thing larger than you">
+    <line id="wLink" x1="190" y1="115" x2="560" y2="115" stroke="var(--accent)" stroke-width="4"></line>
+    <path id="wArrow" d="M545 103 L565 115 L545 127" fill="none" stroke="var(--accent)" stroke-width="4"></path>
+    <circle cx="140" cy="115" r="44" fill="var(--bg)" stroke="var(--fg)" stroke-width="2"></circle>
+    <text x="140" y="120" text-anchor="middle" class="lbl-strong">you</text>
+    <circle id="wBig" cx="690" cy="115" r="98" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"></circle>
+    <text id="wBigT" x="690" y="112" text-anchor="middle" class="lbl-strong">something larger</text>
+    <text id="wBigS" x="690" y="134" text-anchor="middle">that will outlast you</text>
+  </svg>
+  <p class="verdict" id="wVerdict"></p>
+  <p class="note">Three questions and the 3 / reduced / trouble rule are from the talk. The example in each verdict is our illustration.</p>
+</div>
+<section class="col" style="padding-top:28px">
+  <div class="prose">
+    <p>This converges with independent research on belonging by Kelly-Ann Allen and others: without a sense of belonging you're in trouble psychologically, physiologically and socially. Belonging, Vervaeke says, is like <em>niche construction</em> in biology. The organism is shaped by its environment, but it also shapes that environment. They take part in one joint process.</p>
+    <p>He gives this connectedness one word, chosen for its religious overtones: <strong>religio</strong>, “binding”. Knowing, on this picture, is not a copy of the world in your head. It's contact: mind and world shaping each other.</p>
+  </div>
+  <p class="takeaway">Mattering isn't about you. The first question is what you want to exist even if you don't.</p>
+</section>
+
+<!-- 3. autopoiesis: flip -->
+<section class="col" id="autopoiesis">
+  <span class="path">mattering/autopoiesis/</span>
+  <h2>Things can only matter to something that keeps making itself</h2>
+  <div class="prose">
+    <p>Why does anything matter to anyone? Vervaeke borrows from his colleague Evan Thompson: living things are <em>autopoietic</em>, self-making. A tornado is self-organizing too, but it will wander into conditions that destroy it. A paramecium seeks out the conditions that produce, protect and promote its own existence. So it has real needs, and things literally matter to it.</p>
+    <p>None of that, he says, is in the ontology of standard physics. Flip between the two.</p>
+  </div>
+</section>
+<div class="wide figure" id="autoFig">
+  <div class="row">
+    <div class="seg" role="radiogroup" aria-label="Which self-organizing thing">
+      <input type="radio" name="auto" id="autoT" value="t"><label for="autoT">A tornado</label>
+      <input type="radio" name="auto" id="autoP" value="p" checked><label for="autoP">A paramecium</label>
+    </div>
+  </div>
+  <svg class="svgfig" viewBox="0 0 900 260" role="img" aria-label="Which things matter to it">
+    <g id="aItems"></g>
+    <text id="aFate" class="t" x="560" y="250" text-anchor="middle">heading for calm, dry air, which will end it →</text>
+    <g id="aSelf" class="t"><circle cx="0" cy="0" r="34" fill="var(--bg)" stroke="var(--fg)" stroke-width="2"></circle><text id="aSelfT" x="0" y="5" text-anchor="middle" class="lbl-strong">paramecium</text></g>
+  </svg>
+  <div class="items" id="aList"></div>
+  <p class="verdict" id="aVerdict"></p>
+  <p class="note">Illustrative. The tornado/paramecium contrast and sucrose as relevant are from the talk; the other items are ours.</p>
+</div>
+<section class="col" style="padding-top:28px">
+  <div class="prose">
+    <p>You are self-making at every level: your body, your mind (which grows out of the information you take in), your self, and as a mammal and primate, your culture. Because you're always taking care of yourself, you care about <em>this</em> information rather than <em>that</em>. Neuroscientist Read Montague, Vervaeke says, called this the basic difference between you and computers: they don't care about the information they process. You do, because your time and resources are precious.</p>
+    <p>And because we're social animals, there's a second arrow. Not only “what matters to me?” but “how do I matter to you?” How can I help you become a person? Vervaeke calls this the agapic arrow.</p>
+  </div>
+</section>
+
+<!-- 4. explosion: slide -->
+<section class="col" id="explosion">
+  <span class="path">mattering/relevance-realization/</span>
+  <h2>Being intelligent means finding what's relevant in a space too big to search</h2>
+  <div class="prose">
+    <p>Spearman found long ago that how you do in maths predicts, well above chance, how you do in sports and in art. That shared factor, general intelligence, is the single best predictor of most of your outcomes. Vervaeke's first premise: what makes you a <em>general</em> problem solver is solving <strong>meta-problems</strong>, the problems you have to solve while solving any specific problem.</p>
+    <p>The deepest one is <strong>relevance realization</strong>: finding the information that matters to you. The trouble is size. Every combination of things you could attend to, remember, consider or do is a possibility, and possibilities multiply. Slide how many things you could notice in a room.</p>
+  </div>
+</section>
+<div class="wide figure" id="expFig">
+  <div class="stats">
+    <div class="stat"><b id="eN">100</b><span>things you could notice</span></div>
+    <div class="stat"><b class="big" id="eC">10<sup>30</sup></b><span>possible combinations to weigh (2<sup>n</sup>)</span></div>
+  </div>
+  <div style="display:grid; gap:8px">
+    <div class="logscale" aria-hidden="true"><div class="fill" id="eFill"></div><div class="mark" id="eMark80"></div><div class="mark" id="eMark138"></div></div>
+    <div class="marks" id="eMarks"><span id="eL138">2<sup>138</sup>: Cherniak's 138 propositions</span><span id="eL80">10<sup>80</sup>: atoms in the universe</span></div>
+  </div>
+  <input type="range" id="eRange" min="10" max="400" value="100" aria-label="Number of things you could notice">
+  <div class="ends"><span>10 things</span><span>400 things (this room has far more)</span></div>
+  <p class="verdict" id="eVerdict"></p>
+  <p class="note">Illustrative arithmetic: counting only yes/no for each item. The 10<sup>80</sup> atoms figure and the checking speed are conventional estimates, not from the talk. The talk says the possibilities greatly exceed the number of atomic particles in the universe.</p>
+</div>
+<section class="col" style="padding-top:28px">
+  <div class="prose">
+    <p>And you're doing it right now, without an algorithm. To be <em>certain</em> what's relevant, you'd have to check all, or most, of the information first. Try to be comprehensively logical like Mr Spock or Data, he says, and you'd commit cognitive suicide trying to get out of bed. Picking things at random doesn't work either.</p>
+    <blockquote>“Relevance realization is neither algorithmic nor arbitrary.”</blockquote>
+    <p>This is also his charge against large language models. They don't do relevance realization. They live off ours: we organized their training data, we structure the internet by our judgments of relevance, and we provide the feedback on what's appropriate. They are parasites on us, he says, which doesn't make them harmless.</p>
+  </div>
+</section>
+
+<!-- 5. regress: try + cards -->
+<section class="col" id="regress">
+  <span class="path">relevance-realization/no-shortcut/</span>
+  <h2>Every mechanism you might propose for it already needs it</h2>
+  <div class="prose">
+    <p>Vervaeke's test: if a process you propose <em>requires</em> relevance realization, it can't be what ultimately <em>generates</em> it. That would be circular. Then he runs the usual candidates through the test.</p>
+    <p>Start with inference. Take the sentence “it's going to be windy tomorrow”. Its implications are endless. An inference is a <em>selection</em> from them, and which ones you select depends on your plans. Pick tomorrow's plan.</p>
+  </div>
+</section>
+<div class="wide figure" id="windFig">
+  <div class="row">
+    <div class="seg" role="radiogroup" aria-label="Tomorrow's plan" id="windSeg"></div>
+  </div>
+  <div class="chips" id="windChips"></div>
+  <p class="verdict" id="windVerdict"></p>
+  <p class="note">The five plans are from the talk. The implications listed are illustrative, and are 12 of indefinitely many.</p>
+</div>
+<section class="col" style="padding-top:36px">
+  <p>The same circle shows up in each of the other candidates.</p>
+</section>
+<div class="wide figure">
+  <div class="objects">
+    <div class="object"><span class="k">Representations</span><p>A pencil is a writing tool, a stabbing or throwing weapon, the letter I in a mural, something made by humans, post-1960s technology… It has endlessly many true properties. Representing it means picking the aspect that matters (Searle: all representation is aspectual).</p></div>
+    <div class="object"><span class="k">Rules</span><p>“Be kind.” Kind to a colleague the way you're kind to your partner? To your son the way you're kind to a stranger? Rules for applying rules regress forever. It must end in a skill of judgment (Harold Brown, after Wittgenstein).</p></div>
+    <div class="object"><span class="k">Prediction</span><p>Going from sample to population risks two errors: missing what's there, and taking a fluke as general. Lowering one raises the other. Which to accept depends on how much a miss or a mistake matters in your context.</p></div>
+    <div class="object"><span class="k">Formalization</span><p>“24 × 3” is well-defined: you already know what's relevant, and a picture of a platypus isn't an answer. “Go on a successful first date” is ill-defined. Most real problems are, and turning a problem into a formal system is itself one.</p></div>
+  </div>
+</div>
+<div class="col" style="padding-top:28px"><p class="takeaway">Logic, rules and representation all run on relevance realization. None of them can ground it.</p></div>
+<section class="col" style="padding-top:20px">
+  <p class="note">Vervaeke frames this against the left hemisphere in Iain McGilchrist's sense, the conference's honoree: it doesn't lack relevance realization, but it can't ground itself. A paper with Johannes Jaeger, Anna Riedl, Alex Djedovic and Denis Walsh makes the formal case: you can't formalize the process of formalization.</p>
+</section>
+
+<!-- 6. relation: static trio -->
+<section class="col" id="relation">
+  <span class="path">relevance-realization/transjective/</span>
+  <h2>Relevance is neither in you nor in the world. It's a relation between them.</h2>
+  <div class="prose">
+    <p>Is it relevant? “It depends.” So relevance isn't simply objective. But it isn't arbitrary either, because you can be wrong: you thought she was angry, and she was afraid. Vervaeke coins a word for this: <strong>transjective</strong>, neither thrown under (subject) nor thrown against (object), but thrown between.</p>
+    <p>Meaning in life, he proposes, <em>is</em> relevance realization. Both are religio, a binding. If you weren't solving that meta-problem you wouldn't be a cognitive agent at all.</p>
+  </div>
+</section>
+<div class="wide figure">
+  <div class="trio">
+    <div class="object"><span class="k">sub-ject</span><h3>Thrown under</h3><p>Only in you: a feeling or projection.</p></div>
+    <div class="object on"><span class="k">trans-jective</span><h3>Thrown between</h3><p>A real relation, and you can get it wrong.</p></div>
+    <div class="object"><span class="k">ob-ject</span><h3>Thrown against</h3><p>Only out there, whoever is looking.</p></div>
+  </div>
+  <p class="note">Catherine Pickstock (<em>Aspects of Truth</em>) argues modernity's divisions all broke down the same way: analytic/synthetic (Quine), fact/value (Putnam), theory/data. Is relevance a fact or a value? Both, and neither.</p>
+</div>
+<section class="col" style="padding-top:28px">
+  <div class="prose">
+    <p>If the way you think and the way the world is organized take part in one relation, then <strong>relationality is primordial</strong>. Information and intelligibility are relational notions, and we judge what's real by intelligible information.</p>
+    <p>That clashes with the metaphysics we inherited. James Filler (<em>Neoplatonism, Heidegger, and the History of Being</em>) blames Aristotle: what's ultimately real are substances, individual things, with properties belonging to them the way a predicate belongs to the subject of a sentence. But you can't get relations out of substances. A relation isn't a property of one substance, or it could have it alone. It isn't an action of one, or it could do it alone. Scroll to see where Vervaeke says the wrong turn leads.</p>
+  </div>
+</section>
+
+<!-- 7. scrolly: Aristotle to materialism -->
+<div class="wide scrolly" id="history">
+  <div class="stick">
+    <div class="figure">
+      <div class="readout"><span class="st" id="hSt">Aristotle</span><span class="cap" id="hCap"></span></div>
+      <svg class="svgfig" id="hSvg" viewBox="0 0 560 330" role="img" aria-label="Mind and world through the history of metaphysics">
+        <line id="hWall" class="t" x1="265" y1="20" x2="265" y2="310" stroke="var(--fg)" stroke-width="3" stroke-dasharray="2 8"></line>
+        <g id="hLinks">
+          <line x1="110" y1="165" x2="420" y2="80" stroke-width="2.5"></line>
+          <line x1="110" y1="165" x2="480" y2="175" stroke-width="2.5"></line>
+          <line x1="110" y1="165" x2="420" y2="270" stroke-width="2.5"></line>
+        </g>
+        <g id="hRels" class="t">
+          <line x1="420" y1="80" x2="480" y2="175" stroke="var(--accent)" stroke-width="2.5"></line>
+          <line x1="480" y1="175" x2="420" y2="270" stroke="var(--accent)" stroke-width="2.5"></line>
+          <line x1="420" y1="80" x2="420" y2="270" stroke="var(--accent)" stroke-width="2.5"></line>
+        </g>
+        <g id="hThings">
+          <g><circle cx="420" cy="80" r="26" fill="var(--bg)" stroke="var(--fg)" stroke-width="2"></circle><text x="420" y="40" text-anchor="middle">this apple</text><text class="hProp" x="462" y="85">red</text></g>
+          <g><circle cx="480" cy="175" r="26" fill="var(--bg)" stroke="var(--fg)" stroke-width="2"></circle><text class="hProp" x="480" y="225" text-anchor="middle">round</text></g>
+          <g><circle cx="420" cy="270" r="26" fill="var(--bg)" stroke="var(--fg)" stroke-width="2"></circle><text x="420" y="320" text-anchor="middle">this stone</text><text class="hProp" x="462" y="275">heavy</text></g>
+        </g>
+        <g id="hUni" class="t"><text x="330" y="150" text-anchor="middle" class="lbl-strong">colour</text><text x="330" y="200" text-anchor="middle" class="lbl-strong">shape</text></g>
+        <text id="hQ" class="t" x="280" y="128" text-anchor="middle" style="font-size:44px; fill:var(--accent-text)">?</text>
+        <g id="hMind" class="t">
+          <circle id="hMindC" cx="110" cy="165" r="56" fill="var(--bg)" stroke="var(--fg)" stroke-width="2"></circle>
+          <g id="hCopies" class="t"><circle cx="85" cy="175" r="9" fill="none" stroke="var(--faint)" stroke-dasharray="3 3"></circle><circle cx="110" cy="175" r="9" fill="none" stroke="var(--faint)" stroke-dasharray="3 3"></circle><circle cx="135" cy="175" r="9" fill="none" stroke="var(--faint)" stroke-dasharray="3 3"></circle></g>
+          <text id="hMindT" x="110" y="245" text-anchor="middle" class="lbl-strong">mind</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="beats">
+    <div class="beat" data-i="0"><div class="card"><span class="when">Aristotle</span><h3>Things first</h3><p>The most real things are individual substances. Properties belong to them. Knowing is conforming: mind and world share form, so they meet.</p></div></div>
+    <div class="beat" data-i="1"><div class="card"><span class="when">Nishida's objection</span><h3>A contradiction</h3><p>All knowledge is predication. “Red is a colour” puts something into a category. But how can categorical knowledge grasp a thing that is, by definition, an individual?</p></div></div>
+    <div class="beat" data-i="2"><div class="card"><span class="when">Medieval scholasticism</span><h3>Nominalism</h3><p>Thinkers kept Aristotle's ontology and threw out his epistemology. There are no universals out there. They're only in the mind.</p></div></div>
+    <div class="beat" data-i="3"><div class="card"><span class="when">Then</span><h3>Representation and dualism</h3><p>If the real patterns are only in the mind, mind and world no longer conform. The mind must hold representations of an outside it can't touch, and becomes a different substance.</p></div></div>
+    <div class="beat" data-i="4"><div class="card"><span class="when">Then</span><h3>Materialism</h3><p>Dualism hits its own contradictions and collapses. All that exists are individual material objects. The mind becomes one more of them, and nothing matters to anything.</p></div></div>
+    <div class="beat" data-i="5"><div class="card"><span class="when">Vervaeke's proposal</span><h3>Relation first</h3><p>Invert it, with the Neoplatonists: the relata emerge from the relationality. Mind and world can conform again, bound in religio.</p></div></div>
+  </div>
+</div>
+
+<!-- 8. close -->
+<section class="col" id="sacred">
+  <span class="path">relation/the-sacred/</span>
+  <h2>The sacred is what's most real, most good, and most transforming, and it's a relation</h2>
+  <div class="prose">
+    <p>Vervaeke closes with the Canadian philosopher J. L. Schellenberg (an atheist, he notes) and his “triple transcendent”. For something to be sacred it has to be ultimately real, ultimately good, and ultimately transforming. The relational ground, he argues, is all three, and it loops back to where the talk began.</p>
+  </div>
+  <div class="tablewrap"><table class="summary">
+    <thead><tr><th>Wolf's question (meaning in life)</th><th>The triple transcendent</th><th>Why the relational ground qualifies</th></tr></thead>
+    <tbody>
+      <tr><td>Is it really real?</td><td>Ultimately real</td><td>We judge realness by intelligible information, and that is relational.</td></tr>
+      <tr><td>Do you want it to exist even if you don't?</td><td>Ultimately good</td><td>It makes every judgment of truth, goodness and beauty possible.</td></tr>
+      <tr><td>Do you make a difference to it?</td><td>Ultimately transforming</td><td>It exceeds your grasp, so conforming to it changes you. It saves you.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">The talk links the end back to “the meaning in life things” explicitly. Lining up each row is our reading.</p>
+  <p class="coda">That's the sacred. And that's the metaphysics of mattering.</p>
+</section>
+
+<footer class="col" style="padding-top:72px; display:grid; gap:14px;">
+  <span class="path">sources/</span>
+  <div class="sources">
+    <span>John Vervaeke, <a href="https://www.youtube.com/watch?v=AxLi96DkUsc">“The Metaphysics of Mattering”</a>, John Vervaeke's Lectern, 2024. Talk at a conference honouring Iain McGilchrist (California Institute of Integral Studies).</span>
+    <span>Works he cites: Martela &amp; Steger (2016); Costin &amp; Vignoles (2020); Susan Wolf, <em>Meaning in Life and Why It Matters</em>; Kelly-Ann Allen on belonging; Evan Thompson on autopoiesis; John Searle, <em>The Rediscovery of the Mind</em> (1992); Christopher Cherniak and Jerry Fodor on implication; Harold Brown, <em>Rationality</em>; Jaeger, Riedl, Djedovic, Walsh &amp; Vervaeke on naturalizing relevance realization; Catherine Pickstock, <em>Aspects of Truth</em>; James Filler, <em>Neoplatonism, Heidegger, and the History of Being</em>; Kitarō Nishida; J. L. Schellenberg.</span>
+  </div>
+  <span class="note">Built from the talk's auto-generated captions; names misheard by the captions were corrected. The verdict examples, the paramecium's surroundings, the combination arithmetic, the list of implications and the history diagram are illustrative. Arguments are Vervaeke's as given in the talk, compressed, not checked against the works he cites.</span>
+</footer>
+
+<script>
+(function () {
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function $(id) { return document.getElementById(id); }
+
+  /* scrolly(setState): calls setState(i) as beat i crosses the middle of the viewport; marks it .active */
+  function scrolly(setState) {
+    var beats = document.querySelectorAll('.beat');
+    function activate(i) { beats.forEach(function (b) { b.classList.toggle('active', Number(b.getAttribute('data-i')) === i); }); setState(i); }
+    activate(0);
+    if (!('IntersectionObserver' in window)) { beats.forEach(function (b) { b.querySelector('.card').style.opacity = 1; }); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) activate(Number(e.target.getAttribute('data-i'))); }); }, { rootMargin: '-45% 0px -45% 0px' });
+    beats.forEach(function (b) { io.observe(b); });
+  }
+
+  /* ---- Wolf's three questions ---- */
+  var qA = $('qA'), qB = $('qB'), qC = $('qC');
+  function wolf() {
+    var a = qA.checked, b = qB.checked, c = qC.checked, n = a + b + c;
+    var big = $('wBig'), link = $('wLink'), arrow = $('wArrow');
+    big.setAttribute('r', a ? 98 : 46);
+    big.setAttribute('cx', a ? 690 : 300);
+    $('wBigT').setAttribute('x', a ? 690 : 300); $('wBigS').setAttribute('x', a ? 690 : 300);
+    $('wBigT').textContent = a ? 'something larger' : 'your project';
+    $('wBigS').textContent = a ? 'that will outlast you' : '';
+    big.style.strokeDasharray = b ? 'none' : '6 8';
+    big.style.fill = b && n === 3 ? 'var(--accent-soft)' : 'transparent';
+    big.style.stroke = n === 3 ? 'var(--accent)' : 'var(--faint)';
+    link.setAttribute('x2', a ? 585 : 250); arrow.setAttribute('d', a ? 'M567 103 L587 115 L567 127' : 'M232 103 L252 115 L232 127');
+    link.style.opacity = arrow.style.opacity = c ? 1 : 0;
+    link.style.stroke = arrow.style.stroke = n === 3 ? 'var(--accent)' : 'var(--faint)';
+    var v;
+    if (n === 3) v = ['Meaning in life.', 'You are bound to something real, bigger than you, that your life makes a difference to. For example: raising a child, tending a field of science, a community you help hold together.'];
+    else if (n === 0) v = ['You’re in trouble.', 'Nothing beyond you, nothing real, no difference made. The talk ties this to the research on belonging: trouble psychologically, physiologically and socially.'];
+    else if (n === 2 && !a) v = ['Reduced: it’s all about you.', 'Real, and you shape it, but you only care because it’s yours. A career pursued purely for status, say.'];
+    else if (n === 2 && !b) v = ['Reduced: devoted to something unreal.', 'You care and you contribute, but it isn’t really real. A fantasy, or a cause built on a mistake.'];
+    else if (n === 2 && !c) v = ['Reduced: a spectator.', 'It’s real and you love it, but nothing you do touches it. Admiring from outside.'];
+    else v = ['Reduced further.', 'Only one of the three holds. The connection is thin.'];
+    var vEl = $('wVerdict'); vEl.textContent = v[0]; vEl.appendChild(el('small', null, v[1]));
+  }
+  [qA, qB, qC].forEach(function (q) { q.addEventListener('change', wolf); });
+  wolf();
+
+  /* ---- Tornado vs paramecium ---- */
+  var ITEMS = [
+    { name: 'sucrose', x: 150, y: 70, p: 'matters: food, move towards', t: 'nothing at stake' },
+    { name: 'a toxin', x: 760, y: 70, p: 'matters: harm, move away', t: 'nothing at stake' },
+    { name: 'a sand grain', x: 150, y: 210, p: 'neutral', t: 'nothing at stake' },
+    { name: 'light', x: 760, y: 210, p: 'neutral', t: 'nothing at stake' }
+  ];
+  var aItems = $('aItems');
+  ITEMS.forEach(function (it) {
+    var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', it.x); c.setAttribute('cy', it.y); c.setAttribute('r', 16); c.setAttribute('stroke-width', 2);
+    var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.setAttribute('x', it.x); t.setAttribute('y', it.y + 38); t.setAttribute('text-anchor', 'middle'); t.textContent = it.name;
+    g.appendChild(c); g.appendChild(t); aItems.appendChild(g); it.c = c;
+  });
+  function auto() {
+    var p = $('autoP').checked;
+    $('aSelfT').textContent = p ? 'paramecium' : 'tornado';
+    $('aFate').style.opacity = p ? 0 : 1;
+    $('aSelf').style.transform = p ? 'translate(330px, 100px)' : 'translate(560px, 165px)';
+    var list = $('aList'); list.textContent = '';
+    ITEMS.forEach(function (it, i) {
+      var lit = p && i < 2;
+      it.c.style.fill = lit ? 'var(--accent-soft)' : 'var(--bg)';
+      it.c.style.stroke = lit ? 'var(--accent)' : 'var(--faint)';
+      var d = el('div', 'item' + (lit ? ' lit' : '')); d.appendChild(el('b', null, it.name)); d.appendChild(el('span', null, p ? it.p : it.t)); list.appendChild(d);
+    });
+    var v = $('aVerdict'); v.textContent = p ? 'Two things matter to it, because it has a self to keep.' : 'Nothing matters to it. It drifts where the physics takes it, including into conditions that end it.';
+  }
+  ['autoT', 'autoP'].forEach(function (id) { $(id).addEventListener('change', auto); });
+  auto();
+
+  /* ---- Combinatorial explosion ---- */
+  var LOG2 = Math.log10(2), MAXEXP = 400 * LOG2;
+  function pos(exp) { return (exp / MAXEXP * 100) + '%'; }
+  $('eMark80').style.left = pos(80); $('eL80').style.left = pos(80);
+  $('eMark138').style.left = pos(138 * LOG2); $('eL138').style.left = pos(138 * LOG2);
+  $('eL138').style.top = '20px';
+  function exp() {
+    var n = Number($('eRange').value), e = n * LOG2;
+    $('eN').textContent = n;
+    var ex = Math.floor(e); $('eC').innerHTML = (n < 30 ? Math.round(Math.pow(2, n)).toLocaleString() : (Math.pow(10, e - ex).toFixed(1) + ' × 10<sup>' + ex + '</sup>'));
+    $('eFill').style.width = pos(e);
+    // check a trillion combinations a second; the universe is ~1.4e10 years ~ 4.4e17 s
+    var secLog = e - 12, uniLog = Math.log10(4.4e17), v;
+    if (secLog < 0) v = 'Checkable in under a second at a trillion combinations a second.';
+    else if (secLog < uniLog) v = 'Checking them all at a trillion a second: about 10<sup>' + Math.round(secLog) + '</sup> seconds.';
+    else v = 'Checking them all at a trillion a second would take ' + (secLog - uniLog >= 1 ? '10<sup>' + Math.floor(secLog - uniLog) + '</sup> times' : 'longer than') + ' the age of the universe.';
+    $('eVerdict').innerHTML = v + (e > 80 ? ' More combinations than atoms in the universe.' : '');
+  }
+  $('eRange').addEventListener('input', exp);
+  exp();
+
+  /* ---- Windy tomorrow ---- */
+  var PLANS = [
+    { id: 'sail', name: 'Sailing', lit: [0, 1, 2], v: 'Waves, gusts, direction: a real decision about going out.' },
+    { id: 'sky', name: 'Skydiving', lit: [1, 2, 3], v: 'Drift and safety at altitude. Maybe you cancel.' },
+    { id: 'pic', name: 'A picnic', lit: [4, 5, 6], v: 'Napkins, sand, cold. Move it indoors?' },
+    { id: 'kite', name: 'Flying a kite', lit: [2, 7], v: 'Good news: lift.' },
+    { id: 'mov', name: 'Movies at home', lit: [], v: 'Nothing follows that matters to you. Every implication is still true.' }
+  ];
+  var IMPL = ['Waves will be higher', 'Gusts will be stronger', 'Wind direction matters', 'Drift on descent', 'Napkins will blow away', 'Sand will blow around', 'It will feel colder', 'There will be lift for a kite', 'Wind turbines will turn faster', 'Leaves will fall', 'Air pressure is changing', 'Somewhere it is calm'];
+  var seg = $('windSeg'), chips = $('windChips');
+  PLANS.forEach(function (p, i) {
+    var inp = el('input'); inp.type = 'radio'; inp.name = 'plan'; inp.id = 'plan-' + p.id; inp.value = i; if (i === 0) inp.checked = true;
+    var lab = el('label', null, p.name); lab.setAttribute('for', inp.id);
+    inp.addEventListener('change', wind); seg.appendChild(inp); seg.appendChild(lab);
+  });
+  IMPL.forEach(function (t) { chips.appendChild(el('span', 'chip', t)); });
+  function wind() {
+    var p = PLANS[Number(document.querySelector('input[name=plan]:checked').value)];
+    Array.prototype.forEach.call(chips.children, function (c, i) { c.classList.toggle('lit', p.lit.indexOf(i) >= 0); });
+    var v = $('windVerdict'); v.textContent = p.lit.length + ' of ' + IMPL.length + ' implications become inferences.'; v.appendChild(el('small', null, p.v));
+  }
+  wind();
+
+  /* ---- Aristotle to materialism (scrolly) ---- */
+  var H = [
+    { st: 'Aristotle', cap: 'Substances with properties. Mind and world share form, so knowing is conforming.', links: 'on', uni: 'translate(0px,0px)', uniO: 1, q: 0, wall: 0, copies: 0, mind: 'translate(0px,0px)', mindO: 1, rels: 0, mindT: 'mind' },
+    { st: 'Nishida’s objection', cap: 'Knowledge is by category, but the most real things are individuals. The fit breaks.', links: 'weak', uni: 'translate(0px,0px)', uniO: 1, q: 1, wall: 0, copies: 0, mind: 'translate(0px,0px)', mindO: 1, rels: 0, mindT: 'mind' },
+    { st: 'Nominalism', cap: 'Universals move into the mind. Out there: bare individual things.', links: 'weak', uni: 'translate(-220px,0px)', uniO: 1, q: 0, wall: 0, copies: 0, mind: 'translate(0px,0px)', mindO: 1, rels: 0, mindT: 'mind' },
+    { st: 'Dualism', cap: 'A wall between mind and world. The mind holds copies: representations.', links: 'off', uni: 'translate(-220px,0px)', uniO: 0.4, q: 0, wall: 1, copies: 1, mind: 'translate(0px,0px)', mindO: 1, rels: 0, mindT: 'mind (another substance)' },
+    { st: 'Materialism', cap: 'Only material objects exist. The mind is one more of them. Nothing binds anything.', links: 'none', uni: 'translate(-220px,0px)', uniO: 0, q: 0, wall: 0, copies: 0, mind: 'translate(190px,0px) scale(0.6)', mindO: 0.6, rels: 0, mindT: 'brain' },
+    { st: 'Relation first', cap: 'Relations are primary and things emerge from them. Mind and world conform again.', links: 'on', uni: 'translate(-220px,0px)', uniO: 0, q: 0, wall: 0, copies: 0, mind: 'translate(0px,0px)', mindO: 1, rels: 1, mindT: 'mind' }
+  ];
+  $('hMind').style.transformOrigin = '110px 165px';
+  function hist(i) {
+    var s = H[i];
+    $('hSt').textContent = s.st; $('hCap').textContent = s.cap;
+    Array.prototype.forEach.call($('hLinks').children, function (l) {
+      l.style.stroke = s.links === 'on' ? 'var(--accent)' : 'var(--faint)';
+      l.style.strokeDasharray = s.links === 'on' ? 'none' : (s.links === 'weak' ? '10 6' : '3 9');
+      l.style.opacity = s.links === 'none' ? 0 : (s.links === 'off' ? 0.5 : 1);
+    });
+    $('hUni').style.transform = s.uni; $('hUni').style.opacity = s.uniO;
+    $('hQ').style.opacity = s.q; $('hWall').style.opacity = s.wall; $('hCopies').style.opacity = s.copies;
+    $('hMind').style.transform = s.mind; $('hMind').style.opacity = s.mindO; $('hMindT').textContent = s.mindT;
+    $('hRels').style.opacity = s.rels;
+    document.querySelectorAll('#hThings circle').forEach(function (c) { c.setAttribute('r', s.rels ? 18 : 26); c.style.stroke = s.rels ? 'var(--accent)' : 'var(--fg)'; });
+  }
+  scrolly(hist);
+})();
+</script>

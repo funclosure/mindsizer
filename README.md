@@ -11,6 +11,9 @@ The aim is for you to see *why* something is true, not just read that it is.
 
 ## Examples
 
+- [`examples/vervaeke.html`](.claude/skills/mindsizer/examples/vervaeke.html), *Why anything
+  matters to you*: a 32-minute philosophy talk, from auto-captions. **The reference for "easy to
+  take in"**: a map up front, sets as cards, one-click interactions.
 - [`examples/channel.html`](.claude/skills/mindsizer/examples/channel.html), *The Channel
   Nobody Designed*: an event, built from a source.
 - [`examples/weights.html`](.claude/skills/mindsizer/examples/weights.html), *Where a model's
