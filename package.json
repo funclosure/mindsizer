@@ -10,7 +10,13 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "example": "bun run src/cli.ts build examples/dont-scale.outline.md -o examples/dont-scale.deck.html --open",
-    "deploy": "bash scripts/deploy.sh"
+    "deploy": "bash scripts/deploy.sh",
+    "eval:fetch": "bun run eval/fetch.ts",
+    "eval:score": "eval/clean-env.sh bun run eval/score.ts",
+    "eval:baseline": "eval/clean-env.sh bun run eval/baseline.ts",
+    "eval:report": "bun run eval/report.ts",
+    "eval:noise": "eval/clean-env.sh bun run eval/noise.ts",
+    "eval:calibration": "bun run eval/calibration.ts"
   },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.3.289",

@@ -11,6 +11,11 @@ import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 import { loadSources, parseManifest, fetchableSources, sourceLabel, type Source } from "./lib/sources";
 
+// Every model role on Opus 5.5 unless the caller overrides it (each role keeps its default effort).
+for (const k of ["MINDSIZER_MODEL", "MINDSIZER_INGEST_MODEL", "MINDSIZER_AUTHOR_MODEL", "MINDSIZER_JUDGE_MODEL", "MINDSIZER_REVIEW_MODEL"]) {
+  process.env[k] ||= "claude-opus-5-5";
+}
+
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const today = new Date().toISOString().slice(0, 10);
 
