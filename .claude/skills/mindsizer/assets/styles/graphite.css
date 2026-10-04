@@ -1,0 +1,30 @@
+/* style: graphite — pencil only. Every line and note in grey; a yellow highlighter is the one colour, for the point.
+   fonts: (none beyond the template's Shantell Sans) */
+:root {
+  color-scheme: light;
+  --bg: #fdfdfc; --surface: #f5f5f3; --ink: #1d1d1f; --ink-2: #6a6a6f; --rule: #e4e4e1;
+  --h1-c: #6b6b70; --h1-t: #55555a; --h1-m: rgba(255, 214, 0, 0.32);
+  --h2-c: #6b6b70; --h2-t: #55555a; --h2-m: rgba(255, 214, 0, 0.32);
+  --h3-c: #6b6b70; --h3-t: #55555a; --h3-m: rgba(255, 214, 0, 0.32);
+  --h4-c: #6b6b70; --h4-t: #55555a; --h4-m: rgba(255, 214, 0, 0.32);
+  --gray-c: #8a8a8f; --gray-t: #66666b; --gray-m: rgba(138, 138, 143, 0.14);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  --body: var(--sans); --head: var(--sans); --ui: var(--sans); --fig: var(--sans);
+  --paper: none; --radius: 3px; --pencil-passes: 1; --fill-mode: tint; --margin-notes: 0;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #161617; --surface: #1f1f20; --ink: #f2f2f3; --ink-2: #a3a3a8; --rule: #2f2f31;
+  --h1-c: #a9a9ae; --h1-t: #c2c2c6; --h1-m: rgba(255, 214, 0, 0.22);
+  --h2-c: #a9a9ae; --h2-t: #c2c2c6; --h2-m: rgba(255, 214, 0, 0.22);
+  --h3-c: #a9a9ae; --h3-t: #c2c2c6; --h3-m: rgba(255, 214, 0, 0.22);
+  --h4-c: #a9a9ae; --h4-t: #c2c2c6; --h4-m: rgba(255, 214, 0, 0.22);
+  --gray-c: #9a9a9f; --gray-t: #b0b0b4; --gray-m: rgba(170, 170, 175, 0.15);
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #161617; --surface: #1f1f20; --ink: #f2f2f3; --ink-2: #a3a3a8; --rule: #2f2f31;
+  --h1-c: #a9a9ae; --h1-t: #c2c2c6; --h1-m: rgba(255, 214, 0, 0.22);
+  --h2-c: #a9a9ae; --h2-t: #c2c2c6; --h2-m: rgba(255, 214, 0, 0.22);
+  --h3-c: #a9a9ae; --h3-t: #c2c2c6; --h3-m: rgba(255, 214, 0, 0.22);
+  --h4-c: #a9a9ae; --h4-t: #c2c2c6; --h4-m: rgba(255, 214, 0, 0.22);
+  --gray-c: #9a9a9f; --gray-t: #b0b0b4; --gray-m: rgba(170, 170, 175, 0.15);
+  color-scheme: dark; }

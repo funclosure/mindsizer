@@ -1,0 +1,30 @@
+/* style: pencil — coloured pencil: rounder type and softer, doubled strokes, a few pencil colours. The friendliest, still calm.
+   fonts: https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;1,6..12,400&display=swap */
+:root {
+  color-scheme: light;
+  --bg: #fffefc; --surface: #f7f5f1; --ink: #23211f; --ink-2: #6d6a66; --rule: #e8e5df;
+  --h1-c: #d98a2b; --h1-t: #9a5b12; --h1-m: rgba(217, 138, 43, 0.18);
+  --h2-c: #3f9a6a; --h2-t: #2c7a51; --h2-m: rgba(63, 154, 106, 0.16);
+  --h3-c: #4a7fcf; --h3-t: #3565b0; --h3-m: rgba(74, 127, 207, 0.15);
+  --h4-c: #9a6bd4; --h4-t: #7a4cb8; --h4-m: rgba(154, 107, 212, 0.15);
+  --gray-c: #8f8a84; --gray-t: #6d6a66; --gray-m: rgba(143, 138, 132, 0.15);
+  --sans: "Nunito Sans", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --body: var(--sans); --head: var(--sans); --ui: var(--sans); --fig: var(--sans);
+  --paper: none; --radius: 5px; --pencil-passes: 2; --fill-mode: tint; --margin-notes: 0;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #1b1a18; --surface: #232220; --ink: #f4f1ec; --ink-2: #aca79f; --rule: #34322e;
+  --h1-c: #f2b468; --h1-t: #f2b468; --h1-m: rgba(242, 180, 104, 0.2);
+  --h2-c: #7cd0a0; --h2-t: #7cd0a0; --h2-m: rgba(124, 208, 160, 0.18);
+  --h3-c: #8db4f2; --h3-t: #8db4f2; --h3-m: rgba(141, 180, 242, 0.18);
+  --h4-c: #c4a3f0; --h4-t: #c4a3f0; --h4-m: rgba(196, 163, 240, 0.18);
+  --gray-c: #aca79f; --gray-t: #aca79f; --gray-m: rgba(172, 167, 159, 0.16);
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #1b1a18; --surface: #232220; --ink: #f4f1ec; --ink-2: #aca79f; --rule: #34322e;
+  --h1-c: #f2b468; --h1-t: #f2b468; --h1-m: rgba(242, 180, 104, 0.2);
+  --h2-c: #7cd0a0; --h2-t: #7cd0a0; --h2-m: rgba(124, 208, 160, 0.18);
+  --h3-c: #8db4f2; --h3-t: #8db4f2; --h3-m: rgba(141, 180, 242, 0.18);
+  --h4-c: #c4a3f0; --h4-t: #c4a3f0; --h4-m: rgba(196, 163, 240, 0.18);
+  --gray-c: #aca79f; --gray-t: #aca79f; --gray-m: rgba(172, 167, 159, 0.16);
+  color-scheme: dark; }

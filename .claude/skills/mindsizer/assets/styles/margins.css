@@ -1,0 +1,30 @@
+/* style: margins — the text keeps its column; on wide screens the pencilled notes move into a wide margin beside it.
+   fonts: (none beyond the template's Shantell Sans) */
+:root {
+  color-scheme: light;
+  --bg: #fefefd; --surface: #f6f5f3; --ink: #1d1d1f; --ink-2: #6e6e73; --rule: #e6e4e1;
+  --h1-c: #c4502c; --h1-t: #a8431f; --h1-m: rgba(196, 80, 44, 0.11);
+  --h2-c: #c4502c; --h2-t: #a8431f; --h2-m: rgba(196, 80, 44, 0.11);
+  --h3-c: #c4502c; --h3-t: #a8431f; --h3-m: rgba(196, 80, 44, 0.11);
+  --h4-c: #c4502c; --h4-t: #a8431f; --h4-m: rgba(196, 80, 44, 0.11);
+  --gray-c: #898584; --gray-t: #6c6866; --gray-m: rgba(137, 133, 132, 0.15);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  --body: var(--sans); --head: var(--sans); --ui: var(--sans); --fig: var(--sans);
+  --paper: none; --radius: 3px; --pencil-passes: 1; --fill-mode: tint; --margin-notes: 1;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #161618; --surface: #1f1f22; --ink: #f5f5f7; --ink-2: #a1a1a6; --rule: #303033;
+  --h1-c: #ee8a6e; --h1-t: #ee8a6e; --h1-m: rgba(238, 138, 110, 0.16);
+  --h2-c: #ee8a6e; --h2-t: #ee8a6e; --h2-m: rgba(238, 138, 110, 0.16);
+  --h3-c: #ee8a6e; --h3-t: #ee8a6e; --h3-m: rgba(238, 138, 110, 0.16);
+  --h4-c: #ee8a6e; --h4-t: #ee8a6e; --h4-m: rgba(238, 138, 110, 0.16);
+  --gray-c: #b8b8bd; --gray-t: #b8b8bd; --gray-m: rgba(184, 184, 189, 0.16);
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #161618; --surface: #1f1f22; --ink: #f5f5f7; --ink-2: #a1a1a6; --rule: #303033;
+  --h1-c: #ee8a6e; --h1-t: #ee8a6e; --h1-m: rgba(238, 138, 110, 0.16);
+  --h2-c: #ee8a6e; --h2-t: #ee8a6e; --h2-m: rgba(238, 138, 110, 0.16);
+  --h3-c: #ee8a6e; --h3-t: #ee8a6e; --h3-m: rgba(238, 138, 110, 0.16);
+  --h4-c: #ee8a6e; --h4-t: #ee8a6e; --h4-m: rgba(238, 138, 110, 0.16);
+  --gray-c: #b8b8bd; --gray-t: #b8b8bd; --gray-m: rgba(184, 184, 189, 0.16);
+  color-scheme: dark; }

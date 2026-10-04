@@ -1,0 +1,30 @@
+/* style: neat — the neat-annotations library as it is: system sans, white paper, soft marker tints, one colour per idea.
+   fonts: (none beyond the template's Shantell Sans) */
+:root {
+  color-scheme: light;
+  --bg: #fefefd; --surface: #f6f6f4; --ink: #1d1d1f; --ink-2: #6e6e73; --rule: #e6e5e2;
+  --h1-c: #c4801f; --h1-t: #8f5c0e; --h1-m: rgba(255, 176, 0, 0.17);
+  --h2-c: #2f8f5b; --h2-t: #23744a; --h2-m: rgba(47, 143, 91, 0.13);
+  --h3-c: #3b72c4; --h3-t: #2d60aa; --h3-m: rgba(59, 114, 196, 0.12);
+  --h4-c: #8657c8; --h4-t: #7246b3; --h4-m: rgba(134, 87, 200, 0.12);
+  --gray-c: #898584; --gray-t: #6c6866; --gray-m: rgba(137, 133, 132, 0.15);
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  --body: var(--sans); --head: var(--sans); --ui: var(--sans); --fig: var(--sans);
+  --paper: none; --radius: 3px; --pencil-passes: 1; --fill-mode: tint; --margin-notes: 0;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #161618; --surface: #1f1f22; --ink: #f5f5f7; --ink-2: #a1a1a6; --rule: #303033;
+  --h1-c: #f0b45a; --h1-t: #f0b45a; --h1-m: rgba(255, 176, 0, 0.22);
+  --h2-c: #67c792; --h2-t: #67c792; --h2-m: rgba(103, 199, 146, 0.18);
+  --h3-c: #78a9ef; --h3-t: #8db6f1; --h3-m: rgba(120, 169, 239, 0.2);
+  --h4-c: #b998ef; --h4-t: #c4a8f2; --h4-m: rgba(185, 152, 239, 0.2);
+  --gray-c: #b8b8bd; --gray-t: #b8b8bd; --gray-m: rgba(184, 184, 189, 0.16);
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #161618; --surface: #1f1f22; --ink: #f5f5f7; --ink-2: #a1a1a6; --rule: #303033;
+  --h1-c: #f0b45a; --h1-t: #f0b45a; --h1-m: rgba(255, 176, 0, 0.22);
+  --h2-c: #67c792; --h2-t: #67c792; --h2-m: rgba(103, 199, 146, 0.18);
+  --h3-c: #78a9ef; --h3-t: #8db6f1; --h3-m: rgba(120, 169, 239, 0.2);
+  --h4-c: #b998ef; --h4-t: #c4a8f2; --h4-m: rgba(185, 152, 239, 0.2);
+  --gray-c: #b8b8bd; --gray-t: #b8b8bd; --gray-m: rgba(184, 184, 189, 0.16);
+  color-scheme: dark; }

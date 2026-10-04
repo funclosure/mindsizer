@@ -1,215 +1,390 @@
-<title>[Page name, 2–4 words]</title>
+<title>[Page name: 2-4 words]</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..600;1,8..60,400..500&family=JetBrains+Mono:wght@400;500&family=Shantell+Sans:wght@400;500&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shantell+Sans:wght@400;500&display=swap">
+<!--__FONTS__-->
 <style>
-/* mindsizer page template. Reading column 640px, figures 980px, optional scrolly with a sticky figure.
-   Decide what --accent MEANS for this topic and use it only for that. */
-:root {
-  --bg: #f7f7f5; --surface: #eeeeeb; --fg: #18181b; --muted: #5d5d66; --faint: #6a6a74; --line: #dfdfe4;
-  --accent: #d4441c; --accent-text: #b2370f; --accent-soft: rgba(212, 68, 28, 0.12);
-  --display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
-  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
-  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
-  --hand: "Shantell Sans", "Comic Sans MS", cursive;
-}
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #121215; --surface: #1b1b20; --fg: #ececef; --muted: #a3a3ad; --faint: #85858f; --line: #2b2b32;
-  --accent: #ff6a3c; --accent-text: #ff8a63; --accent-soft: rgba(255, 106, 60, 0.16); color-scheme: dark; } }
-:root[data-theme="dark"] {
-  --bg: #121215; --surface: #1b1b20; --fg: #ececef; --muted: #a3a3ad; --faint: #85858f; --line: #2b2b32;
-  --accent: #ff6a3c; --accent-text: #ff8a63; --accent-soft: rgba(255, 106, 60, 0.16); color-scheme: dark; }
-
+/*__STYLE__*/
+</style>
+<style>
+/* mindsizer page base. Every colour and face comes from the style block above (assets/styles/*.css).
+   Print carries the argument; the pencil (thin curved strokes, marker tints, handwriting) points at what to notice.
+   Ideas are coloured with .h1-.h4 (one per map step). Single-colour styles collapse them to one hue. */
+:root { --hand: "Shantell Sans", "Comic Sans MS", cursive; }
 * { box-sizing: border-box; }
-body { background: var(--bg); color: var(--fg); font: 19px/1.6 var(--body); padding-inline: 20px; padding-block: 0 96px; -webkit-font-smoothing: antialiased; margin: 0; }
-a { color: var(--accent-text); text-underline-offset: 3px; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.col { max-width: 640px; margin-inline: auto; }
-.wide { max-width: 980px; margin-inline: auto; }
-section { padding-block: 72px 24px; display: grid; gap: 28px; }
-h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
-h2 { font-size: clamp(30px, 4.4vw, 46px); font-weight: 750; line-height: 1.02; letter-spacing: -0.03em; }
-h3 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+body { margin: 0; background: var(--paper), var(--bg); color: var(--ink); font: 18px/1.62 var(--body); -webkit-font-smoothing: antialiased; padding-inline: 20px; padding-block: 0 120px; }
+main { overflow-x: clip; }
 p { margin: 0; }
+a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 4px; }
+a:hover { text-decoration-color: currentColor; }
+:focus-visible { outline: 2px solid var(--h3-c); outline-offset: 3px; border-radius: 3px; }
+.col { max-width: 660px; margin-inline: auto; position: relative; }
+section { padding-block: 88px 0; display: grid; gap: 22px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; font-family: var(--head); font-weight: 600; }
+h1 { font-size: clamp(36px, 6vw, 50px); line-height: 1.08; letter-spacing: -0.025em; }
+h2 { font-size: clamp(24px, 3.4vw, 30px); line-height: 1.2; letter-spacing: -0.015em; }
+h3 { font-size: 18px; line-height: 1.3; letter-spacing: -0.005em; }
 .prose { display: grid; gap: 18px; }
-.path { font: 500 13px/1.4 var(--mono); color: var(--accent-text); }
-.note { font: 14px/1.5 var(--display); color: var(--faint); }
-.takeaway { font: 700 clamp(22px, 2.8vw, 28px)/1.2 var(--display); letter-spacing: -0.02em; }
-.figure { display: grid; gap: 18px; }
-.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+strong { font-weight: 600; }
+.note, .prose .note { font: 14.5px/1.55 var(--ui); color: var(--ink-2); }
 
-/* hero */
-.hero { padding-block: 64px 24px; display: grid; gap: 28px; }
-.kicker { font: 500 14px/1.4 var(--display); color: var(--muted); }
-.hero h1 { font-size: clamp(48px, 9vw, 100px); font-weight: 800; line-height: 0.92; letter-spacing: -0.04em; }
-.hero .dek { font-size: clamp(20px, 2.4vw, 24px); line-height: 1.45; color: var(--muted); max-width: 34ch; }
+/* idea colours: put .h1-.h4 on a figure, a set item or a marker; everything inside picks up --c/--t/--m */
+.h1 { --c: var(--h1-c); --t: var(--h1-t); --m: var(--h1-m); }
+.h2 { --c: var(--h2-c); --t: var(--h2-t); --m: var(--h2-m); }
+.h3 { --c: var(--h3-c); --t: var(--h3-t); --m: var(--h3-m); }
+.h4 { --c: var(--h4-c); --t: var(--h4-t); --m: var(--h4-m); }
+.hg { --c: var(--gray-c); --t: var(--gray-t); --m: var(--gray-m); }
+/* the marker: the one highlight treatment, for terms, map steps, selections and lit items */
+.mk { --m: var(--gray-m); background: var(--m); border-radius: var(--radius); box-shadow: -0.25em 0 0 0 var(--m), 0.25em 0 0 0 var(--m); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.mk.h1 { --m: var(--h1-m); } .mk.h2 { --m: var(--h2-m); } .mk.h3 { --m: var(--h3-m); } .mk.h4 { --m: var(--h4-m); }
+.hand { font-family: var(--hand); font-weight: 400; }
 
-/* controls */
-button, .seg label { font: 500 15px/1 var(--display); color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; cursor: pointer; }
-button:hover, .seg label:hover { border-color: var(--fg); }
-button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
-button:disabled { opacity: 0.4; cursor: default; border-color: var(--line); }
-.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 22px; padding: 3px; gap: 2px; max-width: 100%; }
-.seg input { position: absolute; opacity: 0; pointer-events: none; }
-.seg label { border: 0; padding: 8px 14px; }
-.seg input:checked + label { background: var(--fg); color: var(--bg); }
-.seg input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
-input[type=text] { flex: 1 1 260px; min-width: 0; font: 16px var(--display); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 12px 18px; }
-input[type=range] { width: 100%; accent-color: var(--accent); }
-.switch { display: flex; gap: 14px; align-items: center; font: 17px/1.35 var(--display); cursor: pointer; }
-.switch input { appearance: none; width: 46px; height: 26px; border-radius: 999px; background: var(--line); position: relative; flex: none; cursor: pointer; transition: background 0.25s; }
-.switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--bg); transition: transform 0.25s; }
-.switch input:checked { background: var(--accent); }
-.switch input:checked::after { transform: translateX(20px); }
+/* hero: kicker, title, dek, the map, the colour legend */
+.hero { padding-block: 72px 0; display: grid; gap: 22px; }
+.kicker { font: 14px/1.4 var(--ui); color: var(--ink-2); }
+.dek { font-size: 20px; line-height: 1.55; color: var(--ink-2); }
+.map { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 4px; font: 500 16px/1.4 var(--ui); padding-top: 6px; }
+.map a { text-decoration: none; padding: 1px 2px; margin-inline: 4px; }
+.map a:hover { text-decoration: underline; text-decoration-color: var(--c); }
+.arw, .chain .down { display: inline-block; background: var(--ink-2); opacity: 0.7; -webkit-mask: var(--arw) center / contain no-repeat; mask: var(--arw) center / contain no-repeat; }
+.arw { width: 30px; height: 20px; --arw: url("data:image/svg+xml,%3Csvg width='46' height='38' viewBox='0 0 46 38' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 19 C15 18 31 18 43 19' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M36 13 L43 19 L36 25' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.legend { font: 15px/1.7 var(--ui); color: var(--ink-2); }
+.legend .mk { color: var(--ink); }
 
-/* data marks */
-.bars { display: grid; gap: 16px; }
-.bar { display: grid; grid-template-columns: minmax(130px, 220px) minmax(0, 1fr) 56px; gap: 16px; align-items: center; }
-.bar .lab { font: 600 17px/1.2 var(--display); }
-.bar .lab small { display: block; font-weight: 400; font-size: 13px; color: var(--faint); margin-top: 3px; }
-.bar .track { height: 26px; background: var(--surface); border-radius: 4px; overflow: hidden; }
-.bar .fill { height: 100%; background: var(--faint); border-radius: 4px; transition: width 0.35s ease, background 0.35s; }
-.bar.on .fill { background: var(--accent); }
-.bar .pct { font: 600 18px/1 var(--display); text-align: right; font-variant-numeric: tabular-nums; }
-.chart { width: 100%; height: auto; display: block; }
-.chart .axis { stroke: var(--line); stroke-width: 1; fill: none; }
-.chart text { fill: var(--muted); font: 12px var(--display); } /* user units: keep viewBox width close to rendered width, see style.md */
-.chart .ln { fill: none; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; }
-.stat b { display: block; font: 800 clamp(34px, 5vw, 48px)/1 var(--display); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
-.stat span { font: 14px/1.4 var(--display); color: var(--muted); }
-.listing { background: var(--surface); border-radius: 14px; padding: 22px 24px; font: 15px/1.9 var(--mono); overflow-x: auto; }
-.chip { font: 14px/1.3 var(--display); padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--faint); transition: all 0.3s; }
-.chip.lit { border-color: var(--accent); color: var(--fg); background: var(--accent-soft); }
-blockquote { margin: 0; font: italic 500 clamp(22px, 3vw, 30px)/1.3 var(--body); }
-/* hero map: the whole idea as 3-6 linked steps */
-.argmap { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font: 600 15px/1.3 var(--display); }
-.argmap a { text-decoration: none; color: var(--fg); padding: 8px 12px; border-radius: 8px; background: var(--surface); }
-.argmap a:hover { background: var(--accent-soft); }
-.argmap .ar { color: var(--faint); }
-/* cards: a SET of 2-5 parallel things, same anatomy each (tag, term, one line); .on = the one this section is about */
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
-.card { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; align-content: start; }
-.card .k { font: 600 12.5px/1.3 var(--display); color: var(--accent-text); }
-.card h3 { font-size: 20px; }
-.card p { font: 15px/1.45 var(--display); color: var(--muted); }
-.card.on { border-color: var(--accent); background: var(--accent-soft); }
-.card.on p { color: var(--fg); }
-/* an "object" box: only for things that ARE objects in the explanation (a grader, a store, a pillar) */
-.object { border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 6px; }
-.object.on { border-color: var(--accent); background: var(--accent-soft); }
-.objects { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-/* summary table for the closing section */
+/* where you are in the map */
+.path { font: 14px/1.4 var(--ui); color: var(--ink-2); display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
+.path .sep { color: var(--ink-2); }
+.path .mk { color: var(--ink); }
+
+/* a section's closing line: "so", pencilled in the margin */
+.so { position: relative; font: 600 20px/1.4 var(--head); letter-spacing: -0.01em; padding-top: 30px; }
+.so::before { content: "so"; position: absolute; top: 2px; left: 0; font: 400 17px/1 var(--hand); color: var(--ink-2); transform: rotate(-6deg); }
+@media (min-width: 900px) { .so { padding-top: 0; } .so::before { left: -46px; top: 5px; } }
+
+/* a SET of 2-5 parallel things: columns, no boxes, the tag pencilled in; .on (+ .h1-.h4) = the one this section is about */
+.set { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 26px; padding-top: 8px; }
+.set > div { display: grid; gap: 6px; align-content: start; min-width: 0; }
+.tag { font: 400 14px/1.3 var(--hand); color: var(--ink-2); transform: rotate(-2deg); transform-origin: left; }
+.set p { font: 15.5px/1.5 var(--ui); color: var(--ink-2); }
+.set .on p { color: var(--ink); }
+.set .on h3 span { background: var(--m); border-radius: var(--radius); box-shadow: -0.25em 0 0 0 var(--m), 0.25em 0 0 0 var(--m); }
+
+/* a CHAIN (A then B then C) is a sequence, not a set: numbered, top to bottom, a pencilled arrow between */
+.chain { list-style: none; margin: 0; padding: 0; display: grid; }
+.chain li { display: grid; grid-template-columns: 34px 1fr; gap: 0 12px; }
+.chain .n { font: 400 18px/1.4 var(--hand); color: var(--ink-2); text-align: right; }
+.chain h3 { font-size: 17px; }
+.chain p { font: 15.5px/1.5 var(--ui); color: var(--ink-2); }
+.chain .down { grid-column: 2; width: 20px; height: 30px; margin: 4px 0; --arw: url("data:image/svg+xml,%3Csvg width='46' height='38' viewBox='0 0 46 38' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M23 4 C22 13 22 24 23 35' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M17 29 L23 36 L29 29' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+
+/* figures */
+.fig { display: grid; gap: 16px; padding-top: 10px; }
+.fig svg { width: 100%; max-width: 600px; height: auto; display: block; margin-inline: auto; overflow: visible; }
+.watch { font: 16px/1.5 var(--ui); color: var(--ink); }
+.watch .hand { color: var(--ink-2); margin-right: 6px; }
+.verdict { font: 600 18px/1.35 var(--ui); min-height: 2.7em; }
+.verdict small { display: block; font-size: 16px; font-weight: 400; line-height: 1.5; color: var(--ink-2); margin-top: 4px; }
+
+/* svg vocabulary: every text element has a class (.fl label, .fs sub-label, .al annotation), never a bare `svg text` rule */
+.ln { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.ln.soft { stroke: var(--ink-2); opacity: 0.75; }
+.ln.hue { stroke: var(--c); }
+.ln.bold { stroke-width: 2.2; }
+.ln.dash { stroke-dasharray: 4 7; }
+.pass2 { opacity: 0.45 !important; stroke-width: 1.1 !important; }
+.fillmk { fill: var(--m); stroke: none; }
+.band { fill: none; stroke: var(--m); stroke-linecap: round; }
+.fl { font: 500 20px var(--fig); fill: var(--ink); }
+.fs { font: 400 20px var(--fig); fill: var(--ink-2); }
+.fs.hue { fill: var(--t); }
+.am { fill: none; stroke: var(--c); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.9; }
+.al { font: 400 21px var(--hand); fill: var(--t); opacity: 0.95; }
+.q { font: 400 40px var(--hand); fill: var(--ink-2); }
+.drawin { animation: drawin 0.6s ease-out both; }
+.fadein { animation: fadein 0.5s ease-out 0.25s both; }
+@keyframes drawin { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes fadein { from { opacity: 0; } }
+
+/* controls: options are words that get the marker when picked; checkboxes are drawn boxes with a pencilled tick */
+.opts { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: baseline; font-family: var(--ui); }
+.opts .lead { font: 400 16px var(--hand); color: var(--ink-2); }
+.opts input { position: absolute; opacity: 0; pointer-events: none; }
+.opts label { font-size: 16.5px; font-weight: 500; color: var(--ink-2); cursor: pointer; padding: 2px 3px; border-radius: var(--radius);
+  text-decoration: underline dotted; text-decoration-color: var(--rule); text-underline-offset: 5px;
+  background: linear-gradient(var(--m), var(--m)) left center / 0% 100% no-repeat; transition: background-size 0.35s ease, color 0.2s; }
+.opts label:hover { color: var(--ink); }
+.opts input:checked + label { color: var(--ink); text-decoration: none; background-size: 100% 100%; }
+.opts input:focus-visible + label { outline: 2px solid var(--c); outline-offset: 3px; }
+.checks { display: grid; gap: 10px; }
+.check { display: flex; gap: 12px; align-items: flex-start; font: 17px/1.4 var(--ui); cursor: pointer; }
+.check input { appearance: none; -webkit-appearance: none; flex: none; width: 20px; height: 20px; margin: 2px 0 0; border: 1.5px solid var(--ink-2); border-radius: 4px 6px 5px 4px; transform: rotate(-2deg); cursor: pointer; background: transparent; position: relative; }
+.check input:checked { border-color: var(--c); }
+.check input:checked::after { content: ""; position: absolute; inset: -6px -8px -2px -2px; background: var(--c);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 30 28' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 15 C8 17 10 20 12 23 C16 15 21 8 27 3' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 30 28' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 15 C8 17 10 20 12 23 C16 15 21 8 27 3' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; }
+.check input:not(:checked) + span { color: var(--ink-2); text-decoration: line-through; text-decoration-color: var(--gray-c); }
+.textbtn { font: 400 16px var(--hand); color: var(--ink-2); background: none; border: 0; padding: 2px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
+.textbtn:hover { color: var(--ink); }
+input[type=range] { width: 100%; accent-color: var(--c); }
+
+/* words that can light up (things in a room, implications of a sentence) */
+.words { display: flex; flex-wrap: wrap; gap: 8px 16px; font: 16px/1.5 var(--ui); }
+.words span { color: var(--ink-2); padding: 0 2px; border-radius: var(--radius); background: linear-gradient(var(--m), var(--m)) left center / 0% 100% no-repeat; transition: background-size 0.35s ease, color 0.2s; }
+.words span.lit { color: var(--ink); background-size: 100% 100%; }
+.words span.picked { --m: var(--gray-m); color: var(--ink); background-size: 100% 100%; }
+.words span.checking { color: var(--ink); text-decoration: underline dotted; text-decoration-color: var(--ink-2); text-underline-offset: 5px; }
+
+/* MORE: a foldable aside for detail beyond the first read. The summary says what's inside, in the pencil voice. */
+details.more > summary { list-style: none; cursor: pointer; font: 400 16px/1.4 var(--hand); color: var(--ink-2); display: inline-flex; gap: 8px; align-items: baseline; }
+details.more > summary::-webkit-details-marker { display: none; }
+details.more > summary::before { content: "+"; font: 500 18px var(--hand); width: 12px; color: var(--ink-2); }
+details.more[open] > summary::before { content: "\2013"; }
+details.more > summary:hover { color: var(--ink); }
+details.more > summary:focus-visible { outline: 2px solid var(--h3-c); outline-offset: 3px; }
+details.more > .prose { margin-top: 12px; padding-left: 20px; border-left: 1.5px solid var(--rule); font-size: 16.5px; line-height: 1.6; gap: 14px; }
+blockquote { margin: 0; font: 500 23px/1.4 var(--head); letter-spacing: -0.01em; }
+blockquote cite { display: block; font: 400 16px var(--hand); color: var(--ink-2); margin-top: 6px; font-style: normal; transform: rotate(-2deg); transform-origin: left; }
+.listing { background: var(--surface); border-radius: 10px; padding: 18px 20px; font: 14.5px/1.8 ui-monospace, Menlo, Consolas, monospace; overflow-x: auto; }
 .tablewrap { overflow-x: auto; }
-table.summary { border-collapse: collapse; width: 100%; font: 15px/1.4 var(--display); }
-table.summary th, table.summary td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
-table.summary th { color: var(--faint); font-weight: 500; }
+table { border-collapse: collapse; width: 100%; font: 15.5px/1.45 var(--ui); }
+th, td { text-align: left; vertical-align: top; padding: 12px 14px 12px 0; border-bottom: 1px solid var(--rule); }
+th { font: 400 15px var(--hand); color: var(--ink-2); }
+td:first-child { font-weight: 600; }
+footer { padding-top: 96px; display: grid; gap: 12px; font: 14.5px/1.55 var(--ui); color: var(--ink-2); }
 
-/* scrolly */
-.scrolly { display: grid; grid-template-columns: minmax(0, 1fr); }
-.stick { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; background: var(--bg); padding-block: 14px; border-bottom: 1px solid var(--line); }
+/* scrolly (scrub pattern): beats scroll past a sticky figure */
+.scrolly { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 940px; margin-inline: auto; }
+.stick { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; background: var(--bg); padding-block: 14px; border-bottom: 1px solid var(--rule); }
 .beat { min-height: 62vh; display: flex; align-items: center; padding-block: 24px; }
-.beat .card { display: grid; gap: 8px; max-width: 460px; padding-left: 16px; border-left: 3px solid transparent; transition: border-color 0.3s; }
-.beat.active .card { border-left-color: var(--accent); }
-.beat .when { font: 600 14px var(--mono); color: var(--accent-text); }
-.beat p { color: var(--muted); }
+.beat > div { display: grid; gap: 8px; max-width: 440px; padding-left: 16px; border-left: 2px solid transparent; transition: border-color 0.3s; }
+.beat.active > div { border-left-color: var(--c); }
+.beat .when { font: 400 16px var(--hand); color: var(--ink-2); }
 @media (min-width: 980px) {
   .scrolly { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 56px; }
   .stick { order: 2; top: calc(env(safe-area-inset-top, 0px) + 10vh); align-self: start; border-bottom: 0; padding-block: 0; }
-  .beats { order: 1; }
-  .beat { min-height: 80vh; }
+  .beats { order: 1; } .beat { min-height: 80vh; }
 }
-/* annotations, after neat-annotations (github.com/syabro/neat-annotations, MIT): a thin hand-drawn
-   curve, an open arrowhead, a short handwritten label tilted a little. Use annotate() below. */
-.ann-mark path { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-.ann-label { fill: var(--accent-text); font-family: var(--hand); font-size: 14px; }
-/* the phrase an annotation names wears the same marker in the prose, linking words to picture */
-.ann-text { background: var(--accent-soft); border-radius: 3px; box-shadow: -0.2em 0 0 0 var(--accent-soft), 0.2em 0 0 0 var(--accent-soft); }
+
+/* inline annotations, from neat-annotations (github.com/syabro/neat-annotations, MIT), coloured by the tokens.
+   <span class="ann h3" data-note="what to notice">phrase</span>; ann-nw for a phrase near the right edge.
+   Put it on the LAST line of a paragraph and give that paragraph .room-below. */
+.ann { --c: var(--gray-c); --t: var(--gray-t); --m: var(--gray-m); position: relative; display: inline-block; line-height: 1.15; border-radius: var(--radius); background: var(--m); box-shadow: -0.3em 0 0 0 var(--m), 0.3em 0 0 0 var(--m); }
+.ann.h1 { --c: var(--h1-c); --t: var(--h1-t); --m: var(--h1-m); } .ann.h2 { --c: var(--h2-c); --t: var(--h2-t); --m: var(--h2-m); }
+.ann.h3 { --c: var(--h3-c); --t: var(--h3-t); --m: var(--h3-m); } .ann.h4 { --c: var(--h4-c); --t: var(--h4-t); --m: var(--h4-m); }
+.ann::before { content: ""; position: absolute; z-index: 3; width: 46px; height: 38px; background: var(--c); opacity: 0.9; pointer-events: none; left: calc(50% - 23px); top: calc(100% + 1px);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg width='46' height='38' viewBox='0 0 46 38' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M23 35 C22 26 22 15 23 4' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M17 10 L23 3 L29 10' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg width='46' height='38' viewBox='0 0 46 38' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M23 35 C22 26 22 15 23 4' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M17 10 L23 3 L29 10' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; }
+.ann::after { content: attr(data-note); position: absolute; z-index: 4; left: 50%; top: calc(100% + 37px); width: max-content; max-width: 170px; transform: translateX(-50%) rotate(-4deg); font: 400 0.95rem/1.05 var(--hand); color: var(--t); opacity: 0.95; pointer-events: none; }
+.ann-nw::before { left: calc(50% - 6px); top: calc(100% - 1px);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg width='46' height='38' viewBox='0 0 46 38' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 32 C30 30 18 18 6 6' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M16 10 L6 6 L10 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg width='46' height='38' viewBox='0 0 46 38' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 32 C30 30 18 18 6 6' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M16 10 L6 6 L10 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; }
+.ann-nw::after { left: calc(50% + 34px); top: calc(100% + 30px); transform: translateX(-40%) rotate(-4deg); }
+.room-below { padding-bottom: 58px; }
+/* margin notes (styles with --margin-notes: 1, wide screens): the script moves each .ann's note into the right margin */
+.ann.in-margin::before, .ann.in-margin::after { display: none; }
+.mnote { position: absolute; left: calc(100% + 64px); width: 210px; font: 400 16px/1.2 var(--hand); color: var(--t); transform: rotate(-3deg); }
+.mnote::before { content: ""; position: absolute; left: -54px; top: -4px; width: 46px; height: 30px; background: var(--c); opacity: 0.9;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg width='46' height='38' viewBox='0 0 46 38' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M43 26 C32 25 15 20 3 12' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M11 9 L3 12 L8 19' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg width='46' height='38' viewBox='0 0 46 38' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M43 26 C32 25 15 20 3 12' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M11 9 L3 12 L8 19' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; }
+.room-below.margined { padding-bottom: 0; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 
+<main>
 <header class="hero col">
-  <div class="kicker">[An explorable explanation · subject or date]</div>
+  <div class="kicker">[An explorable reading of … / An explanation of …]</div>
   <h1>[Title: the idea, in words a newcomer recognises]</h1>
   <p class="dek">[2-3 sentences that state the whole idea. A reader who stops here still learns the main point.]</p>
-  <nav class="argmap" aria-label="The idea in [N] steps">
-    <a href="#s1">[Step 1]</a><span class="ar">→</span><a href="#s2">[Step 2]</a><span class="ar">→</span><a href="#s3">[Step 3]</a>
+  <nav class="map" aria-label="The idea in [N] steps">
+    <a class="mk h1" href="#s1">[Step 1]</a><span class="arw" aria-hidden="true"></span>
+    <a class="mk h2" href="#s2">[Step 2]</a><span class="arw" aria-hidden="true"></span>
+    <a class="mk h3" href="#s3">[Step 3]</a>
   </nav>
-  <p class="note">[The idea in [N] steps. Click one to jump there.] [Orange on this page always marks one thing: …]</p>
+  <!-- multi-colour styles (neat, pencil): name each colour. Single-colour styles: say what the one colour marks. -->
+  <p class="legend">[Each idea keeps its colour all the way down: <span class="mk h1">[idea 1]</span>, <span class="mk h2">[idea 2]</span>, <span class="mk h3">[idea 3]</span>.] <span class="hand">Handwriting</span> is us, pointing at what to notice.</p>
 </header>
 
-<!-- One block per spine section: claim as h2, short prose, then the interaction. -->
+<!-- One section per spine claim: path, claim as h2, short prose, then a set / an interaction / a figure, then "so". -->
 <section class="col" id="s1">
-  <span class="path">[map-step/sub-idea/]</span>
-  <h2>[Claim 1, as a sentence]</h2>
-  <div class="prose"><p>[1–3 short paragraphs. End by telling the reader what to do with the figure.]</p></div>
-</section>
-<div class="wide figure" id="fig1">
-  <!-- EITHER cards (a set of parallel things) ... -->
-  <div class="cards">
-    <div class="card"><span class="k">[who / when]</span><h3>[Term]</h3><p>[One-line definition.]</p></div>
-    <div class="card on"><span class="k">[who / when]</span><h3>[The term this section is about]</h3><p>[One-line definition.]</p></div>
+  <div class="path"><span class="mk h1">[Step 1]</span></div>
+  <h2>[Claim 1, as a sentence the reader should believe afterwards]</h2>
+  <div class="prose">
+    <p>[1–3 short paragraphs. Bold a new <strong>term</strong>, define it in one line, give one concrete example.]</p>
   </div>
-  <!-- ... OR an interaction from references/patterns.md, opening in a meaningful state, with one line saying what to watch -->
-</div>
-<div class="col" style="padding-top:28px"><p class="takeaway">[Optional one-line takeaway.]</p></div>
+  <!-- A SET of parallel things -->
+  <div class="set">
+    <div><span class="tag">[who / when]</span><h3>[Term]</h3><p>[One-line definition.]</p></div>
+    <div class="on h1"><span class="tag">[who / when]</span><h3><span>[The term this section is about]</span></h3><p>[One-line definition.]</p></div>
+  </div>
+  <p class="so">[One bold takeaway line.]</p>
+  <!-- Detail beyond the first read (supporting research, asides, extra examples, citations) folds away: -->
+  <details class="more"><summary>more: [what's inside, in 3-6 words]</summary>
+    <div class="prose"><p>[Supporting detail.]</p></div>
+  </details>
+</section>
 
-<!-- Scrolly section (scrub pattern): uncomment when the idea is a sequence of states.
-<div class="wide scrolly">
-  <div class="stick"><div class="figure" id="scrollyFig"></div></div>
+<section class="col" id="s2">
+  <div class="path"><span>[Step 1]</span><span class="sep">›</span><span class="mk h2">[Step 2]</span></div>
+  <h2>[Claim 2]</h2>
+  <div class="prose">
+    <p class="room-below">[Prose. The phrase the figure is about can carry an inline note at the end of its paragraph:] <span class="ann h2" data-note="[what to notice]">[phrase]</span></p>
+  </div>
+  <!-- An INTERACTION (references/patterns.md): a .fig with the idea's colour class -->
+  <div class="fig h2">
+    <div class="opts"><span class="lead">flip:</span>
+      <input type="radio" name="f2" id="f2a" value="a" checked><label for="f2a">[Case A]</label>
+      <input type="radio" name="f2" id="f2b" value="b"><label for="f2b">[Case B]</label>
+    </div>
+    <p class="watch"><span class="hand">watch:</span>[what to look at, and what it means]</p>
+    <svg id="fig2" viewBox="0 0 600 320" role="img" aria-label="[what the drawing shows]"></svg>
+    <p class="verdict" id="fig2Verdict"></p>
+    <p class="note">[What is illustrative in this figure.]</p>
+  </div>
+  <p class="so">[Takeaway.]</p>
+</section>
+
+<!-- A SCROLLY (scrub pattern) when the idea is a sequence of states and one drawing can show each state:
+<div class="scrolly h4" id="sN">
+  <div class="stick"><div class="fig"><svg id="figN" viewBox="0 0 560 330" role="img" aria-label="[…]"></svg></div></div>
   <div class="beats">
-    <div class="beat" data-i="0"><div class="card"><span class="when">[step/date]</span><h3>[beat heading]</h3><p>[1–3 sentences]</p></div></div>
+    <div class="beat" data-i="0"><div><span class="when">[who / when]</span><h3>[State]</h3><p>[1-2 sentences]</p></div></div>
   </div>
 </div>
 -->
 
-<!-- Closing section: one claim that pulls the threads together, plus a compact summary or a landing quote. -->
+<!-- A CHAIN (sequence) when order is the point:
+  <ol class="chain">
+    <li><span class="n">1</span><div><h3>[Step]</h3><p>[What happens]</p></div></li>
+    <li><span></span><span class="down" aria-hidden="true"></span></li>
+    <li><span class="n">2</span><div><h3>[Step]</h3><p>[What happens]</p></div></li>
+  </ol>
+-->
+
+<!-- Closing section: one claim that pulls the threads together, plus a compact table or a landing quote. -->
 <section class="col" id="close">
-  <span class="path">[so-what/]</span>
+  <div class="path"><span class="mk h3">[Last step]</span></div>
   <h2>[The one sentence to remember]</h2>
-  <div class="tablewrap"><table class="summary"><thead><tr><th>[ ]</th><th>[ ]</th></tr></thead><tbody><tr><td>[ ]</td><td>[ ]</td></tr></tbody></table></div>
+  <div class="tablewrap"><table><thead><tr><th>[ ]</th><th>[ ]</th></tr></thead><tbody><tr><td>[ ]</td><td>[ ]</td></tr></tbody></table></div>
 </section>
 
-<footer class="col" style="padding-top:72px; display:grid; gap:14px;">
-  <span class="path">sources/</span>
-  <div class="note">[Links to sources.] [What is illustrative on this page.]</div>
+<footer class="col">
+  <span class="hand">sources</span>
+  <span>[Links to sources.]</span>
+  <span>[What is illustrative, simplified or "our reading" on this page.] Annotation style after <a href="https://github.com/syabro/neat-annotations">neat-annotations</a> (MIT).</span>
 </footer>
+</main>
 
 <script>
 (function () {
+  var NS = "http://www.w3.org/2000/svg";
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var css = getComputedStyle(document.documentElement);
+  var STYLE = { passes: Number(css.getPropertyValue("--pencil-passes")) || 1, hatch: css.getPropertyValue("--fill-mode").trim() === "hatch", margin: css.getPropertyValue("--margin-notes").trim() === "1" };
+  function $(id) { return document.getElementById(id); }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function f(n) { return Math.round(n * 10) / 10; }
+  function verdict(node, head, sub) { node.textContent = head; if (sub) node.appendChild(el("small", null, sub)); }
 
-  /* annotate(svg, { to: [x, y], at: [x, y], text, side }): draws a neat-annotations mark inside an SVG.
-     to = the point to mark; at = where the label sits (usually a margin beside the drawing);
-     side "r" (label right of the curve start) or "l"; "\n" in text breaks lines. Coordinates are user units. */
-  function annotate(svg, a) {
-    var NS = "http://www.w3.org/2000/svg", left = a.side === "l", lines = String(a.text).split("\n"), lh = 16;
-    var lx = a.at[0], ly = a.at[1], tx = a.to[0], ty = a.to[1];
-    var t = document.createElementNS(NS, "text");
-    t.setAttribute("class", "ann-label"); t.setAttribute("text-anchor", left ? "end" : "start");
-    t.setAttribute("transform", "rotate(-4 " + lx + " " + ly + ")");
-    lines.forEach(function (l, i) { var s = document.createElementNS(NS, "tspan"); s.setAttribute("x", lx); s.setAttribute(i ? "dy" : "y", i ? lh : ly); s.textContent = l; t.appendChild(s); });
-    /* the curve leaves from under the label and bows on its way to the spot */
-    var sx = lx + (left ? -6 : 6), sy = ly + (lines.length - 1) * lh + 8, dx = tx - sx, dy = ty - sy, len = Math.hypot(dx, dy) || 1;
-    var ex = tx - dx / len * 6, ey = ty - dy / len * 6, bow = (left ? -1 : 1) * Math.min(28, len * 0.22);
-    var mx = (sx + ex) / 2 - dy / len * bow, my = (sy + ey) / 2 + dx / len * bow, ang = Math.atan2(ey - my, ex - mx), hl = 8;
-    var g = document.createElementNS(NS, "g"); g.setAttribute("class", "ann-mark");
-    var c = document.createElementNS(NS, "path"); c.setAttribute("d", "M" + sx + " " + sy + "Q" + mx + " " + my + " " + ex + " " + ey);
-    var h = document.createElementNS(NS, "path"); h.setAttribute("d", "M" + (ex - hl * Math.cos(ang - 0.5)) + " " + (ey - hl * Math.sin(ang - 0.5)) + "L" + ex + " " + ey + "L" + (ex - hl * Math.cos(ang + 0.5)) + " " + (ey - hl * Math.sin(ang + 0.5)));
-    svg.style.overflow = "visible"; /* a label may sit in the margin; never clip it (still leave a gutter in the viewBox) */
-    g.appendChild(c); g.appendChild(h); svg.appendChild(g); svg.appendChild(t);
+  /* ---- the pencil. Shapes are seeded by a key, so a shape looks the same every time it's drawn. ---- */
+  function rng(key) { var h = 2166136261; for (var i = 0; i < key.length; i++) { h ^= key.charCodeAt(i); h = Math.imul(h, 16777619); } var s = (h >>> 0) % 2147483647 || 1; return function () { s = s * 16807 % 2147483647; return (s - 1) / 2147483646; }; }
+  /* smooth(points): a curve through [[x,y], ...] */
+  function smooth(p) { var d = "M" + f(p[0][0]) + " " + f(p[0][1]); for (var i = 0; i < p.length - 1; i++) { var p0 = p[i - 1] || p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p2; d += " C" + f(p1[0] + (p2[0] - p0[0]) / 6) + " " + f(p1[1] + (p2[1] - p0[1]) / 6) + " " + f(p2[0] - (p3[0] - p1[0]) / 6) + " " + f(p2[1] - (p3[1] - p1[1]) / 6) + " " + f(p2[0]) + " " + f(p2[1]); } return d; }
+  /* ring(cx, cy, r, key): a circle drawn in one stroke, a little uneven, ends overlapping */
+  function ring(cx, cy, r, key) { var R = rng(key), a0 = R() * 6.283, over = 0.14 + R() * 0.1, n = 22, p = []; for (var i = 0; i <= n; i++) { var t = a0 + (2 * Math.PI + over) * i / n, k = r * (1 + 0.02 * Math.sin(2 * t + a0) + (i / n - 0.5) * 0.018); p.push([cx + k * Math.cos(t), cy + k * Math.sin(t)]); } return smooth(p); }
+  /* blob(cx, cy, r, key): the marker swash behind a shape, slightly off-register (use with class "fillmk") */
+  function blob(cx, cy, r, key) { var R = rng(key + "b"), n = 18, p = []; for (var i = 0; i <= n; i++) { var t = 2 * Math.PI * i / n, k = r * (0.97 + R() * 0.06); p.push([cx + 3 + k * Math.cos(t), cy + 2 + k * Math.sin(t)]); } return smooth(p) + "Z"; }
+  /* line(x1, y1, x2, y2, key, bow): a gently bowed stroke */
+  function line(x1, y1, x2, y2, key, bow) { var R = rng(key), dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy) || 1, b = bow == null ? (R() - 0.5) * 5 : bow; return "M" + f(x1) + " " + f(y1) + " Q" + f((x1 + x2) / 2 - dy / L * b) + " " + f((y1 + y2) / 2 + dx / L * b) + " " + f(x2) + " " + f(y2); }
+  /* head(x, y, angle, size): an open arrowhead pointing along angle (radians) */
+  function head(x, y, ang, s) { s = s || 9; return "M" + f(x - s * Math.cos(ang - 0.5)) + " " + f(y - s * Math.sin(ang - 0.5)) + " L" + f(x) + " " + f(y) + " L" + f(x - s * Math.cos(ang + 0.5)) + " " + f(y - s * Math.sin(ang + 0.5)); }
+  /* ann(key, { to: [x,y], at: [x,y], text, side: "l"|"r" }): a neat-annotations mark for a figure, returned as draw() items.
+     at = the label's spot, in a gutter beside the drawing; to = the point that matters. "\n" breaks lines. ≤ 6 words. */
+  function ann(key, a) {
+    var left = a.side === "l", lines = String(a.text).split("\n"), lh = 22, lx = a.at[0], ly = a.at[1], tx = a.to[0], ty = a.to[1];
+    var sx = lx + (left ? -8 : 8), sy = ly + (lines.length - 1) * lh + 10, dx = tx - sx, dy = ty - sy, len = Math.hypot(dx, dy) || 1;
+    var ex = tx - dx / len * 5, ey = ty - dy / len * 5, bow = (left ? -1 : 1) * Math.min(26, len * 0.2);
+    var mx = (sx + ex) / 2 - dy / len * bow, my = (sy + ey) / 2 + dx / len * bow, ang = Math.atan2(ey - my, ex - mx);
+    return [
+      { key: key + "c", tag: "path", cls: "am", d: "M" + f(sx) + " " + f(sy) + " Q" + f(mx) + " " + f(my) + " " + f(ex) + " " + f(ey) },
+      { key: key + "h", tag: "path", cls: "am", d: head(ex, ey, ang, 9) },
+      { key: key + "t", tag: "text", cls: "al", x: lx, y: ly, anchor: left ? "end" : "start", rot: -4, lines: lines, lh: lh }
+    ];
   }
+  function build(it, svg) {
+    var n = document.createElementNS(NS, it.tag);
+    if (it.cls) n.setAttribute("class", it.cls);
+    if (it.tag === "path") { n.setAttribute("d", it.d); if (it.w) n.setAttribute("stroke-width", it.w); if (STYLE.hatch && /fillmk/.test(it.cls || "")) n.style.fill = "url(#hatch-" + svg.id + ")"; }
+    if (it.tag === "text") {
+      n.setAttribute("text-anchor", it.anchor || "middle");
+      if (it.rot) n.setAttribute("transform", "rotate(" + it.rot + " " + it.x + " " + it.y + ")");
+      (it.lines || [it.text]).forEach(function (l, i) { var s = document.createElementNS(NS, "tspan"); s.setAttribute("x", it.x); if (i) s.setAttribute("dy", it.lh || 22); else s.setAttribute("y", it.y); s.textContent = l; n.appendChild(s); });
+    }
+    return n;
+  }
+  /* draw(svg, items): render one state of a figure. items = [{ key, tag: "path"|"text", cls, d | x,y,text, anchor }].
+     Items whose key and content are unchanged stay put; new ones are pencilled in. Call it again on every state change. */
+  function draw(svg, items) {
+    if (STYLE.hatch && !svg.querySelector("pattern")) svg.insertAdjacentHTML("afterbegin", '<defs><pattern id="hatch-' + svg.id + '" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><line x1="0" y1="0" x2="0" y2="6" style="stroke: var(--c)" stroke-width="1" opacity="0.55"></line></pattern></defs>');
+    if (STYLE.passes > 1) items = items.reduce(function (out, it) { out.push(it); if (it.tag === "path" && /\b(ln|am)\b/.test(it.cls || "") && !/dash/.test(it.cls)) out.push({ key: it.key + "~2", tag: "path", cls: it.cls + " pass2", d: it.d, shift: 1 }); return out; }, []);
+    var old = {}, keep = {}, ready = svg.dataset.ready === "1";
+    Array.prototype.forEach.call(svg.querySelectorAll("[data-k]"), function (n) { old[n.dataset.k] = n; });
+    items.forEach(function (it) {
+      var sig = JSON.stringify(it), n = old[it.key];
+      if (n && n.dataset.sig === sig) { svg.appendChild(n); keep[it.key] = 1; return; }
+      if (n) n.remove();
+      n = build(it, svg); n.dataset.k = it.key; n.dataset.sig = sig; keep[it.key] = 1;
+      if (it.shift) n.setAttribute("transform", "translate(0.9 0.7)");
+      if (ready && !reduce) {
+        if (it.tag === "path" && !/fillmk|dash|band/.test(it.cls || "")) {
+          n.setAttribute("pathLength", "1"); n.style.strokeDasharray = "1"; n.classList.add("drawin");
+          n.addEventListener("animationend", function () { n.classList.remove("drawin"); n.removeAttribute("pathLength"); n.style.strokeDasharray = ""; }, { once: true });
+        } else n.classList.add("fadein");
+      }
+      svg.appendChild(n);
+    });
+    Object.keys(old).forEach(function (k) { if (!keep[k]) old[k].remove(); });
+    svg.dataset.ready = "1";
+  }
+
+  /* margin notes: with --margin-notes: 1 on a wide screen, each inline .ann's note moves into the right margin */
+  function marginNotes() {
+    document.querySelectorAll(".mnote").forEach(function (n) { n.remove(); });
+    document.querySelectorAll(".ann").forEach(function (a) {
+      var col = a.closest(".col"), on = STYLE.margin && window.innerWidth >= 1160 && col;
+      a.classList.toggle("in-margin", !!on);
+      var p = a.closest(".room-below"); if (p) p.classList.toggle("margined", !!on);
+      if (!on) return;
+      var m = el("p", "mnote", a.getAttribute("data-note")), cs = getComputedStyle(a);
+      m.style.setProperty("--c", cs.getPropertyValue("--c")); m.style.setProperty("--t", cs.getPropertyValue("--t"));
+      m.style.top = (a.getBoundingClientRect().top - col.getBoundingClientRect().top) + "px";
+      col.appendChild(m);
+    });
+  }
+  marginNotes(); window.addEventListener("resize", marginNotes);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(marginNotes);
 
   /* scrolly(setState): calls setState(i) as beat i crosses the middle of the viewport; marks it .active */
   function scrolly(setState) {
-    var beats = document.querySelectorAll('.beat');
-    function activate(i) { beats.forEach(function (b) { b.classList.toggle('active', Number(b.getAttribute('data-i')) === i); }); setState(i); }
+    var beats = document.querySelectorAll(".beat");
+    function activate(i) { beats.forEach(function (b) { b.classList.toggle("active", Number(b.getAttribute("data-i")) === i); }); setState(i); }
     activate(0);
-    if (!('IntersectionObserver' in window)) { beats.forEach(function (b) { b.querySelector('.card').style.opacity = 1; }); return; }
-    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) activate(Number(e.target.getAttribute('data-i'))); }); }, { rootMargin: '-45% 0px -45% 0px' });
+    if (!("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) activate(Number(e.target.getAttribute("data-i"))); }); }, { rootMargin: "-45% 0px -45% 0px" });
     beats.forEach(function (b) { io.observe(b); });
   }
 
-  // [page code: build each interaction, render its initial meaningful state, wire controls]
-  // if (document.querySelector('.beat')) scrolly(function (i) { /* re-render the sticky figure from STATES[i] */ });
+  // [page code: one function per figure that builds the items for the current state and calls draw(); wire controls; call it once]
+  // Example (a flip between two states):
+  // function fig2() {
+  //   var b = $("f2b").checked, items = [];
+  //   items.push({ key: "self", tag: "path", cls: "ln", d: ring(300, 160, 56, "self") });
+  //   items.push({ key: "lbl", tag: "text", cls: "fl", x: 300, y: 167, text: b ? "[B]" : "[A]" });
+  //   if (!b) items.push({ key: "loop", tag: "path", cls: "ln hue bold", d: ring(300, 160, 74, "loop") });
+  //   items = items.concat(ann("n", b ? { to: [330, 100], at: [380, 30], text: "[what changed]", side: "r" } : { to: [250, 100], at: [220, 30], text: "[the cause]", side: "l" }));
+  //   draw($("fig2"), items);
+  //   verdict($("fig2Verdict"), b ? "[B, in one line]" : "[A, in one line]", "[why]");
+  // }
+  // ["f2a", "f2b"].forEach(function (id) { $(id).addEventListener("change", fig2); }); fig2();
+  // if (document.querySelector(".beat")) scrolly(function (i) { /* re-render the sticky figure from STATES[i] */ });
 })();
 </script>

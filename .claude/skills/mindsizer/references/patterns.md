@@ -12,9 +12,12 @@ or re-highlights. In the reference, the implications of "it's going to be windy 
 up differently for sailing, skydiving or a picnic. Include one case where nothing applies,
 because the contrast teaches. The facts stay fixed; only their relevance moves.
 **Trap:** cases that differ only in wording. Each pick must visibly change the output.
+**Trap:** a label swap. If every case redraws the same shapes with new words in them, the
+figure isn't showing anything; draw each case's own structure, or use a `.set` instead of a
+pick. `scripts/states.sh` flags cases that draw or light the same thing.
 
 Each pattern lists when to use it, the minimum it needs, and the trap to avoid. The live
-versions are in `examples/channel.html` (section id in brackets).
+versions are in `examples/older-look/channel.html` (section id in brackets).
 
 ## train / run: a simulator
 **When:** an outcome emerges from repeated steps (learning, growth, selection, compounding).

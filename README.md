@@ -11,13 +11,25 @@ The aim is for you to see *why* something is true, not just read that it is.
 
 ## Examples
 
-- [`examples/vervaeke.html`](.claude/skills/mindsizer/examples/vervaeke.html), *Why anything
-  matters to you*: a 32-minute philosophy talk, from auto-captions. **The reference for "easy to
-  take in"**: a map up front, sets as cards, one-click interactions.
-- [`examples/channel.html`](.claude/skills/mindsizer/examples/channel.html), *The Channel
-  Nobody Designed*: an event, built from a source.
-- [`examples/weights.html`](.claude/skills/mindsizer/examples/weights.html), *Where a model's
-  habits live*: a general concept, explained with no source document.
+- [`examples/vervaeke.html`](.claude/skills/mindsizer/examples/vervaeke.html), *How anything
+  comes to matter*: a 32-minute philosophy talk, from auto-captions, in the `ink` style. **The
+  reference for "easy to take in"**: a map up front, sets side by side, one-click interactions,
+  short pencilled notes on the figures.
+- [`examples/claude-mods.html`](.claude/skills/mindsizer/examples/claude-mods.html), *Claude Code
+  mods*: a new product feature explained from its docs, with three use cases; built by the
+  skill in a fresh session, then revised after an eval.
+- [`examples/older-look/`](.claude/skills/mindsizer/examples/older-look/): an event told as a
+  story and a concept explained with no source, in an earlier, retired look.
+
+## Styles
+
+Every page is built in one of five calm styles, all after
+[neat-annotations](https://github.com/syabro/neat-annotations): calm print, and a pencil that
+points at what to notice. Name one in your request ("make it in ink"); the default is `ink`.
+
+| `neat` | `graphite` | `ink` | `margins` | `pencil` |
+|---|---|---|---|---|
+| system sans, a colour per idea | all grey, one yellow highlighter | serif, dot grid, one blue | notes in a wide margin | rounder type, coloured pencils |
 
 ## Use
 
@@ -36,10 +48,13 @@ The skill is instructions plus a template. There is no CLI and no build step.
 ```
 .claude/skills/mindsizer/
   SKILL.md               spine → one interaction per idea → write in one pass → quick check → deliver
-  references/style.md    the look: calm type, one accent with one meaning, light and dark
+  references/style.md    the five styles, the token contract, colour, type, figures, annotations
   references/patterns.md interaction patterns: train, scrub, flip, reveal, slide, try, switch off
-  assets/template.html   page skeleton with tokens, components and a scrolly helper
+  assets/template.html   page skeleton: hero map, sets, chains, controls, the pencil kit, scrolly
+  assets/styles/*.css    one file per style (tokens for light and dark)
+  scripts/new-page.sh    start a page: template + chosen style
   scripts/check.sh       syntax check + screenshots at 1280px and 400px (node + npx playwright)
+  scripts/states.sh      every interactive state screenshotted; flags look-alike states, tiny phone text, long first reads
   examples/              reference pages
 ```
 
