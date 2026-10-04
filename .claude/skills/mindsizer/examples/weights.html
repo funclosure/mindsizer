@@ -1,0 +1,612 @@
+<title>Where Behaviour Lives</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..600;1,8..60,400..500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Accent means one thing on this page: what is writing or steering the behaviour right now
+   (the training signal, the changed weights, the live context, the note being read). */
+:root {
+  --bg: #f7f7f5; --surface: #eeeeeb; --fg: #18181b; --muted: #5d5d66; --faint: #8f8f99; --line: #dfdfe4;
+  --accent: #d4441c; --accent-text: #b2370f; --accent-soft: rgba(212, 68, 28, 0.12);
+  --display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121215; --surface: #1b1b20; --fg: #ececef; --muted: #a3a3ad; --faint: #6f6f7a; --line: #2b2b32;
+  --accent: #ff6a3c; --accent-text: #ff8a63; --accent-soft: rgba(255, 106, 60, 0.16); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #121215; --surface: #1b1b20; --fg: #ececef; --muted: #a3a3ad; --faint: #6f6f7a; --line: #2b2b32;
+  --accent: #ff6a3c; --accent-text: #ff8a63; --accent-soft: rgba(255, 106, 60, 0.16); color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 19px/1.6 var(--body); padding-inline: 20px; padding-block: 0 96px; -webkit-font-smoothing: antialiased; margin: 0; }
+a { color: var(--accent-text); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.col { max-width: 640px; margin-inline: auto; }
+.wide { max-width: 980px; margin-inline: auto; }
+section { padding-block: 72px 24px; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(30px, 4.4vw, 46px); font-weight: 750; line-height: 1.02; letter-spacing: -0.03em; }
+h3 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+p { margin: 0; }
+.prose { display: grid; gap: 18px; }
+.path { font: 500 13px/1.4 var(--mono); color: var(--accent-text); }
+.note { font: 14px/1.5 var(--display); color: var(--faint); }
+.takeaway { font: 700 clamp(22px, 2.8vw, 28px)/1.2 var(--display); letter-spacing: -0.02em; }
+.figure { display: grid; gap: 18px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+/* hero */
+.hero { padding-block: 64px 24px; display: grid; gap: 28px; }
+.kicker { font: 500 14px/1.4 var(--display); color: var(--muted); }
+.hero h1 { font-size: clamp(48px, 9vw, 100px); font-weight: 800; line-height: 0.92; letter-spacing: -0.04em; }
+.hero .dek { font-size: clamp(20px, 2.4vw, 24px); line-height: 1.45; color: var(--muted); max-width: 34ch; }
+.places { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.place { border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 6px; align-content: start; }
+.place b { font: 700 20px/1.2 var(--display); letter-spacing: -0.01em; }
+.place span { font: 15px/1.45 var(--display); color: var(--muted); }
+.place .life { font: 600 14px/1.3 var(--display); color: var(--fg); }
+
+/* controls */
+button, .seg label { font: 500 15px/1 var(--display); color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; cursor: pointer; }
+button:hover, .seg label:hover { border-color: var(--fg); }
+button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+button:disabled { opacity: 0.4; cursor: default; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 22px; padding: 3px; gap: 2px; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label { border: 0; padding: 8px 14px; }
+.seg input:checked + label { background: var(--fg); color: var(--bg); }
+.seg input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type=text] { flex: 1 1 260px; min-width: 0; font: 16px var(--display); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 12px 18px; }
+.readout { font: 500 15px/1.3 var(--display); color: var(--muted); }
+.readout b { font-size: 20px; color: var(--fg); font-variant-numeric: tabular-nums; }
+
+/* reveal: the rulebook vs the numbers */
+.rulebook { border: 2px dashed var(--faint); border-radius: 14px; padding: 24px; display: grid; gap: 10px; transition: all 0.5s cubic-bezier(.2,.7,.2,1); }
+.rulebook h3 { color: var(--muted); font-size: 22px; }
+.rulebook ol { margin: 0; padding-left: 22px; display: grid; gap: 6px; font: 17px/1.4 var(--display); color: var(--muted); }
+.numbers { display: none; gap: 12px; }
+.numbers .listing { background: var(--surface); border-radius: 14px; padding: 18px 20px; font: 13px/1.7 var(--mono); color: var(--muted); overflow-x: auto; white-space: pre; }
+.reveal.open .rulebook { opacity: 0.25; transform: scale(0.97); filter: blur(1.5px); }
+.reveal.open .numbers { display: grid; }
+
+/* simulator */
+.bars { display: grid; gap: 16px; }
+.bar { display: grid; grid-template-columns: minmax(120px, 230px) minmax(0, 1fr) 52px; gap: 16px; align-items: center; }
+.bar .lab { font: 600 17px/1.2 var(--display); }
+.bar .lab small { display: block; font-weight: 400; font-size: 13px; color: var(--faint); margin-top: 3px; }
+.bar .track { position: relative; height: 26px; background: var(--surface); border-radius: 4px; }
+.bar .fill { height: 100%; background: var(--faint); border-radius: 4px; transition: width 0.35s ease, background 0.35s; }
+.bar.on .fill { background: var(--accent); }
+.bar .base { position: absolute; top: -5px; bottom: -5px; width: 2px; background: var(--fg); transition: left 0.35s; }
+.bar .base[hidden] { display: none; }
+.bar .pct { font: 600 18px/1 var(--display); text-align: right; font-variant-numeric: tabular-nums; }
+.chart { width: 100%; height: auto; display: block; }
+.chart .axis { stroke: var(--line); stroke-width: 1; fill: none; }
+.chart .phase { stroke: var(--fg); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.chart text { fill: var(--faint); font: 12px var(--display); }
+.chart .ln { fill: none; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.legend { display: flex; gap: 18px; flex-wrap: wrap; font: 13px var(--display); color: var(--faint); }
+.legend i { display: inline-block; width: 2px; height: 14px; background: var(--fg); vertical-align: -2px; margin-right: 6px; }
+
+/* scrolly */
+.scrolly { display: grid; grid-template-columns: minmax(0, 1fr); }
+.stick { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; background: var(--bg); padding-block: 14px; border-bottom: 1px solid var(--line); }
+.beat { min-height: 62vh; display: flex; align-items: center; padding-block: 24px; }
+.beat .card { display: grid; gap: 8px; max-width: 460px; opacity: 0.38; transition: opacity 0.3s; }
+.beat.active .card { opacity: 1; }
+.beat .when { font: 600 14px var(--mono); color: var(--accent-text); }
+.beat p { color: var(--muted); }
+.lc-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: baseline; }
+.lc-head .stage { font: 800 24px/1 var(--display); letter-spacing: -0.02em; }
+.lc-head .sub { font: 15px var(--display); color: var(--muted); }
+.ckpts { display: flex; gap: 8px; flex-wrap: wrap; }
+.ck { font: 13px/1.3 var(--display); padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); color: var(--faint); transition: all 0.3s; }
+.ck[data-s="saved"] { border-color: var(--fg); color: var(--fg); }
+.ck[data-s="writing"] { border-color: var(--accent); color: var(--fg); background: var(--accent-soft); }
+.ck[data-s="frozen"] { border-color: var(--fg); color: var(--fg); background: var(--surface); }
+.grid { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); gap: 3px; }
+.grid i { aspect-ratio: 1; border-radius: 2px; background: var(--fg); transition: opacity 0.4s, background 0.4s; }
+.grid i.ch { background: var(--accent); }
+.grid-cap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font: 13px var(--display); color: var(--faint); }
+.boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.box { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-height: 76px; display: grid; gap: 4px; align-content: start; transition: all 0.3s; }
+.box b { font: 600 14px var(--display); color: var(--muted); }
+.box span { font: 13px/1.4 var(--mono); color: var(--faint); }
+.box[data-s="on"] { border-color: var(--accent); background: var(--accent-soft); }
+.box[data-s="on"] b, .box[data-s="on"] span { color: var(--fg); }
+.box[data-s="kept"] { border-color: var(--fg); }
+.box[data-s="kept"] b { color: var(--fg); }
+@media (min-width: 980px) {
+  .scrolly { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 56px; }
+  .stick { order: 2; top: calc(env(safe-area-inset-top, 0px) + 10vh); align-self: start; border-bottom: 0; padding-block: 0; }
+  .beats { order: 1; }
+  .beat { min-height: 80vh; }
+}
+@media (max-width: 979px) { .grid { grid-template-columns: repeat(24, minmax(0, 1fr)); } .stick .figure { gap: 10px; } .box { min-height: 0; } }
+
+/* context flip */
+.ctx { background: var(--surface); border-radius: 14px; padding: 18px 20px; font: 14px/1.7 var(--mono); display: grid; gap: 2px; overflow-x: auto; }
+.ctx .role { color: var(--faint); }
+.ctx .added { color: var(--accent-text); }
+.reply { font: italic 500 clamp(20px, 2.6vw, 24px)/1.35 var(--body); }
+.frozen { display: flex; gap: 22px; flex-wrap: wrap; font: 14px var(--display); color: var(--muted); }
+.frozen b { color: var(--fg); font-variant-numeric: tabular-nums; }
+
+/* three places try */
+.where3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.slot { border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 8px; align-content: start; min-height: 120px; transition: all 0.3s; }
+.slot b { font: 600 16px var(--display); }
+.slot .item { font: 13px/1.4 var(--display); padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); color: var(--faint); }
+.slot .item.live { border-color: var(--accent); background: var(--accent-soft); color: var(--fg); }
+.slot .item.kept { border-color: var(--fg); color: var(--fg); }
+.slot .item.gone { text-decoration: line-through; }
+.log { display: grid; gap: 8px; font: 16px/1.45 var(--display); }
+.log div { display: grid; grid-template-columns: 26px 1fr; gap: 8px; }
+.log .k { font: 600 14px var(--mono); color: var(--accent-text); }
+.verdict { font: 700 20px/1.3 var(--display); }
+@media (max-width: 560px) { .where3 { grid-template-columns: 1fr; } .slot { min-height: 0; } }
+
+/* summary table */
+.tbl { width: 100%; border-collapse: collapse; font: 15px/1.4 var(--display); }
+.tbl th, .tbl td { text-align: left; padding: 10px 10px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tbl th { font-weight: 600; color: var(--muted); }
+.tbl td:first-child { font-weight: 700; }
+.tblwrap { overflow-x: auto; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+
+<header class="hero col">
+  <div class="kicker">An explorable explanation · how language models keep what they learned</div>
+  <h1>Where a model's habits live</h1>
+  <p class="dek">Training, pretraining and RL alike, writes behaviour into billions of numbers: the weights. Context and external stores never change those numbers. They steer them, only while their text is in front of the model.</p>
+</header>
+<div class="wide places" aria-label="The three places at a glance">
+  <div class="place"><b>Weights</b><span>Written by training. Read-only once the model ships.</span><span class="life">Lasts as long as this model does</span></div>
+  <div class="place"><b>Context window</b><span>The text in front of the model right now: instructions, the chat, documents.</span><span class="life">Lasts one conversation</span></div>
+  <div class="place"><b>External store</b><span>Files, notes or a database an agent can write to and search.</span><span class="life">Lasts until deleted, works only when read in</span></div>
+</div>
+
+<!-- 1 · weights -->
+<section class="col" id="weights">
+  <span class="path">weights/</span>
+  <h2>"In the weights" means a tendency spread across billions of numbers, not a rule written down somewhere</h2>
+  <div class="prose">
+    <p>A language model is one fixed recipe, the architecture, plus a very large list of numbers, the weights or parameters. Given some text, the recipe uses the weights to score every possible next token and turns those scores into probabilities. Sampling one token, appending it and repeating produces a reply.</p>
+    <p>So a "habit", such as answering politely, hedging, or writing Python a certain way, is just that some continuations are more probable than others. No line anywhere says "be polite". It's natural to imagine one. Look for it.</p>
+  </div>
+</section>
+<div class="col figure reveal" id="reveal">
+  <div class="rulebook">
+    <h3>What people picture: a rulebook inside the model</h3>
+    <ol>
+      <li>Be polite and helpful.</li>
+      <li>Paris is the capital of France.</li>
+      <li>Close every bracket you open.</li>
+      <li>Hedge when unsure.</li>
+    </ol>
+  </div>
+  <div class="numbers">
+    <div class="listing" aria-label="A few weights, illustrative">layer 17 · attention · W_q[2048:2056, 911]
+ 0.0132  -0.0410   0.0067   0.0291  -0.0158   0.0003  -0.0222   0.0371
+layer 17 · mlp · W_up[911, 5120:5128]
+-0.0087   0.0194  -0.0311   0.0042   0.0260  -0.0019   0.0135  -0.0278
+… and billions more like these</div>
+    <p style="font: 17px/1.45 var(--display); color: var(--muted)">That is all there is to find. Politeness, the fact about Paris and bracket-closing are each spread over very many of these numbers, and each number takes part in very many behaviours. Interpretability research tries to locate such features, and it is a hard, open problem.</p>
+  </div>
+  <div class="row"><button type="button" class="primary" id="openWeights" aria-pressed="false">Look inside the model</button><span class="note">The numbers and layer names are illustrative.</span></div>
+</div>
+<div class="col" style="padding-top:28px"><p class="takeaway">A habit in the weights is a shape in the odds, not a sentence you could delete.</p></div>
+
+<!-- 2 · training -->
+<section class="col" id="training">
+  <span class="path">weights/training/</span>
+  <h2>Pretraining and RL edit the same numbers; what differs is the signal pushing them</h2>
+  <div class="prose">
+    <p><strong>Pretraining</strong> shows the model huge amounts of text and, at every position, nudges all the weights a little so the true next token becomes more likely. The result, the <em>base model</em>, mirrors its data: asked a question, it often just continues the page, the way a web document would.</p>
+    <p><strong>Post-training</strong> starts from a copy of those weights and keeps nudging the same numbers. Supervised fine-tuning imitates example answers. Reinforcement learning samples the model's own replies, scores them with a reward (a model of human preferences, a test suite, a grader), and makes high-scoring replies more likely. It mostly reweights what the base model could already do. It also amplifies whatever the reward happens to favour, including what nobody intended.</p>
+    <p>Below, the bars are how often the model replies in each style. Pretrain it, then run RL with either grader. The black tick is the saved base model.</p>
+  </div>
+</section>
+<div class="wide figure" id="sim">
+  <div class="row">
+    <div class="seg" role="radiogroup" aria-label="What the RL reward favours">
+      <input type="radio" name="rw" id="rwGood" value="good" checked><label for="rwGood">Reward: correct and concise</label>
+      <input type="radio" name="rw" id="rwLong" value="long"><label for="rwLong">Reward: longer answers (a flawed grader)</label>
+    </div>
+    <span class="readout" style="margin-left:auto">Pretraining <b id="nPre">0</b> · RL <b id="nRL">0</b></span>
+  </div>
+  <div class="bars" id="bars"></div>
+  <svg class="chart" viewBox="0 0 960 190" role="img" aria-label="Share of each reply style over training steps">
+    <line class="axis" x1="40" y1="160" x2="940" y2="160"></line>
+    <line class="axis" x1="40" y1="10" x2="40" y2="160"></line>
+    <text x="34" y="14" text-anchor="end">100%</text><text x="34" y="164" text-anchor="end">0</text>
+    <text x="40" y="182">random start</text><text x="940" y="182" text-anchor="end">step 120</text>
+    <g id="phase"></g><g id="lines"></g>
+  </svg>
+  <div class="row">
+    <button type="button" id="pre10">Pretrain 10 steps</button>
+    <button type="button" class="primary" id="rl10">Run RL 10 steps</button>
+    <button type="button" id="reset">Reset to random weights</button>
+  </div>
+  <div class="legend"><span><i></i>base model, saved when RL starts</span><span>Orange: the style the current signal is pushing up</span></div>
+  <p class="note" id="simNote">Illustrative toy. Four reply styles stand in for billions of weights. Pretraining moves the odds toward how often each style appears in the text; RL raises each style in proportion to how much its reward beats the average. Real post-training also adds a penalty for drifting far from the base model.</p>
+</div>
+<div class="col" style="padding-top:28px"><p class="takeaway">Both stages write to one place. RL's habits end up "in the weights" exactly as pretraining's do.</p></div>
+
+<!-- 3 · lifecycle -->
+<section class="col" id="lifecycle">
+  <span class="path">weights/checkpoints/</span>
+  <h2>The base model is fixed only as a saved snapshot; the model you talk to is a later copy, frozen at release</h2>
+  <p>"Fixed" is half right. Scroll through one model's life and watch which layer changes at each step.</p>
+</section>
+<div class="wide scrolly">
+  <div class="stick">
+    <div class="figure">
+      <div class="lc-head"><span class="stage" id="lcStage">Start</span><span class="sub" id="lcSub">random numbers</span></div>
+      <div class="ckpts" id="ckpts">
+        <span class="ck" data-c="base">base model</span>
+        <span class="ck" data-c="post">post-trained model</span>
+        <span class="ck" data-c="next">next version</span>
+      </div>
+      <div class="grid" id="grid" aria-hidden="true"></div>
+      <div class="grid-cap"><span>Weights (a tiny illustrative sample)</span><span id="lcChanged">orange = changed in this step</span></div>
+      <div class="boxes">
+        <div class="box" data-b="ctx"><b>Context window</b><span id="ctxText">empty</span></div>
+        <div class="box" data-b="store"><b>External store</b><span id="storeText">empty</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="beats">
+    <div class="beat" data-i="0"><div class="card"><span class="when">step 0</span><h3>Random numbers</h3><p>Before training, the weights are random. The model produces gibberish.</p></div></div>
+    <div class="beat" data-i="1"><div class="card"><span class="when">pretraining</span><h3>Nearly every weight moves</h3><p>Over trillions of tokens, each step nudges the weights toward predicting the next token. Grammar, facts and styles of writing settle in as tendencies.</p></div></div>
+    <div class="beat" data-i="2"><div class="card"><span class="when">checkpoint saved</span><h3>The base model</h3><p>The weights are written to disk. This file never changes again. This is the sense in which the base model is fixed.</p></div></div>
+    <div class="beat" data-i="3"><div class="card"><span class="when">post-training</span><h3>A copy is trained further</h3><p>Fine-tuning and RL start from a copy of the base weights and change them again, usually by far less than pretraining did. The result is a new file: same architecture, different numbers.</p></div></div>
+    <div class="beat" data-i="4"><div class="card"><span class="when">release</span><h3>Frozen for use</h3><p>When the model is served, its weights are only read, never written. Every user talks to the same numbers.</p></div></div>
+    <div class="beat" data-i="5"><div class="card"><span class="when">conversation A</span><h3>Behaviour shifts, weights don't</h3><p>Your instructions and the chat so far sit in the context window. They change what the model does in this conversation. Zero weights change.</p></div></div>
+    <div class="beat" data-i="6"><div class="card"><span class="when">conversation ends</span><h3>The context is gone</h3><p>Nothing from conversation A remains in the model. If the agent wrote a note to a file or memory store before it ended, the note is the only thing that remains.</p></div></div>
+    <div class="beat" data-i="7"><div class="card"><span class="when">conversation B</span><h3>The note comes back as text</h3><p>The agent searches the store and pastes the note into its new context. The behaviour returns because the text is back in front of the model. The weights are still untouched.</p></div></div>
+    <div class="beat" data-i="8"><div class="card"><span class="when">a later training run</span><h3>Only training writes weights</h3><p>If a lab later trains on new data, which might include conversations, depending on its policy, the change lands in a new model. The released model's file stays as it was.</p></div></div>
+  </div>
+</div>
+
+<!-- 4 · context -->
+<section class="col" id="context">
+  <span class="path">context/</span>
+  <h2>The context window steers behaviour without changing a single weight, and it's gone when the conversation ends</h2>
+  <div class="prose">
+    <p>Every next token is computed from the weights <em>and</em> all the text in the context: system prompt, conversation, pasted documents, tool results. Change the text and the same frozen weights produce different odds. Models can even pick up a new pattern from a few examples in the prompt. This is called in-context learning, and nothing is written back.</p>
+    <p>It's also bounded: the window holds a limited number of tokens, and strong trained habits can win against a weak instruction. Change what's in the context, then end the conversation.</p>
+  </div>
+</section>
+<div class="col figure" id="ctxFig">
+  <div class="seg" role="radiogroup" aria-label="What is in the context">
+    <input type="radio" name="cx" id="cxNone" value="none"><label for="cxNone">Just the question</label>
+    <input type="radio" name="cx" id="cxInstr" value="instr" checked><label for="cxInstr">Add an instruction</label>
+    <input type="radio" name="cx" id="cxShots" value="shots"><label for="cxShots">Add two examples</label>
+  </div>
+  <div class="ctx" id="ctxBox" aria-live="polite"></div>
+  <div><span class="note">Most likely reply</span><p class="reply" id="ctxReply"></p></div>
+  <div class="frozen"><span>Weights changed: <b>0</b></span><span>Tokens in context: <b id="ctxTok">0</b></span></div>
+  <div class="row"><button type="button" id="endChat">End the conversation</button><span class="note">Prompts and replies are illustrative.</span></div>
+</div>
+<div class="col" style="padding-top:28px"><p class="takeaway">Context is working memory: powerful, immediate, and temporary.</p></div>
+
+<!-- 5 · store -->
+<section class="col" id="store">
+  <span class="path">store/</span>
+  <h2>An external store lasts, but it only matters once it's read back into the context</h2>
+  <div class="prose">
+    <p>Agents get memory across conversations by writing outside themselves: a notes file, a database, a search index. In a later session they look it up, and the retrieved text joins the context. Product "memory" features generally work this way rather than by retraining the model on each user.</p>
+    <p>That makes the store the opposite of the weights in the ways that matter. You can read it, edit it and delete it, but it does nothing unless it's retrieved. Pick where a habit lives, then put it through what happens to models.</p>
+  </div>
+</section>
+<div class="wide figure" id="tryFig">
+  <form class="row" id="habitForm">
+    <input type="text" id="habitText" maxlength="48" placeholder="A habit, e.g. sign off every reply with “— V”" aria-label="A habit to give the model">
+    <button type="submit">Use this habit</button>
+  </form>
+  <div class="seg" role="radiogroup" aria-label="Where the habit lives">
+    <input type="radio" name="wh" id="whW" value="weights"><label for="whW">Trained into the weights</label>
+    <input type="radio" name="wh" id="whC" value="context"><label for="whC">Said in the context</label>
+    <input type="radio" name="wh" id="whS" value="store" checked><label for="whS">Saved to the store</label>
+  </div>
+  <div class="where3" id="where3"></div>
+  <div class="row">
+    <button type="button" class="primary" data-ev="new">Start a new conversation</button>
+    <button type="button" data-ev="read">Show me where it is</button>
+    <button type="button" data-ev="del">Remove it</button>
+    <button type="button" data-ev="ver">Ship a new model version</button>
+  </div>
+  <div class="log" id="log" aria-live="polite"></div>
+  <p class="note">The outcomes are the general pattern, simplified. Real systems mix all three.</p>
+</div>
+
+<!-- 6 · close -->
+<section class="col" id="meaning">
+  <span class="path">summary/</span>
+  <h2>So: training writes, context steers, stores remember</h2>
+  <div class="prose">
+    <p>When someone says a habit is "in the weights", they mean training made it more probable, everywhere, for everyone using that model, until a new model replaces it. You can't open the weights and point at it, and you can't remove it by editing. You can only train again.</p>
+    <p>Anything in the context or a store is text the frozen model reads. It's specific to a conversation or a user, it's inspectable, and it vanishes or stays exactly as long as the text does.</p>
+  </div>
+</section>
+<div class="col tblwrap">
+  <table class="tbl">
+    <thead><tr><th></th><th>Written by</th><th>Lasts</th><th>Can you read it?</th><th>How to remove</th></tr></thead>
+    <tbody>
+      <tr><td>Weights</td><td>Pretraining, fine-tuning, RL</td><td>The model's lifetime</td><td>Only through behaviour</td><td>Train again; no guarantee</td></tr>
+      <tr><td>Context</td><td>You, the app, tools</td><td>One conversation</td><td>Yes</td><td>Edit or end the chat</td></tr>
+      <tr><td>Store</td><td>The agent or app</td><td>Until deleted</td><td>Yes</td><td>Delete the entry</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer class="col" style="padding-top:72px; display:grid; gap:14px;">
+  <span class="path">sources/</span>
+  <div class="note">This page is an explanation of standard, widely taught machine learning, not a report built from a particular source. It simplifies: many deployed systems also use adapters (small add-on sets of weights trained on top of a frozen model), and labs differ in how they fine-tune. Illustrative: the weight values and layer names, the four-style training toy and its rewards, the lifecycle grid, and all example prompts, replies and outcomes.</div>
+</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  var SVG = 'http://www.w3.org/2000/svg';
+
+  /* 1 · reveal */
+  var rv = document.getElementById('reveal'), ow = document.getElementById('openWeights');
+  ow.addEventListener('click', function () {
+    var open = !rv.classList.contains('open');
+    rv.classList.toggle('open', open);
+    ow.textContent = open ? 'Show the rulebook again' : 'Look inside the model';
+    ow.setAttribute('aria-pressed', String(open));
+  });
+
+  /* 2 · training simulator */
+  var S = [
+    { key: 'continue', label: 'Continues the page', sub: 'as web text would', corpus: 0.55, r: { good: 0.0, long: 0.1 } },
+    { key: 'answer', label: 'Answers directly', sub: 'correct, short', corpus: 0.22, r: { good: 1.0, long: 0.3 } },
+    { key: 'padded', label: 'Long, padded answer', sub: 'correct but wordy', corpus: 0.15, r: { good: 0.5, long: 1.0 } },
+    { key: 'refuse', label: 'Declines to answer', sub: '', corpus: 0.08, r: { good: 0.1, long: 0.0 } }
+  ];
+  var MAX = 120, z, hist, nPre, nRL, base, baseAt;
+  function probs(v) { var m = Math.max.apply(null, v), e = v.map(function (x) { return Math.exp(x - m); }), s = e.reduce(function (a, b) { return a + b; }); return e.map(function (x) { return x / s; }); }
+  function init() { z = [0.3, -0.2, 0.1, -0.15]; hist = [probs(z)]; nPre = 0; nRL = 0; base = null; baseAt = null; }
+  function preStep() {
+    if (hist.length > MAX) return;
+    var p = probs(z);
+    z = z.map(function (v, i) { return v + 0.6 * (S[i].corpus - p[i]); }); // cross-entropy gradient toward the corpus mix
+    nPre++; hist.push(probs(z));
+  }
+  function rlStep() {
+    if (hist.length > MAX) return;
+    if (!base) { base = probs(z); baseAt = hist.length - 1; }
+    var m = rwMode(), p = probs(z), avg = 0, i;
+    for (i = 0; i < 4; i++) avg += p[i] * S[i].r[m];
+    z = z.map(function (v, i) { return v + 1.6 * p[i] * (S[i].r[m] - avg); }); // expected policy gradient
+    nRL++; hist.push(probs(z));
+  }
+  function rwMode() { return document.getElementById('rwLong').checked ? 'long' : 'good'; }
+  var barsEl = document.getElementById('bars');
+  var barEls = S.map(function (s) {
+    var row = el('div', 'bar');
+    var lab = el('div', 'lab', s.label); if (s.sub) lab.appendChild(el('small', null, s.sub));
+    var track = el('div', 'track'), fill = el('div', 'fill'), tick = el('div', 'base'); tick.hidden = true;
+    track.appendChild(fill); track.appendChild(tick);
+    var pct = el('div', 'pct', '');
+    row.appendChild(lab); row.appendChild(track); row.appendChild(pct); barsEl.appendChild(row);
+    return { row: row, fill: fill, tick: tick, pct: pct };
+  });
+  var linesG = document.getElementById('lines'), phaseG = document.getElementById('phase');
+  var lastSignal = 'pre';
+  function pushed(i) {
+    if (lastSignal === 'pre') { var p = probs(z); return S[i].corpus - p[i] > 0.01; }
+    var m = rwMode(), q = probs(z), avg = 0; for (var k = 0; k < 4; k++) avg += q[k] * S[k].r[m];
+    return S[i].r[m] > avg;
+  }
+  function draw() {
+    var p = probs(z);
+    S.forEach(function (s, i) {
+      barEls[i].fill.style.width = (p[i] * 100).toFixed(1) + '%';
+      barEls[i].pct.textContent = Math.round(p[i] * 100) + '%';
+      barEls[i].row.classList.toggle('on', pushed(i));
+      if (base) { barEls[i].tick.hidden = false; barEls[i].tick.style.left = 'calc(' + (base[i] * 100).toFixed(1) + '% - 1px)'; } else barEls[i].tick.hidden = true;
+    });
+    document.getElementById('nPre').textContent = nPre;
+    document.getElementById('nRL').textContent = nRL;
+    while (linesG.firstChild) linesG.removeChild(linesG.firstChild);
+    while (phaseG.firstChild) phaseG.removeChild(phaseG.firstChild);
+    function X(j) { return 40 + (j / MAX) * 900; }
+    if (baseAt != null) {
+      var l = document.createElementNS(SVG, 'line');
+      l.setAttribute('class', 'phase'); l.setAttribute('x1', X(baseAt)); l.setAttribute('x2', X(baseAt)); l.setAttribute('y1', 10); l.setAttribute('y2', 160);
+      phaseG.appendChild(l);
+      var t = document.createElementNS(SVG, 'text'); t.setAttribute('x', X(baseAt) - 6); t.setAttribute('y', 24); t.setAttribute('text-anchor', 'end'); t.textContent = 'base model saved · RL begins';
+      phaseG.appendChild(t);
+    }
+    S.forEach(function (s, i) {
+      var d = hist.map(function (q, j) { return (j ? 'L' : 'M') + X(j).toFixed(1) + ' ' + (160 - q[i] * 150).toFixed(1); }).join(' ');
+      var path = document.createElementNS(SVG, 'path');
+      path.setAttribute('d', d); path.setAttribute('class', 'ln');
+      path.setAttribute('stroke', pushed(i) ? 'var(--accent)' : 'var(--faint)');
+      linesG.appendChild(path);
+    });
+    // end labels, nudged apart so they never overlap
+    if (hist.length > 4) {
+      var last = hist[hist.length - 1];
+      var lab = S.map(function (s, i) { return { t: s.key, y: 160 - last[i] * 150 + 4 }; }).sort(function (a, b) { return a.y - b.y; });
+      lab[0].y = Math.max(lab[0].y, 22);
+      for (var k = 1; k < lab.length; k++) if (lab[k].y - lab[k - 1].y < 13) lab[k].y = lab[k - 1].y + 13;
+      var over = lab[lab.length - 1].y - 172; if (over > 0) lab.forEach(function (l) { l.y -= over; });
+      lab.forEach(function (l) {
+        var tx = document.createElementNS(SVG, 'text');
+        tx.setAttribute('x', Math.min(X(hist.length - 1) + 8, 890)); tx.setAttribute('y', l.y); tx.textContent = l.t;
+        linesG.appendChild(tx);
+      });
+    }
+    var full = hist.length > MAX;
+    document.getElementById('pre10').disabled = full || nRL > 0;
+    document.getElementById('rl10').disabled = full;
+    document.getElementById('pre10').title = nRL > 0 ? 'Pretraining comes first. Reset to start over.' : '';
+  }
+  document.getElementById('pre10').addEventListener('click', function () { lastSignal = 'pre'; for (var i = 0; i < 10; i++) preStep(); draw(); });
+  document.getElementById('rl10').addEventListener('click', function () { lastSignal = 'rl'; for (var i = 0; i < 10; i++) rlStep(); draw(); });
+  document.getElementById('reset').addEventListener('click', function () { init(); lastSignal = 'pre'; draw(); });
+  document.getElementById('rwGood').addEventListener('change', function () { if (nRL) lastSignal = 'rl'; draw(); });
+  document.getElementById('rwLong').addEventListener('change', function () { if (nRL) lastSignal = 'rl'; draw(); });
+  init();
+  for (var s = 0; s < 40; s++) preStep();
+  lastSignal = 'rl';
+  for (s = 0; s < 20; s++) rlStep();
+  draw();
+
+  /* 3 · lifecycle scrolly */
+  var N = 96, gridEl = document.getElementById('grid'), cells = [];
+  function rnd(k) { var x = Math.sin(k * 12.9898) * 43758.5453; return x - Math.floor(x); }
+  for (var c = 0; c < N; c++) { var ci = el('i'); gridEl.appendChild(ci); cells.push(ci); }
+  // shade sets: each stage has its own deterministic pattern; "changed" picks which cells moved
+  function shade(seed) { return cells.map(function (_, k) { return 0.12 + 0.75 * rnd(k + seed * 97); }); }
+  var SH = { rand: shade(1), base: shade(2), post: null, next: shade(4) };
+  SH.post = SH.base.map(function (v, k) { return rnd(k + 500) < 0.18 ? 0.12 + 0.75 * rnd(k + 900) : v; });
+  var postChanged = SH.base.map(function (v, k) { return SH.post[k] !== v; });
+  var ST = [
+    { stage: 'Start', sub: 'random numbers', sh: 'rand', ch: 'none', ck: {}, ctx: ['', 'empty'], store: ['', 'empty'], cap: 'nothing learned yet' },
+    { stage: 'Pretraining', sub: 'predict the next token, trillions of times', sh: 'base', ch: 'all', ck: { base: 'writing' }, ctx: ['', 'not used yet'], store: ['', 'not used yet'], cap: 'orange = changed in this step: nearly all' },
+    { stage: 'Base model', sub: 'saved to disk, never edited again', sh: 'base', ch: 'none', ck: { base: 'saved' }, ctx: ['', 'not used yet'], store: ['', 'not used yet'], cap: 'unchanged from here on, in this file' },
+    { stage: 'Post-training', sub: 'fine-tuning + RL on a copy', sh: 'post', ch: 'post', ck: { base: 'saved', post: 'writing' }, ctx: ['', 'not used yet'], store: ['', 'not used yet'], cap: 'orange = changed by post-training (illustrative share)' },
+    { stage: 'Released', sub: 'weights are read, never written', sh: 'post', ch: 'none', ck: { base: 'saved', post: 'frozen' }, ctx: ['', 'empty'], store: ['', 'empty'], cap: 'frozen' },
+    { stage: 'Conversation A', sub: 'behaviour steered by the context', sh: 'post', ch: 'none', ck: { base: 'saved', post: 'frozen' }, ctx: ['on', '"Call me Vic. Keep it short."'], store: ['', 'empty'], cap: 'weights changed: 0' },
+    { stage: 'Conversation ends', sub: 'the context is discarded', sh: 'post', ch: 'none', ck: { base: 'saved', post: 'frozen' }, ctx: ['', 'empty'], store: ['kept', 'notes.md: "User: Vic. Prefers short replies."'], cap: 'weights changed: 0' },
+    { stage: 'Conversation B', sub: 'the note is read back in', sh: 'post', ch: 'none', ck: { base: 'saved', post: 'frozen' }, ctx: ['on', '[from notes.md] User: Vic. Prefers short replies.'], store: ['on', 'notes.md: read by the agent'], cap: 'weights changed: 0' },
+    { stage: 'Next training run', sub: 'a new model, a new file', sh: 'next', ch: 'all', ck: { base: 'saved', post: 'frozen', next: 'writing' }, ctx: ['', 'empty'], store: ['kept', 'notes.md: still there'], cap: 'a different set of numbers; the released file is untouched' }
+  ];
+  function setState(i) {
+    var st = ST[i], sh = SH[st.sh];
+    document.getElementById('lcStage').textContent = st.stage;
+    document.getElementById('lcSub').textContent = st.sub;
+    document.getElementById('lcChanged').textContent = st.cap;
+    cells.forEach(function (cell, k) {
+      var ch = st.ch === 'all' ? rnd(k + i * 31) < 0.9 : st.ch === 'post' ? postChanged[k] : false;
+      cell.style.opacity = sh[k].toFixed(2);
+      cell.classList.toggle('ch', ch);
+    });
+    document.querySelectorAll('.ck').forEach(function (k) { k.setAttribute('data-s', st.ck[k.getAttribute('data-c')] || ''); });
+    var bc = document.querySelector('.box[data-b="ctx"]'), bs = document.querySelector('.box[data-b="store"]');
+    bc.setAttribute('data-s', st.ctx[0]); document.getElementById('ctxText').textContent = st.ctx[1];
+    bs.setAttribute('data-s', st.store[0]); document.getElementById('storeText').textContent = st.store[1];
+    document.querySelectorAll('.beat').forEach(function (b) { b.classList.toggle('active', Number(b.getAttribute('data-i')) === i); });
+  }
+  setState(0);
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) setState(Number(e.target.getAttribute('data-i'))); }); }, { rootMargin: '-45% 0px -45% 0px' });
+    document.querySelectorAll('.beat').forEach(function (b) { io.observe(b); });
+  } else { document.querySelectorAll('.beat .card').forEach(function (c) { c.style.opacity = 1; }); }
+
+  /* 4 · context flip */
+  var CX = {
+    none: { lines: [['user', 'What is the boiling point of water at sea level?']], reply: '“Water boils at 100 °C (212 °F) at sea level. At higher altitudes, where air pressure is lower, it boils at a lower temperature…”', tok: 14 },
+    instr: { lines: [['system', 'Answer in one short sentence, in French.', 1], ['user', 'What is the boiling point of water at sea level?']], reply: '“L’eau bout à 100 °C au niveau de la mer.”', tok: 26 },
+    shots: { lines: [['user', 'Freezing point of water?'], ['assistant', '0 °C ✓', 1], ['user', 'Boiling point of ethanol?'], ['assistant', '78 °C ✓', 1], ['user', 'What is the boiling point of water at sea level?']], reply: '“100 °C ✓”', tok: 41 }
+  };
+  var ctxBox = document.getElementById('ctxBox');
+  function cxMode() { var r = document.querySelector('input[name=cx]:checked'); return r ? r.value : 'none'; }
+  function drawCtx(ended) {
+    while (ctxBox.firstChild) ctxBox.removeChild(ctxBox.firstChild);
+    if (ended) {
+      ctxBox.appendChild(el('span', 'role', '(new conversation: the context is empty)'));
+      document.getElementById('ctxReply').textContent = 'Nothing to reply to yet. The French instruction and the examples are gone; the weights are exactly what they were.';
+      document.getElementById('ctxTok').textContent = 0;
+      return;
+    }
+    var m = CX[cxMode()];
+    m.lines.forEach(function (ln) {
+      var d = el('div');
+      d.appendChild(el('span', 'role', ln[0] + ': '));
+      d.appendChild(el('span', ln[2] ? 'added' : null, ln[1]));
+      ctxBox.appendChild(d);
+    });
+    document.getElementById('ctxReply').textContent = m.reply;
+    document.getElementById('ctxTok').textContent = m.tok;
+  }
+  document.querySelectorAll('input[name=cx]').forEach(function (r) { r.addEventListener('change', function () { drawCtx(false); }); });
+  document.getElementById('endChat').addEventListener('click', function () { drawCtx(true); });
+  drawCtx(false);
+
+  /* 5 · three places */
+  var habit = 'sign off every reply with “— V”', where = 'store', state = 'live', logN = 0;
+  var where3 = document.getElementById('where3'), logEl = document.getElementById('log');
+  var NAMES = { weights: 'Weights', context: 'Context window', store: 'External store' };
+  function whMode() { return document.querySelector('input[name=wh]:checked').value; }
+  function drawSlots(extra) {
+    while (where3.firstChild) where3.removeChild(where3.firstChild);
+    ['weights', 'context', 'store'].forEach(function (k) {
+      var s = el('div', 'slot'); s.appendChild(el('b', null, NAMES[k]));
+      if (k === where && state !== 'none') {
+        var cls = state === 'gone' ? 'item gone' : state === 'kept' ? 'item kept' : 'item live';
+        s.appendChild(el('span', cls, k === 'weights' ? 'a raised tendency to ' + habit : habit));
+      }
+      if (extra && extra[k]) s.appendChild(el('span', 'item live', extra[k]));
+      where3.appendChild(s);
+    });
+  }
+  function log(text, verdict) {
+    logN++;
+    var row = el('div'); row.appendChild(el('span', 'k', String(logN))); row.appendChild(el('span', null, text));
+    logEl.appendChild(row);
+    var rows = logEl.querySelectorAll('div'); if (rows.length > 4) rows[0].remove();
+    document.getElementById('tryVerdict').textContent = verdict;
+  }
+  var OUT = {
+    weights: {
+      new: ['New conversation: the habit is still there. Nothing has to be loaded; it is part of how this model computes every reply.', 'live', 'Present in every conversation, for every user of this model.'],
+      read: ['There is no entry to show. The habit is spread over many weights; you can only see it in what the model does.', 'live', 'Real, but not inspectable.'],
+      del: ['There is nothing to delete. You would train more to push the tendency back down, and could not be sure it is fully gone.', 'live', 'Removing it means training again.'],
+      ver: ['It depends on the new training. A run from the old weights may keep it; a run from scratch keeps it only if the data produce it again.', 'kept', 'Tied to this model, not to you.']
+    },
+    context: {
+      new: ['New conversation: gone. The context started empty and the weights never changed.', 'gone', 'Lasted one conversation.'],
+      read: ['It is right there in the prompt, as plain text.', 'live', 'Fully visible.'],
+      del: ['Edit the prompt and it is gone from the next reply on.', 'gone', 'Removed instantly.'],
+      ver: ['A new model starts with no context. Paste the text again and the new model follows it too, if it is trained to follow instructions.', 'gone', 'The text is portable; the model is not involved.']
+    },
+    store: {
+      new: ['New conversation: the agent searches the store, finds the note and puts it into its context. The habit returns, as text the model reads.', 'kept', 'Persists, but only works when retrieved.'],
+      read: ['Open notes.md and there it is. You can read and edit exactly what the agent will see.', 'kept', 'Fully visible.'],
+      del: ['Delete the note. The next conversation retrieves nothing, so the habit is gone.', 'gone', 'Removed by deleting one entry.'],
+      ver: ['The store does not care which model reads it. The new version retrieves the same note.', 'kept', 'Survives model upgrades.']
+    }
+  };
+  document.querySelectorAll('[data-ev]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var ev = b.getAttribute('data-ev'), o = OUT[where][ev];
+      if (state === 'gone' && ev !== 'read') { log('The habit is already gone. Pick a place, or type a new habit, to start over.', 'Nothing left.'); return; }
+      if (state === 'gone' && ev === 'read') { log('There is nothing to show: it was removed.', 'Nothing left.'); return; }
+      state = o[1];
+      var extra = (where === 'store' && ev === 'new') ? { context: 'retrieved: ' + habit } : null;
+      drawSlots(extra);
+      log(o[0], o[2]);
+    });
+  });
+  function restart(msg) {
+    where = whMode(); state = 'live'; logN = 0;
+    while (logEl.firstChild) logEl.removeChild(logEl.firstChild);
+    drawSlots();
+    log(msg, 'Active now.');
+  }
+  document.querySelectorAll('input[name=wh]').forEach(function (r) {
+    r.addEventListener('change', function () {
+      var w = whMode();
+      restart(w === 'weights' ? 'Trained in: fine-tuning rewarded replies that follow “' + habit + '” until the model does it by default.' : w === 'context' ? 'Typed into the system prompt for this conversation.' : 'Written by the agent to notes.md.');
+    });
+  });
+  document.getElementById('habitForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var t = document.getElementById('habitText').value.trim();
+    habit = t ? t.replace(/[.\s]+$/, '') : 'sign off every reply with “— V”';
+    restart('New habit: “' + habit + '”, placed in the ' + NAMES[whMode()].toLowerCase() + '.');
+  });
+  var vd = el('p', 'verdict'); vd.id = 'tryVerdict'; document.getElementById('tryFig').insertBefore(vd, document.getElementById('log').nextSibling);
+  restart('Written by the agent to notes.md.');
+  state = 'kept'; drawSlots({ context: 'retrieved: ' + habit }); log(OUT.store.new[0], OUT.store.new[2]);
+})();
+</script>

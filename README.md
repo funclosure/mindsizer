@@ -1,170 +1,51 @@
 # mindsizer
 
-**Paste dense text → get an interactive deck that makes the idea _click_.**
+**A Claude Code skill that turns something hard into one clear page you can operate.**
 
-▶ **[Try the live example](https://funclosure.github.io/mindsizer/dont-scale/)** — an interactive deck built from Paul Graham's _Do Things that Don't Scale_. Use **← / →** to navigate; click and drag the controls on each slide.
+Ask Claude to help you understand a concept, article, paper, transcript or event. mindsizer
+builds a single interactive web page where each section makes one claim and you operate the
+mechanism behind it: train a toy model, scrub a timeline, flip a condition, type an example.
+The aim is for you to see *why* something is true, not just read that it is.
 
-mindsizer is a local-first tool that digests hard or dense writing, asks what you need it _for_, and rebuilds it into a self-contained deck of comprehension-first slides — including genuinely **interactive** ones you can operate. Everything ships as **one offline HTML file** you can open anywhere.
+> Summarizers make it shorter. Deck-makers make it prettier. mindsizer makes it click.
 
-> Summarizers make it _shorter_. Deck-makers make it _prettier_. **mindsizer makes it _click_** — rebuilding hard information into the shape your purpose demands.
+## Examples
 
-The mental model is _responsive design for cognition_: a responsive layout reflows a page to fit a viewport; mindsizer reflows information to fit the reader's working memory, aimed by what they intend to do with it.
+- [`examples/channel.html`](.claude/skills/mindsizer/examples/channel.html), *The Channel
+  Nobody Designed*: an event, built from a source.
+- [`examples/weights.html`](.claude/skills/mindsizer/examples/weights.html), *Where a model's
+  habits live*: a general concept, explained with no source document.
 
----
+## Use
 
-## What makes a mindsizer slide different
-
-A slide is treated as an **explorable instrument**, not a bullet dump and not a marketing page. When it helps the idea land, the slide is **operable** — you tune a control and watch the concept respond. For example, from Paul Graham's _Do Things that Don't Scale_:
-
-- a **crank** dial you turn (manual force → self-sustaining growth),
-- a **compound-growth** chart with a live weekly-rate slider and linear/log toggle,
-- a **contained-fire** instrument where you split fixed effort across 1–8 markets and watch each "front" rise or fall below the ignition line.
-
-Decks stay **linear and presentable** (one frame at a time, arrow-key navigation) so they're usable as material for discussion — interactivity lives _inside_ each slide, not as a free-scrolling website.
-
----
-
-## Quick start
-
-Three ways in, easiest first.
-
-### 1. Just look — no install
-
-Open the bundled, prebuilt example deck. Zero setup, zero auth:
+Inside this repo the skill loads automatically. To use it in every project:
 
 ```bash
-open examples/dont-scale.deck.html
+ln -s "$PWD/.claude/skills/mindsizer" ~/.claude/skills/mindsizer
 ```
 
-(Or the live version: <https://funclosure.github.io/mindsizer/dont-scale/>.) Navigate with **← / →**; click and drag the controls on the interactive slides. See [`examples/`](examples/) for what's bundled.
-
-### 2. Rebuild the bundled example
-
-Requires [Bun](https://bun.sh):
-
-```bash
-bun install
-bunx playwright install chromium   # the author uses headless chromium as its "eyes"
-bun link                            # registers the `mindsizer` command
-bun run example                     # rebuilds examples/dont-scale.deck.html and opens it
-```
-
-Authentication: the agent talks to Claude via the [Claude Agent SDK](https://docs.claude.com). It uses your Claude Code session by default (no API key needed), and falls back to `ANTHROPIC_API_KEY` if set.
-
-### 3. Your own text
-
-```bash
-mindsizer ingest article.txt -o article.outline.md   # digest → pick a teaching angle
-mindsizer build  article.outline.md --open           # author the interactive deck
-```
-
-`ingest` proposes a few angles and asks you to pick; add `--yes` to take the first automatically. `build` writes one self-contained, offline `article.outline.html`.
-
-### View a deck
-
-The deck is a single self-contained HTML file (fonts embedded, no network, no server):
-
-```bash
-open article.outline.html
-```
-
-Navigate with **→ / ← / Space**. On interactive slides, click or drag the controls.
-
----
-
-## Commands
-
-| Command | What it does |
-| --- | --- |
-| `mindsizer ingest <text-file> [--yes] [-o out.md] [--source <url>] [--source-label <text>]` | Digest text → propose teaching angles (pick interactively, or `--yes` to take the first) → write a canonical `outline.md` + a `*.context.json` sidecar (digest + chosen angle). `--source`/`--source-label` record where the text came from (also editable later as `source:` front-matter — label + url); the sealed deck renders it as a bottom-left attribution link. |
-| `mindsizer plan <text-file> [--yes] [-o out.plan.md] [--source <url>] [--source-label <text>]` | **Layer 1.** Everything `ingest` does, plus a whole-deck planning pass at high effort that writes each slide's *claim · mechanism · device (kind, operate, changes, resting) · aha · data · source* as a ```plan fence, and the deck's `direction` (conceit/motif/arc) in front-matter. The resulting `*.plan.md` is a hand-editable contract any visual layer can implement — the harness (`build`) or a Claude Code session (`mindsizer-author` skill). |
-| `mindsizer brief [--theme <name>]` | Print the author identity brief (genre, 16:9 format, theme aesthetic, output contract) — the shared brief for any Layer 2. |
-| `mindsizer fit <slide.html> [--shot <png>] [--steps <json>] [--theme <name>]` | Render one saved slide section at 1280×720; write the screenshot(s); report overflow + console errors. Exits **0** when clean, **1** when the slide overflows or logs console errors, **2** when the file has no usable `<section data-slide-id="…">`. |
-| `mindsizer build <outline.md \| plan.md> [-o out.html] [--open] [--concurrency <n>] [--resume] [--theme <name>]` | The rich path: an agentic author writes a bespoke (often interactive) slide per entry, renders + critiques its own work, then seals everything into one offline deck. Slides author **in parallel** (a bounded pool, default 4). Works the same on a `plan.md`; `--resume` reuses any slide already saved under `<stem>.build/slides/<id>.html` (hand-authored or from a prior run) and authors only what's missing. |
-| `mindsizer <outline.md> [-o out.html] [--open]` | The fast, no-LLM path: mechanically render + seal the outline (for `analogy` / `plain` layouts). |
-
-`MINDSIZER_MODEL` overrides the model (default `claude-opus-4-8`). `MINDSIZER_CONCURRENCY` sets how many slides author at once (default 4; `--concurrency`/`-c` overrides it; `1` = sequential).
-
-Each role can be pointed at a different model with `MINDSIZER_<ROLE>_MODEL` / `MINDSIZER_<ROLE>_EFFORT` (`ROLE` = `INGEST` · `AUTHOR` · `JUDGE` · `REVIEW`), which beats `MINDSIZER_MODEL`. The planning role (`INGEST`, used by both `ingest` and `plan`) defaults to `claude-opus-4-8` at `high` effort. To run planning on the strongest model instead — where that model is available to your session — set:
-
-```bash
-export MINDSIZER_INGEST_MODEL=claude-fable-5-1
-```
-
-If the model isn't available, mindsizer fails with a clear error naming it rather than producing an empty plan.
-
----
+Then just ask: "help me actually understand how RLHF works", or "make this paper click".
 
 ## How it works
 
-mindsizer is two layers with one file between them:
-
-- **Layer 1 — planning** (`plan`, Opus at high effort by default — see `MINDSIZER_INGEST_MODEL` above): digest → angle → outline → art direction → per-slide plan. Owns the *claim*, the *mechanism*, the *comprehension device*, the *resting state*, the *data*, the *source anchor*. Output: `x.plan.md`.
-- **Layer 2 — visual design + implementation**: composition, hierarchy, how the figure is drawn, how a control looks, render-and-fix. Either the built-in harness (`build`) or a Claude Code session (the `mindsizer-author` skill, using `brief` for identity and `fit` for eyes) — both seal through the same `build --resume`.
+The skill is instructions plus a template. There is no CLI and no build step.
 
 ```
-text ──▶ ingest ──▶ outline.md  +  *.context.json
-                         │  (digest + chosen angle)
-mindsizer build ─────────┘
-   orchestrator (deterministic, unit-tested):
-     author slides in a bounded pool (default 4, --concurrency) — each:
-       gather materials (the idea: source + digest + angle + neighbours)
-         └▶ agentic author  [bounded "render" tool — no fs/Bash/network]
-              think → write HTML → render at 1280×720 → LOOK → fix
-              ↳ converges: stop the moment a render is clean; seal the BEST pass
-         ◀ returns a slide: <style>? <section> <script>?
-       validate + guarantee the section id ;  overload → retry/backoff
-     progress streams to <stem>.build/  (progress.jsonl · status.json)
-   seal ──▶ ONE self-contained, offline, LINEAR, interactive deck.html
-   verify the sealed deck  (section count · 0 console errors · no loose text)
+.claude/skills/mindsizer/
+  SKILL.md               spine → one interaction per idea → write in one pass → quick check → deliver
+  references/style.md    the look: calm type, one accent with one meaning, light and dark
+  references/patterns.md interaction patterns: train, scrub, flip, reveal, slide, try, switch off
+  assets/template.html   page skeleton with tokens, components and a scrolly helper
+  scripts/check.sh       syntax check + screenshots at 1280px and 400px (node + npx playwright)
+  examples/              reference pages
 ```
 
-Key ideas:
+The page is one HTML file. It is published as a claude.ai Artifact when the session has
+the Artifact tool, otherwise saved locally.
 
-- **Hybrid author.** A free agentic author (an Agent-SDK session with a single, bounded `render` tool) iterates on its _own_ screenshots — the way a designer would — wrapped in a deterministic shell that gathers context, validates, and seals. The shell is unit-tested with fakes; the agent and browser are verified by running.
-- **Converged & parallel.** Slides author concurrently (a bounded pool), and each loop stops the moment its render is clean — sealing the _best_ rendered pass, not a later regression. Overloads retry with backoff, every build streams telemetry to `<stem>.build/`, and the assembled deck is checked end-to-end before you see it.
-- **The agent gets the idea, not a bullet.** `ingest` persists the digest and chosen angle in a `*.context.json` sidecar so the author understands the argument, not just a one-line label.
-- **Interactive slides.** A slide may carry a scoped per-slide `<script>`; it's sealed into the offline deck. The deck renders every slide on a fixed **1280×720 stage scaled to fit**, so all slides are uniform and exactly match what the author saw while building.
-- **Identity over rulebook.** Authoring is steered by a short "instrument, not landing page" brief in the [Field](#design-language) aesthetic, rather than a long list of rules.
+## History
 
----
-
-## Design language
-
-**Field** — a calm, instrument-panel aesthetic: dark navy ground, cream text, a single cyan accent; Fraunces (display serif), Geist (body), Geist Mono (micro-labels and numerals); hairline rules and a faint dot-grid. Fonts are vendored under `themes/fonts/` and embedded into every sealed deck. The target genre is the _explorable explanation / instrument_ — never marketing-landing-page gloss.
-
----
-
-## Project layout
-
-```
-src/
-  outline/   canonical outline model — parse/serialize/validate, ids, the data-bind seam
-  agent/     ingest pipeline (digest → angles → outline), the agentic author + bounded render tool,
-             the Claude Agent SDK adapter, the context sidecar
-  render/    the build orchestrator (buildDeck/buildSlide), per-slide materials, the identity brief,
-             the headless-chromium renderer ("eyes"), static layouts
-  export/    seal an outline + authored sections into one self-contained offline HTML deck
-  cli.ts     the `mindsizer` command (ingest / build / seal)
-themes/      the Field stylesheet + vendored woff2 fonts (plus paper / ember / blueprint)
-docs/        product spec + design/implementation docs
-prd.md       the product requirements document
-```
-
----
-
-## Development
-
-```bash
-bun run test        # run the unit suite (Vitest) — bare `bun test` hangs on a vitest-mock test
-bun run test:watch  # watch mode
-bunx tsc --noEmit   # typecheck
-```
-
-The deterministic core (outline, orchestrator, the pool/retry primitives, contract, seal, sidecar, materials) is unit-tested with fakes. The render _barrel_ keeps Playwright off the fast path; the headless renderer (`src/render/fit-check.ts`) has its own running tests, and the live agentic author is verified by running. See `docs/` for the design specs and implementation plans.
-
----
-
-## Status
-
-Early, local-first, and private. The v1 flow — `ingest` → pick an angle → `build` → an offline interactive deck — works end to end, now with parallel authoring, per-build telemetry, and a post-seal deck check. The slide-authoring harness is the active surface; output ambition (and the workspace UI) is still growing.
+Until October 2026 mindsizer was a TypeScript CLI that built 1280×720 interactive slide decks
+with a per-slide agentic harness. A side-by-side comparison with a single-author page showed
+the page explaining more clearly and faster, so the CLI was retired. It remains in git history
+(`main` before the `skill-v2` merge).

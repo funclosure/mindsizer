@@ -1,72 +1,27 @@
-# Dependencies
-node_modules/
-
-# Build output
-dist/
-build/
-*.tsbuildinfo
-
-# Secrets & local config
-# BYOK: the Anthropic API key lives in a local env/config and must never be committed (PRD §9.1)
-.env
-.env.*
-!.env.example
-.mindsizer/
-config.local.json
-
-# Test output / coverage
-coverage/
-*.lcov
-.vitest/
-
-# Headless-render / Playwright artifacts (future render-and-inspect + PNG export)
-test-results/
-playwright-report/
-playwright/.cache/
-
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
 # OS / editor cruft
 .DS_Store
-Thumbs.db
 .idea/
 *.swp
 .vscode/*
-!.vscode/extensions.json
 
-# Render demo output
-examples/out/
-
-# Playwright MCP scratch output
-.playwright-mcp/
-
-# Demo / scratch artifacts — generated decks, per-deck outlines + slides, context
-# sidecars, screenshots, demo source texts, and one-off reference generators. These are
-# experiment output, not product source. Root-scoped so src/tests/theme/docs are untouched.
-/*.deck.html
-/*.outline.html
-/*.outline.md
+# Leftovers from the retired CLI (local only, never product source)
+node_modules/
+*.build/
+/*.html
+!/README.html
+/*.png
+/*.txt
+/*.md
+!/README.md
 /*.outline.slides/
 /*.context.json
-/adolescence.*.html
-/adolescence.txt
-/scale.txt
-/*.png
+/*.bak.html
 /build-*.ts
-/*.tmp.ts
-
-# Skill-dev eval scratch (trigger eval sets + result JSON live here during tuning)
+/eval/
+.superpowers/
 .claude/skills/*-workspace/
 
-# Build observability output — progress.jsonl / status.json / timing.json / per-slide HTML.
-# `mindsizer build` writes one `<stem>.build/` dir next to the outline; it's regenerated each run.
-*.build/
-
-# Root-level demo source texts, raw-build backups, and findings reports (scratch, never product source)
-/*.txt
-/*.bak.html
-/MINDSIZER_HARNESS_FINDINGS*.md
+# check.sh screenshots next to a page
+*-1280.png
+*-400.png
+/examples/
