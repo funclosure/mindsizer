@@ -58,8 +58,13 @@ The skill is instructions plus a template. There is no CLI and no build step.
   examples/              reference pages
 ```
 
-The page is one HTML file. It is published as a claude.ai Artifact when the session has
-the Artifact tool, otherwise saved locally.
+The page is one standalone HTML file (HTML, CSS and plain JavaScript; only Google Fonts load
+from outside), so it opens in any browser and can be hosted anywhere. In Claude it is also
+published as an Artifact when the session has that tool.
+
+Nothing in the skill is tied to Claude Code beyond the `SKILL.md` format: the instructions are
+plain Markdown, the scripts need only bash, Python 3, Node and `npx playwright`, so another
+agent that can read files and run shell commands can follow it.
 
 ## History
 

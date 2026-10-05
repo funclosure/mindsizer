@@ -8,8 +8,8 @@ description: >-
   ink, margins, pencil); the user can name one. Use whenever the user wants to UNDERSTAND, LEARN, EXPLAIN, TEACH or DIGEST something: a
   concept ("explain how RLHF works"), an article, paper, talk transcript, README or event.
   Casual phrasings count: "help me get this", "make this click", "explain this to me properly",
-  "build me an explainer". Output is a single self-contained HTML page, published as an
-  Artifact when the session can. Do NOT use it for a short TL;DR, for writing new prose from
+  "build me an explainer". Output is a single self-contained HTML file that opens in any browser
+  (published as a Claude Artifact when the host has that tool). Do NOT use it for a short TL;DR, for writing new prose from
   scratch, or when the user asks for a specific format (PowerPoint, PDF, Google Slides).
 ---
 
@@ -53,7 +53,9 @@ These came from comparing pages with the user. They matter more than any single 
    included); past 1,500, fold more. Code goes in a fold unless the code itself is the point.
    Everything else the
    source offers (supporting research, asides, extra examples, names and citations) goes in a
-   foldable `details.more` at the end of the section, whose summary says what's inside. Keep
+   foldable `details.more` at the end of the section, whose summary says what's inside. Never
+   fold the source's own statement of its point, or the steps it uses to get there ("I
+   submit…", "the point is…", "there is no such thing as…"): those stay in the first read. Keep
    the detail, just fold it. Warm, plain prose, like a good lecture.
 8. **Say what the colour means.** Each map step gets an idea colour (`.h1`–`.h4`) that follows
    it through the page. One line under the map says what colour means.
@@ -101,7 +103,11 @@ These came from comparing pages with the user. They matter more than any single 
    one shows a different capability, none repeats a demo from earlier on the page, and each
    says in one line why a simpler tool wouldn't do. A `.set` is usually the right form.
 
-Write the map and spine down briefly before coding. They decide the page.
+Write the map and spine down briefly before coding. They decide the page. In the spine, write
+next to every heading and every "so" line the source sentence it rests on. These are the lines
+the page writes itself, they compress the most, and they are where pages drift: a heading that
+says "unchosen worship eats you alive" when the source says "pretty much anything else you
+worship will eat you alive" is an invented claim, even though every quote on the page is exact.
 
 ## 2. Write the page in one pass
 
@@ -136,11 +142,19 @@ Write the map and spine down briefly before coding. They decide the page.
   `.room-below`.
 - **Figure test:** cover the prose and ask whether the figure alone shows *why* the state changed.
   If the answer lives only in the paragraph, redraw it (draw the loop, the need, the missing
-  link), don't just recolour.
+  link). Two states that differ only in colour, dashing or a label fail the test.
+- **Default state:** a figure opens on the case the source leads with (the reader the source
+  holds up as its example, the version it argues against first), not on a case you chose.
+- **Labels and verdicts are claims.** Every word inside a figure, and every verdict line, either
+  traces to a source line or is marked "our illustration". Never put words in a person's mouth
+  that the source rules out.
 - **Copy:** plain, short, active sentences, with concrete examples over abstractions. No hype,
   no "In this section we will…".
+- **Map links:** each map chip links to the section that introduces its idea, and path kickers
+  use the map's exact names.
 - **Close:** one short final section that ties the threads together (a claim plus a compact
-  table, or a quote that lands the point). Then the footer: sources, and a one-line note on
+  table, or a quote that lands the point). A closing table has one row per map step, named as
+  on the map, and adds something (a contrast, a "so what"); if it only restates, use a quote. Then the footer: sources, and a one-line note on
   what is illustrative, simplified or "our reading".
 
 ## 3. Quick check (once, then deliver)
@@ -160,7 +174,9 @@ Write the map and spine down briefly before coding. They decide the page.
    - script errors.
 3. Look at the screenshots, especially every figure at 400px. Fix what you see in one pass.
    Don't loop.
-4. **Fidelity pass:**
+4. **Fidelity pass.** Start with the lines you wrote yourself, because exact quotes rarely drift
+   and summaries do: the dek, the map, every heading, every "so" line, every verdict and every
+   figure label. Hold each against the source sentence named in the spine.
    - Every number and quote is in the source, or labelled illustrative.
    - Every "X says" names the person the source names, the same way everywhere.
    - Every "therefore" or mapping follows the source's direction. "Our reading" may extend
@@ -168,12 +184,14 @@ Write the map and spine down briefly before coding. They decide the page.
 
 ## 4. Deliver
 
-- Save the page as `<topic>.html`, or the user's filename, in the user's chosen place (else the
-  scratchpad). The template has no doctype, because the Artifact tool adds the page skeleton.
-  For a page that will only live as a local file, put `<!doctype html><meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">` at the very top.
-- If the session has the Artifact tool, publish it and give the link. Otherwise give the
-  file path, and `open` it if the user is local.
+- The deliverable is one standalone HTML file that opens in any browser: no build step, no
+  framework, only Google Fonts loaded from outside. Save it as `<topic>.html`, or the user's
+  filename, in the user's chosen place (else a scratch or temp folder), give the path, and
+  `open` it if the user is local.
+- **Publishing is optional and depends on the host.** In Claude with the Artifact tool,
+  publish a copy without the first line (the Artifact tool adds its own page skeleton, so
+  `tail -n +2 page.html > page.artifact.html`) and give the link. Anywhere else, the file is
+  already a web page: it can be hosted as is.
 - Reply in a few lines: what the page covers, the interactions, what is illustrative, and
   what you did NOT check.
 
