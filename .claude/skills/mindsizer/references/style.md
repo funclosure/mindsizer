@@ -92,8 +92,10 @@ themes; `--h*-t` is the text version of a colour, `--h*-c` is for strokes only.
   notice or the cause, never just a part's name. Put the label above or beside its target, never
   below it, or its own stroke crosses it.
 - Write a note for every reachable state. With several switches, give each missing part its own
-  note, shown together. When something is removed, draw its ghost (`ln dash`) and point at
-  that, never at blank space. A note never contradicts the drawing.
+  note, shown together. When a condition is switched off, draw what that does to the outcome
+  and point at the consequence; a ghost (`ln dash`) of the removed part may stay as a reminder,
+  but it is never the whole change, and a note never points at blank space. A note never
+  contradicts the drawing.
 - In prose: `<span class="ann h3" data-note="what to notice">phrase</span>`, on the last line of
   its paragraph, with `.room-below` on that paragraph (`ann-nw` when the phrase sits near the
   right edge). At most 2–3 on a page. In `margins`, these move into the margin by themselves.

@@ -77,6 +77,10 @@ default. [#board]
 **When:** an outcome depends on several things holding at once.
 **Needs:** one switch per condition, an artefact that degrades visibly per switch (blur,
 scramble, fade), and a verdict line for each combination. [#legible]
+**Trap:** dashing the condition you switched off and leaving the outcome untouched. The reader
+learns nothing from seeing a missing part drawn dashed; they need to see what the outcome
+loses (the resource shrinks, the link breaks, the message garbles). `scripts/states.sh` won't
+catch this, because the drawing does change: check it by eye.
 
 ## static, on purpose
 When the claim is a definition, a quote, or a single striking number, use a big number, a

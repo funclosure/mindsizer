@@ -13,10 +13,11 @@ let html = fs.readFileSync(pageFile, 'utf8');
 if (!/^\s*<!doctype/i.test(html.slice(0, 200))) html = '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">' + html;
 
 const browser = await chromium.launch();
-const report = { same: [], small: [], errors: [], shots: 0 };
+const report = { same: [], small: [], errors: [], dupKeys: [], shots: 0 };
 for (const width of [1280, 400]) {
   const page = await browser.newPage({ viewport: { width, height: 900 } });
   page.on('pageerror', e => report.errors.push(`${width}: ${e.message}`));
+  page.on('console', m => { if (/duplicate key/.test(m.text()) && !report.dupKeys.includes(m.text())) report.dupKeys.push(m.text()); });
   await page.setContent(html, { waitUntil: 'load' });
   await page.waitForTimeout(800);
   const figs = await page.$$('.fig');
@@ -78,4 +79,5 @@ console.log(`first read: ${report.words.firstRead} words` + (report.words.longPr
 console.log(`states that look the same: ${report.same.length}` + report.same.map(s => '\n  ' + s).join(''));
 console.log(`svg text under 12px at 400 wide: ${report.small.length}` + report.small.slice(0, 5).map(s => `\n  ${s.px}px "${s.text}"`).join(''));
 console.log(`handwriting problems: ${report.handCode.length}` + report.handCode.slice(0, 8).map(s => '\n  ' + s).join(''));
+console.log(`duplicate draw keys: ${report.dupKeys.length}` + report.dupKeys.slice(0, 5).map(s => '\n  ' + s).join(''));
 console.log(`script errors: ${report.errors.length}` + report.errors.map(s => '\n  ' + s).join(''));

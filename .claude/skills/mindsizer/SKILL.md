@@ -136,8 +136,10 @@ worship will eat you alive" is an invented claim, even though every quote on the
 - **Annotations:** `ann(key, { to, at, text, side })`, labels in a gutter, ≤ 6 words. Put the label
   above or beside its target, never below it: the stroke leaves from under the label, so a
   label below its target gets crossed by its own stroke. Write a note
-  for every reachable state, never one note reused across states. When something is removed,
-  draw its ghost (`ln dash`) and point at that. A note never contradicts the drawing. In prose,
+  for every reachable state, never one note reused across states. When a switch turns a
+  condition off, show what that does to the outcome (the commons shrinks, the link breaks, the
+  text blurs), and point the note at the consequence; a dashed ghost of the removed part is at
+  most a reminder of what is gone, never the whole change. A note never contradicts the drawing. In prose,
   `<span class="ann h2" data-note="…">phrase</span>` at the end of a paragraph with
   `.room-below`.
 - **Figure test:** cover the prose and ask whether the figure alone shows *why* the state changed.
@@ -151,10 +153,14 @@ worship will eat you alive" is an invented claim, even though every quote on the
 - **Copy:** plain, short, active sentences, with concrete examples over abstractions. No hype,
   no "In this section we will…".
 - **Map links:** each map chip links to the section that introduces its idea, and path kickers
-  use the map's exact names.
+  use only the map's exact names. If two sections sit under one step, both kickers end in that
+  step's name; don't invent sub-names the map doesn't show.
 - **Close:** one short final section that ties the threads together (a claim plus a compact
   table, or a quote that lands the point). A closing table has one row per map step, named as
-  on the map, and adds something (a contrast, a "so what"); if it only restates, use a quote. Then the footer: sources, and a one-line note on
+  on the map, and adds something (a contrast, a "so what"); if it only restates, use a quote.
+  Its cells use only what the page has already shown: a close never introduces a new idea, name
+  or counter-example. A distinction the close relies on (say, "regulated" vs "open to anyone")
+  must be explained in the first read, not only in a fold. Then the footer: sources, and a one-line note on
   what is illustrative, simplified or "our reading".
 
 ## 3. Quick check (once, then deliver)
@@ -171,6 +177,8 @@ worship will eat you alive" is an invented claim, even though every quote on the
    - **first-read words**, and sections whose prose runs over 110 words;
    - **handwriting problems**: code or exact values set in the pencil voice, and set tags too
      long for one line;
+   - **duplicate draw keys**: two items in one figure sharing a key, so one silently replaces
+     the other;
    - script errors.
 3. Look at the screenshots, especially every figure at 400px. Fix what you see in one pass.
    Don't loop.
@@ -181,6 +189,12 @@ worship will eat you alive" is an invented claim, even though every quote on the
    - Every "X says" names the person the source names, the same way everywhere.
    - Every "therefore" or mapping follows the source's direction. "Our reading" may extend
      the source, never reverse it.
+   - **Quantifiers and hedges:** a "wherever", "always", "every", "never" or "is" in your line
+     must match the source's own strength. If the source says "may", "could" or "often",
+     so do you.
+   - **Side-by-side reads as one claim.** Two facts placed in one sentence, verdict or caption
+     read as one finding by one person. If the source credits them to different people, name
+     both, or split them.
 
 ## 4. Deliver
 

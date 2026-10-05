@@ -303,7 +303,9 @@ footer { padding-top: 96px; display: grid; gap: 12px; font: 14.5px/1.55 var(--ui
   /* head(x, y, angle, size): an open arrowhead pointing along angle (radians) */
   function head(x, y, ang, s) { s = s || 9; return "M" + f(x - s * Math.cos(ang - 0.5)) + " " + f(y - s * Math.sin(ang - 0.5)) + " L" + f(x) + " " + f(y) + " L" + f(x - s * Math.cos(ang + 0.5)) + " " + f(y - s * Math.sin(ang + 0.5)); }
   /* ann(key, { to: [x,y], at: [x,y], text, side: "l"|"r" }): a neat-annotations mark for a figure, returned as draw() items.
-     at = the label's spot, in a gutter beside the drawing; to = the point that matters. "\n" breaks lines. ≤ 6 words. */
+     at = the label's spot, in a gutter beside the drawing; to = the point that matters. "\n" breaks lines. ≤ 6 words.
+     It makes the keys key+"c", key+"h" and key+"t": give notes their own prefix (e.g. "n…") so they never collide with
+     other items, such as an arrow keyed "a1" whose head is "a1h". draw() warns in the console about duplicate keys. */
   function ann(key, a) {
     var left = a.side === "l", lines = String(a.text).split("\n"), lh = 22, lx = a.at[0], ly = a.at[1], tx = a.to[0], ty = a.to[1];
     var sx = lx + (left ? -8 : 8), sy = ly + (lines.length - 1) * lh + 10, dx = tx - sx, dy = ty - sy, len = Math.hypot(dx, dy) || 1;
@@ -318,7 +320,7 @@ footer { padding-top: 96px; display: grid; gap: 12px; font: 14.5px/1.55 var(--ui
   function build(it, svg) {
     var n = document.createElementNS(NS, it.tag);
     if (it.cls) n.setAttribute("class", it.cls);
-    if (it.tag === "path") { n.setAttribute("d", it.d); if (it.w) n.setAttribute("stroke-width", it.w); if (STYLE.hatch && /fillmk/.test(it.cls || "")) n.style.fill = "url(#hatch-" + svg.id + ")"; }
+    if (it.tag === "path") { n.setAttribute("d", it.d); if (it.w) n.style.strokeWidth = it.w; if (STYLE.hatch && /fillmk/.test(it.cls || "")) n.style.fill = "url(#hatch-" + svg.id + ")"; }
     if (it.tag === "text") {
       n.setAttribute("text-anchor", it.anchor || "middle");
       if (it.rot) n.setAttribute("transform", "rotate(" + it.rot + " " + it.x + " " + it.y + ")");
@@ -331,6 +333,7 @@ footer { padding-top: 96px; display: grid; gap: 12px; font: 14.5px/1.55 var(--ui
   function draw(svg, items) {
     if (STYLE.hatch && !svg.querySelector("pattern")) svg.insertAdjacentHTML("afterbegin", '<defs><pattern id="hatch-' + svg.id + '" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><line x1="0" y1="0" x2="0" y2="6" style="stroke: var(--c)" stroke-width="1" opacity="0.55"></line></pattern></defs>');
     if (STYLE.passes > 1) items = items.reduce(function (out, it) { out.push(it); if (it.tag === "path" && /\b(ln|am)\b/.test(it.cls || "") && !/dash/.test(it.cls)) out.push({ key: it.key + "~2", tag: "path", cls: it.cls + " pass2", d: it.d, shift: 1 }); return out; }, []);
+    var seenKeys = {}; items.forEach(function (it) { if (seenKeys[it.key]) console.warn("draw(): duplicate key " + it.key + " in #" + svg.id); seenKeys[it.key] = 1; });
     var old = {}, keep = {}, ready = svg.dataset.ready === "1";
     Array.prototype.forEach.call(svg.querySelectorAll("[data-k]"), function (n) { old[n.dataset.k] = n; });
     items.forEach(function (it) {
