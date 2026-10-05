@@ -51,6 +51,18 @@ for (const width of [1280, 400]) {
     const ctm = t.getScreenCTM(); const px = parseFloat(getComputedStyle(t).fontSize) * (ctm ? Math.hypot(ctm.a, ctm.b) : 1);
     return { text: t.textContent.slice(0, 30), px: Math.round(px * 10) / 10 };
   }).filter(t => t.px < 12));
+  if (width === 1280) report.handCode = await page.evaluate(() => {
+    // the pencil voice is for asides; code, identifiers and exact values belong in print
+    const code = /\$\.|\b\w+\.\w+\b|\w\(\)|\b[a-z]+[A-Z]\w*\b|\b\w+_\w+\b|--\w/;
+    const out = [];
+    for (const el of document.querySelectorAll('main *, svg text')) {
+      if (el.children.length && el.tagName !== 'text') continue;
+      const t = (el.textContent || '').trim(); if (!t || !/shantell|cursive/i.test(getComputedStyle(el).fontFamily)) continue;
+      if (code.test(t)) out.push('code in handwriting: "' + t.slice(0, 40) + '"');
+      if (el.classList.contains('tag') && el.scrollWidth > el.clientWidth + 1) out.push('tag cut off: "' + t.slice(0, 40) + '"');
+    }
+    return out;
+  });
   if (width === 1280) report.words = await page.evaluate(() => {
     const main = document.querySelector('main') || document.body; const words = el => (el.innerText || '').split(/\s+/).filter(Boolean).length;
     const folded = [...main.querySelectorAll('details.more')].reduce((n, d) => n + words(d) - words(d.querySelector('summary') || d), 0);
@@ -65,4 +77,5 @@ console.log(`shots: ${report.shots} in ${out}`);
 console.log(`first read: ${report.words.firstRead} words` + (report.words.longProse.length ? `; prose over 110 words in: ${report.words.longProse.map(s => s.id + ' (' + s.prose + ')').join(', ')}` : ''));
 console.log(`states that look the same: ${report.same.length}` + report.same.map(s => '\n  ' + s).join(''));
 console.log(`svg text under 12px at 400 wide: ${report.small.length}` + report.small.slice(0, 5).map(s => `\n  ${s.px}px "${s.text}"`).join(''));
+console.log(`handwriting problems: ${report.handCode.length}` + report.handCode.slice(0, 8).map(s => '\n  ' + s).join(''));
 console.log(`script errors: ${report.errors.length}` + report.errors.map(s => '\n  ' + s).join(''));

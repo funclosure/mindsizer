@@ -49,6 +49,11 @@ themes; `--h*-t` is the text version of a colour, `--h*-c` is for strokes only.
   annotations, inline notes, set tags, the "so" before a takeaway, "try:" and "watch:", quote
   attributions, the chain numbers. Never for headings, body text or anything the reader must
   read to follow the argument.
+- Never put code, identifiers, commands, numbers or anything the reader must read exactly in
+  the pencil voice. A set tag that names code is `<span class="tag code">`: print, monospace,
+  untilted. Pencil tags are short asides ("Markdown", "an outside process").
+- A tag fits on one line (about three words); the CSS cuts off anything longer, and
+  `scripts/states.sh` reports it, so every item's heading lines up.
 - Mono only for literal code, paths and data (`.listing`).
 
 ## Layout

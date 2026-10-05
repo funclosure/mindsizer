@@ -95,7 +95,11 @@ strong { font-weight: 600; }
 /* a SET of 2-5 parallel things: columns, no boxes, the tag pencilled in; .on (+ .h1-.h4) = the one this section is about */
 .set { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 26px; padding-top: 8px; }
 .set > div { display: grid; gap: 6px; align-content: start; min-width: 0; }
-.tag { font: 400 14px/1.3 var(--hand); color: var(--ink-2); transform: rotate(-2deg); transform-origin: left; }
+/* five items never leave one alone on a row: three, then two */
+.set:has(> :nth-child(5):last-child) { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.tag { font: 400 14px/1.3 var(--hand); color: var(--ink-2); transform: rotate(-2deg); transform-origin: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* a tag that names code (an event, an API) is print, not pencil: the reader must read it exactly */
+.tag.code { font: 500 13px/1.3 ui-monospace, Menlo, Consolas, monospace; transform: none; }
 .set p { font: 15.5px/1.5 var(--ui); color: var(--ink-2); }
 .set .on p { color: var(--ink); }
 .set .on h3 span { background: var(--m); border-radius: var(--radius); box-shadow: -0.25em 0 0 0 var(--m), 0.25em 0 0 0 var(--m); }
@@ -325,11 +329,11 @@ footer { padding-top: 96px; display: grid; gap: 12px; font: 14.5px/1.55 var(--ui
     <p>A mod's code has no file, network or process access of its own. It reaches everything through the <strong>mods API</strong>, the <code>$</code> each hook receives, and behind <code>$</code> it can do what you can: mods aren't sandboxed. It can also approve a tool call before you'd be asked: one an <code>ask</code> rule would prompt for, or one your own <code>PreToolUse</code> hook blocked, and in auto mode it skips the classifier. Your <code>deny</code> rules and your organization's managed hooks still win where the built-in guard loads.</p>
   </div>
   <div class="set">
-    <div><span class="tag">$.fs</span><h3>Files</h3><p>Read and write anywhere your account can.</p></div>
-    <div><span class="tag">$.process</span><h3>Programs</h3><p>Start commands as you, like <code>gh</code> or <code>git</code>.</p></div>
-    <div><span class="tag">$.http</span><h3>Network</h3><p>Make network requests over http or https.</p></div>
-    <div><span class="tag">$.model</span><h3>Models</h3><p>Ask a model a side question, on your plan or API key.</p></div>
-    <div class="on h3"><span class="tag">$.ui, $.command, $.tool</span><h3><span>Claude Code</span></h3><p>Draw, add commands, give Claude tools.</p></div>
+    <div><span class="tag code">$.fs</span><h3>Files</h3><p>Read and write anywhere your account can.</p></div>
+    <div><span class="tag code">$.process</span><h3>Programs</h3><p>Start commands as you, like <code>gh</code> or <code>git</code>.</p></div>
+    <div><span class="tag code">$.http</span><h3>Network</h3><p>Make network requests over http or https.</p></div>
+    <div><span class="tag code">$.model</span><h3>Models</h3><p>Ask a model a side question, on your plan or API key.</p></div>
+    <div class="on h3"><span class="tag code">$.ui</span><h3><span>Claude Code</span></h3><p>Draw, add commands (<code>$.command</code>) and give Claude tools (<code>$.tool</code>).</p></div>
   </div>
   <div class="prose">
     <p class="room-below">Claude Code lists every door a mod uses before it runs: <span class="ann h3 ann-nw" data-note="read these before you install">The hooks and calls lines</span></p>
@@ -407,9 +411,9 @@ footer { padding-top: 96px; display: grid; gap: 12px; font: 14.5px/1.55 var(--ui
     <p>You don't have to write them by hand: describe one ("make a mod that…") and Claude writes it and, once you approve, loads it for that session.</p>
   </div>
   <div class="set">
-    <div class="on h1"><span class="tag">tool.call · answers</span><h3><span>Hold a risky command</span></h3><p>A force push or <code>rm -rf</code> waits for your yes; on "no" the hook denies it (the sample mod <code>blast-radius</code>).</p><p><em>Why a mod:</em> it can show what would change and wait for you.</p></div>
-    <div><span class="tag">a timer · $.process · $.ui.status</span><h3>Watch CI from the prompt</h3><p>Every minute it runs <code>gh pr checks</code> and updates a line under the prompt (the API docs' example).</p><p><em>Why a mod:</em> it runs on its own clock, between turns.</p></div>
-    <div><span class="tag">turn.step · ui.render pane</span><h3>Chart your context</h3><p>One hook records your context use after each request; another charts it in a pane (the docs' example).</p><p><em>Why a mod:</em> only a mod can add a pane.</p></div>
+    <div class="on h1"><span class="tag code">tool.call</span><h3><span>Hold a risky command</span></h3><p>A force push or <code>rm -rf</code> waits for your yes; on "no" the hook denies it (the sample mod <code>blast-radius</code>).</p><p><em>Why a mod:</em> it can show what would change and wait for you.</p></div>
+    <div><span class="tag code">$.clock.every</span><h3>Watch CI from the prompt</h3><p>Every minute it runs <code>gh pr checks</code> and updates a line under the prompt (the API docs' example).</p><p><em>Why a mod:</em> it runs on its own clock, between turns.</p></div>
+    <div><span class="tag code">turn.step + Pane</span><h3>Chart your context</h3><p>One hook records your context use after each request; another charts it in a pane (the docs' example).</p><p><em>Why a mod:</em> only a mod can add a pane.</p></div>
   </div>
   <p class="so">Guard what Claude does, show what's going on, and add a view of your own: each is one or two hooks.</p>
   <details class="more"><summary>the code for the three</summary>

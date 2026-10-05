@@ -58,7 +58,8 @@ These came from comparing pages with the user. They matter more than any single 
 8. **Say what the colour means.** Each map step gets an idea colour (`.h1`–`.h4`) that follows
    it through the page. One line under the map says what colour means.
 9. **Point at what matters.** A figure gets 1–3 short pencilled notes saying what to notice
-   ("this loop is the need"), not just a part's name. A key phrase in the prose can carry one
+   ("this loop is the need"), not just a part's name. The pencil is only ever an aside: anything the reader must
+   read exactly (code, a command, a number) stays in print. A key phrase in the prose can carry one
    too. Print carries the argument; the pencil only points.
 
 ## 1. Find the spine (think before you write)
@@ -154,6 +155,8 @@ Write the map and spine down briefly before coding. They decide the page.
      option must change what the reader sees; fix the figure, not the verdict text;
    - **SVG text under 12px at 400 wide**: enlarge it or move it into HTML;
    - **first-read words**, and sections whose prose runs over 110 words;
+   - **handwriting problems**: code or exact values set in the pencil voice, and set tags too
+     long for one line;
    - script errors.
 3. Look at the screenshots, especially every figure at 400px. Fix what you see in one pass.
    Don't loop.
