@@ -1,0 +1,85 @@
+{
+ "source": "written from the sources only, by an agent that never saw a page",
+ "questions": [
+  {
+   "id": "Q1",
+   "question": "Why can it be rational for each user of a shared resource to overuse it, even though everyone ends up worse off?",
+   "reference": "Each user captures the full benefit of an extra unit of use (one more cow, one more catch) personally, while the damage that use causes is spread across everyone who shares the resource. So each individual's calculation says 'take more', and when everyone follows it the resource is depleted for all. The metaphor: 'the benefits of exploitation accrue to individuals or groups ... while the costs of the exploitation are borne by all those to whom the resource is available'.",
+   "key_points": [
+    "The gain from extra use goes privately to the individual user",
+    "The cost/damage is shared among all users (so each user bears only a fraction of it)",
+    "Each choice is individually rational, but all of them together deplete or destroy the resource for everyone"
+   ]
+  },
+  {
+   "id": "Q2",
+   "question": "How does Hardin's 1968 essay relate to Lloyd's 1833 pasture example, and what was Hardin mainly arguing about?",
+   "reference": "Lloyd's 1833 pamphlet, 'Two Lectures on the Checks to Population', gave the hypothetical case of herders grazing extra cattle on a shared pasture: 'For each additional animal, a herder could receive additional benefits, while the whole group shared the resulting damage.' Hardin took the title and the image from Lloyd, but 'the principal concern of Hardin's essay was overpopulation'. He argued that the freedom to choose family size must be replaced by 'mutual coercion, mutually agreed upon', and that conscience alone cannot police a commons.",
+   "key_points": [
+    "Lloyd (1833) is the source of the herders-on-a-common-pasture example; Hardin borrowed it and the title",
+    "Hardin's main concern was human population growth / overpopulation, not pastures",
+    "Hardin's remedy was 'mutual coercion, mutually agreed upon' (restricting the freedom to breed), not appeals to conscience"
+   ]
+  },
+  {
+   "id": "Q3",
+   "question": "Which of these is a real tragedy-of-the-commons risk, and why: (a) millions of people downloading copies of a free e-book, (b) a neighbourhood sharing one internet connection's bandwidth, (c) more people joining a public marketplace or festival?",
+   "reference": "Only (b). A commons tragedy needs a finite resource that each user's consumption uses up for others, with open, unrestricted access: 'free access and unrestricted demand for a finite resource ultimately reduces the resource'. Downloading a file 'does not constitute the destruction of the file', so (a) does not deplete anything, while bandwidth 'can become congested when too many people try to access' it. (c) is a 'comedy of the commons', where 'the more people use the resource, the higher the benefit to each one'.",
+   "key_points": [
+    "Picks (b): bandwidth is finite and one user's use reduces what others get (congestion)",
+    "(a) is not a tragedy because copying doesn't use the resource up (not depletable/rival)",
+    "(c) is the opposite case, a 'comedy of the commons': more users raise the benefit to each (increasing returns)"
+   ]
+  },
+  {
+   "id": "Q4",
+   "question": "What are the main families of solutions to a commons tragedy, and what is a weakness or trade-off of each?",
+   "reference": "The article groups them as non-governmental (local self-governance, which works when the community conditions hold but fails when the community is too large or 'taken over by non-locals'), and governmental ones: privatization (gives an owner 'an incentive to enforce its sustainability', but per Marx's critique of the enclosures it pushes people onto shrinking commons, 'displacing and exacerbating the problem'), regulation (permits and limits, which need government oversight) and internalizing externalities, e.g. gasoline taxes, a middle path that offers 'the flexibility of privatization while minimizing the amount of government oversight'.",
+   "key_points": [
+    "Names privatization, government regulation (permits/quotas/limits) and community self-governance (internalizing externalities, e.g. taxes, as a middle path, is a plus)",
+    "Gives a trade-off for privatization: displaces people / concentrates ownership (enclosure critique), or it only works if the owner pays the full cost",
+    "Gives a trade-off for regulation (needs government oversight/overhead) and/or for self-governance (only works with small, stable communities; breaks when outsiders take over)"
+   ]
+  },
+  {
+   "id": "Q5",
+   "question": "What did Elinor Ostrom find about real commons, and which conditions make community self-governance work?",
+   "reference": "Ostrom (Nobel 2009) found the tragedy 'not as prevalent or as difficult to solve as Hardin maintained, since locals have often come up with solutions to the commons problem themselves', e.g. a Swiss Alpine commons run by farmers since 1517. Success depends on a resource with definable boundaries, real dependence on it (a perceptible threat of depletion and few substitutes), a small and stable community with dense social ties and conservation norms, and community rules 'with built-in incentives for responsible use and punishments for overuse'. When outsiders take over, these solutions stop working.",
+   "key_points": [
+    "Ostrom showed that real communities often manage commons themselves, so the tragedy is not inevitable (it challenges Hardin)",
+    "Names at least two conditions: clear boundaries, dependence/no substitutes, small stable community with strong norms, local rules with rewards and punishments",
+    "Implication: neither privatization nor state control is the only option, but self-governance needs these conditions and breaks down when non-locals take over"
+   ]
+  },
+  {
+   "id": "Q6",
+   "question": "Why do historians say the English common pasture is a bad example of the tragedy that Lloyd and Hardin describe?",
+   "reference": "Historical commons were not open to everyone: 'every parcel of \"common\" land had a legal owner', only designated commoners had rights to use it, and those grazing rights were 'restricted by law – precisely in order to prevent overgrazing', enforced by manorial courts that could fine people for grazing too many cattle. The system lasted for centuries; Cox calls it the 'triumph of the commons', and commons declined through enclosure and agricultural change rather than overuse. In short, Hardin conflated managed common-pool resources with open-access ones (he later said he should have written 'the Unregulated Commons').",
+   "key_points": [
+    "Real commons were not unrestricted: they had legal owners and a limited set of commoners",
+    "Use was regulated by customary law and manorial courts (stocking limits, fines) to prevent overgrazing, and it worked for centuries",
+    "So Hardin's model describes open-access/unregulated resources, not managed common-pool resources; the decline of commons came from enclosure and social/agricultural change"
+   ]
+  },
+  {
+   "id": "Q7",
+   "question": "A valley of about 40 farming families has relied for generations on one aquifer. The water table is visibly falling, and there is no other water source nearby. Some propose selling the aquifer to a private company; others propose that the families set their own pumping quotas. Using the article, which approach looks most promising, and why?",
+   "reference": "It is a commons tragedy: each family gains privately from pumping more, while the falling water table is a cost they all share. Ostrom's conditions largely hold: a bounded resource, a 'perceptible threat of resource depletion' with no substitutes, and a 'small and stable' community with dense ties. Community quotas with 'built-in incentives for responsible use and punishments for overuse' (meters, fines) are therefore promising. Privatization risks displacing the families, as the enclosure critique warns, and regulation by the state would be the fallback if self-governance failed.",
+   "key_points": [
+    "Identifies the mechanism: private gain from extra pumping, shared cost of depletion",
+    "Recommends community self-governance because Ostrom's conditions are met (small stable group, clear dependence/no substitutes, visible threat)",
+    "Notes that the rules need monitoring and sanctions (quotas, meters, punishments for overuse), and/or gives a drawback of privatization (displacement)"
+   ]
+  },
+  {
+   "id": "Q8",
+   "question": "In a large city, each driver gains from driving, but every car adds air pollution that millions of residents breathe. Which commons mechanism is at work, and why does the article's analysis favour a tool such as a fuel tax or emission limits over community self-management here?",
+   "reference": "This is a 'negative commons'/negative externality: the driver keeps the benefit while pollution, a shared cost, falls on everyone ('Every time Person A gets in a car, it becomes more likely for Person Z to suffer'). A city of millions fails Ostrom's conditions (no small, stable community; the air has no definable boundary), and 'governmental solutions are used when the above conditions are not met'. Internalizing the externality, e.g. 'gasoline taxes, intended to include both the cost of road maintenance and of air pollution', makes drivers pay their full cost, while regulation (pollution limits) is the other option.",
+   "key_points": [
+    "Identifies a negative externality / pollution as a 'negative commons': private benefit, shared cost",
+    "Explains why self-governance doesn't fit: the group is too large and anonymous and the resource is unbounded, so Ostrom's conditions fail",
+    "Proposes internalizing the cost (fuel/emissions tax so users pay the full cost) or government regulation (pollution limits)"
+   ]
+  }
+ ]
+}

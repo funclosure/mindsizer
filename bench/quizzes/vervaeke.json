@@ -1,0 +1,109 @@
+{
+ "source": "written from the transcript only (eval/skill-vervaeke, 2026-10-04)",
+ "questions": [
+  {
+   "id": "Q1",
+   "question": "Vervaeke starts from the psychology of 'meaning in life'. What dimensions does that research identify, why does he say purpose alone is not enough, and how does 'mattering' end up relating to 'significance'?",
+   "reference": "Martela & Steger proposed three dimensions: purpose (an overarching goal), coherence (the world makes sense and hangs together) and significance (a mix of value and realness). Costin & Vignoles added a fourth, mattering, and showed experimentally that mattering matters more than purpose, so the culture's reduction of meaning in life to purpose is a distortion. A later Martela & Steger review replicated this and found that significance and mattering are two sides of one shared phenomenon.",
+   "key_points": [
+    "Meaning in life (what keeps you going through failure and futility) differs from meaning of life (a cosmic proposal)",
+    "Martela & Steger: purpose, coherence, significance",
+    "Costin & Vignoles added mattering as a fourth dimension",
+    "Mattering matters more than purpose; reducing meaning to purpose is a distortion (one that suits capitalism)",
+    "Significance and mattering turn out to be two aspects of one phenomenon"
+   ]
+  },
+  {
+   "id": "Q2",
+   "question": "How does Susan Wolf's account of meaning in life lead Vervaeke to the ideas of connectedness, belonging and 'religio'? Include the diagnostic questions and the niche-construction analogy.",
+   "reference": "Wolf argues that meaning in life can't be reduced to mastery over your environment or to morality (morally admirable people can still be lonely). It comes down to connectedness to something larger than yourself, which can be tested with three questions: what do you want to exist even if you don't, how real is it, and how much difference do you make to it. This matches the research on belonging, which Vervaeke models as niche construction: organism and environment shape each other in a shared, participatory process. He calls this mutual fitting and binding 'religio', on purpose, because the word carries religious overtones.",
+   "key_points": [
+    "Wolf: not reducible to mastery or to morality (the lonely moral person)",
+    "'Connected to something larger' is a metaphor, unpacked as connectedness",
+    "Three diagnostic questions: want it to exist even without you, how real it is, how much difference you make",
+    "Converges with belonging research (Kelly Allen); lacking belonging harms you psychologically, physiologically and socially",
+    "Niche construction: organism and environment co-shape each other; belonging is participation",
+    "Religio = connectedness, binding, conforming, with deliberate religious overtones"
+   ]
+  },
+  {
+   "id": "Q3",
+   "question": "How does Vervaeke connect mattering to autopoiesis, and why does that mark a difference between living or cognitive beings and computers?",
+   "reference": "Autopoietic beings make themselves: unlike a self-organizing tornado, which will move into conditions that destroy it, a paramecium seeks out conditions that produce, protect and promote its existence. So it has real needs and things literally matter to it (sucrose is relevant, poison is a threat, much else is neutral), which standard physics' ontology doesn't contain. Because we are always taking care of ourselves, biologically, cognitively, existentially and culturally, we care about some information rather than other information. Computers don't care about the information they process (Reid Montague's point), but we do, because our time and resources are precious.",
+   "key_points": [
+    "Autopoiesis is self-making, not mere self-organization (tornado vs paramecium)",
+    "Self-making creates real needs, so things literally matter or are relevant",
+    "Mattering is absent from standard physics' ontology",
+    "Continuum of autopoiesis: biological, cognitive, self/personhood, cultural",
+    "Two-way relevance: things matter to us, and we ask how we matter to others (the agapic arrow)",
+    "Caring about information comes from finite time and resources; computers don't care"
+   ]
+  },
+  {
+   "id": "Q4",
+   "question": "What is relevance realization, why does Vervaeke put it at the core of general intelligence, and why can't it be algorithmic or arbitrary?",
+   "reference": "General intelligence is the ability to solve meta-problems, the problems you must solve while solving any specific problem, and the central one is relevance realization: finding the information that matters out of a combinatorially explosive space of information, memories, possibilities and actions. It can't be comprehensively algorithmic, because algorithms aim at certainty, and being certain about what's relevant would mean checking all or most of the information first. That would be 'cognitive suicide' (you'd never get out of bed). It also isn't arbitrary, because relevance can be gotten wrong and connections have to make sense. It lies in between, as Aristotle recognized.",
+   "key_points": [
+    "Spearman's g: general intelligence predicts performance across domains",
+    "General intelligence = solving meta-problems; anticipation widens the 'light cone'",
+    "Relevance realization = zeroing in on what matters among combinatorially explosive options",
+    "Algorithms work by certainty, so they would have to check everything, which is impossible (cognitive suicide)",
+    "Not arbitrary either: it is neither algorithmic nor arbitrary but in between",
+    "LLMs don't do relevance realization; they are parasitic on ours (curated data, structured internet, human reinforcement)"
+   ]
+  },
+  {
+   "id": "Q5",
+   "question": "Vervaeke tests several candidate 'generators' of relevance (representation, implication/inference, rules, prediction, formalization). What principle does he apply, and how does each candidate fail?",
+   "reference": "The principle: if a process requires relevance realization, it can't be the ultimate generator of relevance realization, since that would be circular. Representations are aspectual (Searle), so they already select a few relevant properties out of countless true ones. Inference is a selection of the relevant implications from a combinatorially vast set (Cherniak, Fodor), and which ones count depends on context. Rules can't specify their own conditions of application, so rules for applying rules lead to an infinite regress that must end in a skilled judgment. Prediction faces a trade-off between overfitting and underfitting (misses vs false alarms) with no algorithmic solution. Formalization is itself an ill-defined problem, and trying to formalize it creates another regress.",
+   "key_points": [
+    "Non-circularity principle: whatever presupposes relevance realization can't ground it",
+    "Representation: aspectual, selects properties (pencil as weapon, writing tool, etc.)",
+    "Implication vs inference: inference selects the relevant implications; Cherniak's proof about checking 138 propositions",
+    "Rules: can't specify their own application; regress ends in judgment (Brown, Wittgenstein, Aristotle)",
+    "Prediction: overfitting/underfitting trade-off settled by contextual relevance of misses vs mistakes",
+    "Formalization: entering a formal system is an ill-defined problem (well-defined vs ill-defined problems)",
+    "The point is not to reject logic, math or representation, but to show they can't ground themselves"
+   ]
+  },
+  {
+   "id": "Q6",
+   "question": "Why does Vervaeke call relevance realization 'transjective', and how does this connect with Pickstock's argument about the collapse of modern dichotomies?",
+   "reference": "Relevance isn't purely objective (whether something is relevant 'depends') or merely subjective and arbitrary (you can be wrong: 'I thought she was angry but she was afraid'). It is a real relation between agent and world, 'thrown between' rather than 'thrown under' (subject) or 'thrown against' (object). That is why he calls it transjective, a binding or religio. Pickstock argues that modernity's dichotomies (analytic/synthetic, fact/value, theory/data) have each broken down through the same performative contradiction, which points back to a conformity theory of truth: relevance is both fact and value, or neither.",
+   "key_points": [
+    "Not objective: relevance depends on context",
+    "Not subjective/arbitrary: you can be mistaken about it",
+    "A real relation 'thrown between' subject and object, hence transjective",
+    "We project relevance and bind ourselves to it, and the world also calls us (mutual shaping)",
+    "Pickstock: analytic/synthetic (Quine), fact/value (Putnam), theory/data dichotomies collapse; relevance is both fact and value",
+    "Leads back to a conformity theory of knowing (contact rather than mere representation)"
+   ]
+  },
+  {
+   "id": "Q7",
+   "question": "What is the argument (via James Filler and Nishida) that Aristotle's substance metaphysics is flawed, and how does Vervaeke trace that flaw to modern materialism?",
+   "reference": "Aristotle made substances (individual things, like the subject of a sentence) ultimately real and treated properties as belonging to them, mirroring subject-predicate logic. Filler argues that relations can't be derived from substances: a relation isn't a property or an action of one substance, since the substance could have or perform those alone, and calling it a 'connection' already assumes relation, so relationality must be primary, with the relata emerging from it. Nishida adds a contradiction: the most real things are non-categorical individuals, yet all knowledge is categorical predication. Nominalism kept the ontology and dropped universals, which put patterns only in the mind, which produced representation and dualism, whose contradictions then collapsed into materialism.",
+   "key_points": [
+    "Aristotle: substances + properties, structured like subject-predicate logic",
+    "Filler: a relation is not a property or an action of a substance, and 'connection' presupposes relation",
+    "Invert it: relata emerge from relationality (Neoplatonism; Trinity, love, light, logos as inherently relational)",
+    "Nishida: contradiction between knowledge-as-categorization and reality-as-individual substances",
+    "Nominalism: keep the ontology, drop universals, so the mind is cut off from real patterns",
+    "Chain: nominalism → representation → dualism → materialism"
+   ]
+  },
+  {
+   "id": "Q8",
+   "question": "How does Vervaeke tie the argument back to meaning in life and the sacred? What does it mean that 'relationality is primordial', and what are Schellenberg's three conditions for the sacred?",
+   "reference": "Vervaeke's proposal is that religio, or meaning in life, simply is relevance realization, so without it you aren't a cognitive agent at all. Because caring, connectedness and conformity link the grammar of cognition with the grammar of reality, and because information and intelligibility (by which we judge realness) are inherently relational, relationality is the primordial ground of being. Connecting to that ground meets Schellenberg's 'triple transcendent': it is ultimately real, ultimately good (it makes all judgments of truth, goodness and beauty possible) and ultimately transformative or salvific (it exceeds our grasp and changes us). That is the sacred, and that is the metaphysics of mattering.",
+   "key_points": [
+    "Meaning in life / religio is identified with relevance realization",
+    "Without relevance realization there is no cognitive agency; it is the master meta-problem",
+    "Information and intelligibility are relational, and realness is judged through intelligible information, so relationality is primordial",
+    "Cognition and reality co-participate in shared principles of organization (conformity, not mere representation)",
+    "Schellenberg's triple transcendent: most real, most good, most salvific/transformative",
+    "Echoes the meaning-in-life diagnostic questions (realness, value) and frames the left-hemisphere/algorithmic framework as a performative contradiction"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,85 @@
+{
+ "source": "written from the sources only, by an agent that never saw a page",
+ "questions": [
+  {
+   "id": "Q1",
+   "question": "What is a Claude Code mod, how does it relate to plugins and to Claude Code's existing (settings) hooks, and what can a mod do that a settings hook can't?",
+   "reference": "A mod is a plugin whose code (JavaScript/TypeScript) registers event handlers that Claude Code calls inside its own process; it installs and is shared like any plugin. Settings hooks run outside as a shell command, HTTP request or prompt and can only block/allow/adjust a tool call or prompt; mods can also rewrite events, draw new UI (panes, bands, restyled rows), replace built-in features (e.g. /diff) and add commands. Both run on events, and settings hooks keep working alongside mods.",
+   "key_points": [
+    "A mod is a plugin containing JS/TS function handlers (a hooks module) that run inside Claude Code; installed/shared via plugin marketplaces",
+    "Settings hooks are external scripts/HTTP/prompts configured in settings; they still work, mods don't replace them",
+    "Mods additionally can rewrite events, draw/redraw the interface, replace built-in features, add commands"
+   ]
+  },
+  {
+   "id": "Q2",
+   "question": "How does a single mod handler run before, after, instead of, or around (wrapping) a Claude Code event?",
+   "reference": "Claude Code emits an event (tool call, prompt submit, permission check, drawing a component) and calls the hook with ($, e, next) before acting. Code before calling next(e) runs before the event (observe or pass a rewritten copy of e); code after awaiting next(e) runs after and can change the result, which makes it a wrap; returning its own result without calling next answers the event instead, so the usual behavior doesn't run.",
+   "key_points": [
+    "Hooks attach to named events via on('event', [matcher], handler) and receive $, e, next",
+    "Calling next(e) (or next with a modified copy) lets the event continue; code after next sees/changes the result (after / wrap)",
+    "Returning a result without calling next takes over the event (instead), e.g. deny a tool call or answer a command"
+   ]
+  },
+  {
+   "id": "Q3",
+   "question": "When several mods hook the same event, in what order do they run, and why does that order matter (especially for organizations)?",
+   "reference": "Mods run in the order they load, like middleware nesting: the first mod to load sees the event first and the result last, so it wraps everything after it and can change, refuse, or skip what later mods do. This lets mods from different authors stack. Admins use prependPlugins to run their mods (and the sec-default guard) before every user mod, or appendPlugins to run after them.",
+   "key_points": [
+    "Load order: first-loaded mod sees the event first and the result last (onion/middleware nesting)",
+    "Earlier mods have more authority: they can rewrite/refuse before later mods see the event",
+    "Admins put policy mods first via prependPlugins (or last via appendPlugins)"
+   ]
+  },
+  {
+   "id": "Q4",
+   "question": "Why should you only install mods from sources you trust? What can an installed mod reach, and does sandboxing protect you?",
+   "reference": "A mod is code that runs with your permissions inside Claude Code and is not sandboxed. It can read/write your files, start processes, make network requests, read secrets in env vars and settings, see and rewrite every prompt and tool call, approve tool calls without asking, and spend your usage on model calls. Turning on Claude Code's sandbox only isolates Claude's Bash commands; processes a mod starts run outside it. One limit: a mod can't change the permission prompt. You can inspect a mod before installing with `claude plugin validate`, which lists its hooks and calls.",
+   "key_points": [
+    "Not sandboxed: runs as you, with access to files, processes, network, secrets",
+    "Sees and can change prompts/tool calls and can approve tool calls without asking you",
+    "Sandbox mode doesn't contain a mod's processes; review with `claude plugin validate` before installing"
+   ]
+  },
+  {
+   "id": "Q5",
+   "question": "What do you need to use mods, are they on by default, and how can a user and an organization admin turn them off?",
+   "reference": "Mods need Claude Code v2.1.287 or later and are on by default (CLI and Desktop Code tab). A user can disable one mod's plugin in /plugin, start with --safe-mode to turn off all installed mods for a session, or set \"disableAllHooks\": true in ~/.claude/settings.json for every session (which also stops settings hooks and the custom status line). Admins use managed settings: the sec-default guard's allowManagedModsOnly option blocks users' own mods, and disableAllHooks / allowManagedHooksOnly / disableSideloadFlags go further; built-in mods aren't stopped by these switches.",
+   "key_points": [
+    "Requires Claude Code v2.1.287+; mods are on by default",
+    "User controls: disable in /plugin, --safe-mode (one session), disableAllHooks in settings (all sessions)",
+    "Admin controls via managed settings: allowManagedModsOnly on the sec-default guard (plus disableAllHooks etc.); built-in mods have their own switches"
+   ]
+  },
+  {
+   "id": "Q6",
+   "question": "Applied: You want Claude never to see API keys that show up in command output (e.g. when it runs `cat .env` or `env`). How would a mod do this, and which pattern (before/after/instead/wrap) is it?",
+   "reference": "Hook the tool call event (tool.call, optionally with a { tool: 'Bash' } matcher), let the tool run by awaiting next(e), then replace secret-looking strings in the returned result before returning it, so Claude only reads the redacted output. Because the code runs after next resolves and modifies the result, it is an 'after'/wrap hook. The blog lists exactly this: \"Redact secrets from tool output before Claude reads it.\"",
+   "key_points": [
+    "Hook tool calls (tool.call, filtered to the relevant tool)",
+    "Call next(e) so the tool runs, then rewrite the result to mask secrets before returning it",
+    "It's an after/wrap use: Claude reads only the redacted result"
+   ]
+  },
+  {
+   "id": "Q7",
+   "question": "Applied: Your team wants any shell command that touches production config (or e.g. `rm -rf`, a force push) to be held for the user's confirmation, and refused if they say no. How would a mod do this?",
+   "reference": "Register a tool.call hook (matched to Bash) that inspects the command before calling next. If it looks risky, it holds the call and asks the user (or shows a preview with proceed/cancel buttons); on approval it calls next(e) so the tool runs, otherwise it returns { deny: reason } and never calls next, so the tool doesn't run. This is the 'production safeguards' example in the blog and the blast-radius sample mod.",
+   "key_points": [
+    "Hook tool.call (before the tool runs), filtered to Bash, and check the command",
+    "Hold the call and ask the user; proceed with next(e) on yes",
+    "On no, return { deny: reason } without calling next so the command never runs"
+   ]
+  },
+  {
+   "id": "Q8",
+   "question": "Applied: For each need, pick mod, settings hook, skill, or MCP server: (a) a pane beside the conversation showing your CI pipeline's status, updating as builds pass/fail; (b) blocking a tool call with a shell script you already have; (c) giving Claude access to an external system like a database; (d) instructions you keep pasting into chat.",
+   "reference": "(a) A mod: only mods can draw in the interface, and it can poll on a timer and update a pane (the blog's CI/CD status example). (b) A settings hook: pick it to block, allow, or log an event with a script you already have. (c) An MCP server, when Claude needs to reach an external system. (d) A skill, a SKILL.md of instructions Claude reads. A single plugin can bundle all of these.",
+   "key_points": [
+    "UI such as a live pane requires a mod (only mods draw)",
+    "Existing block/allow/log script fits a settings hook; external-system access fits an MCP server",
+    "Repeated instructions fit a skill"
+   ]
+  }
+ ]
+}

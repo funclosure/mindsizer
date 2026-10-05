@@ -1,0 +1,52 @@
+{
+  "_note": "One entry per benchmark topic. Sources are fetched into bench/.cache/<id>/ by fetch.py and never committed (they are copyrighted). The quiz in quizzes/<id>.json was written from the sources only.",
+  "topics": [
+    {
+      "id": "claude-mods",
+      "request": "explain to me what is Claude Mods from these sources, and give me 3 use cases",
+      "style": null,
+      "covers": "product docs, a requested set of use cases, safety/permissions, the default style (ink)",
+      "notes": "The feature is newer than the model's training data: rely only on the sources. Requires Claude Code v2.1.287+; mods are on by default there (the old CLAUDE_CODE_ENABLE_FUNCTION_HOOKS flag is ignored); individual mods can be disabled via /plugin, broader sets via settings, --safe-mode or org managed settings.",
+      "sources": [
+        {"file": "overview.md", "type": "raw", "url": "https://code.claude.com/docs/en/plugins/mods/overview.md"},
+        {"file": "create.md", "type": "raw", "url": "https://code.claude.com/docs/en/plugins/mods/create.md"},
+        {"file": "api.md", "type": "raw", "url": "https://code.claude.com/docs/en/plugins/mods/api.md"},
+        {"file": "reference.md", "type": "raw", "url": "https://code.claude.com/docs/en/plugins/mods/reference.md"},
+        {"file": "admin.md", "type": "raw", "url": "https://code.claude.com/docs/en/plugins/mods/admin.md"},
+        {"file": "blog.txt", "type": "html", "url": "https://claude.com/blog/claude-code-mods"},
+        {"file": "issue.md", "type": "gh-issue", "repo": "anthropics/claude-code", "number": 91870, "hint": "very long design discussion; read the opening post and skim the rest; where it differs from the docs, the docs win"}
+      ]
+    },
+    {
+      "id": "this-is-water",
+      "request": "help me understand David Foster Wallace's 'This Is Water'",
+      "style": "pencil",
+      "covers": "a speech with a moral argument, sensitive content, a multi-colour style",
+      "notes": "The source is copyrighted: quote short lines only. The speech mentions suicide; handle it soberly and briefly, as Wallace does.",
+      "sources": [
+        {"file": "transcript.txt", "type": "html", "url": "https://fs.blog/david-foster-wallace-this-is-water/"}
+      ]
+    },
+    {
+      "id": "commons",
+      "request": "explain the tragedy of the commons to me, properly",
+      "style": "graphite",
+      "covers": "an encyclopedia article with rival positions (balance), a single-colour style",
+      "notes": "Present the arguments as the article attributes them (Lloyd, Hardin, Ostrom, critics); take no side the article doesn't take. CC BY-SA 4.0.",
+      "sources": [
+        {"file": "wikipedia.txt", "type": "wikipedia", "title": "Tragedy_of_the_commons"}
+      ]
+    },
+    {
+      "id": "vervaeke",
+      "request": "help me understand this talk",
+      "style": "margins",
+      "covers": "a long philosophy talk from auto-captions, a sequence (scrolly), the margins style",
+      "confounded": "the skill's lead example (examples/vervaeke.html) is a page about this same talk, so the builder sees a worked answer; read its scores as a ceiling, not as generalisation",
+      "notes": "Auto-generated captions: fix obvious mishearings of names. Copyrighted: quote short lines only.",
+      "sources": [
+        {"file": "transcript.txt", "type": "youtube", "url": "https://www.youtube.com/watch?v=AxLi96DkUsc", "title": "John Vervaeke, 'The Metaphysics of Mattering' (2024)"}
+      ]
+    }
+  ]
+}
