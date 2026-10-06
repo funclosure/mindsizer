@@ -116,6 +116,7 @@ def run_topic(tid, run_dir, model, reuse, k=0):
     for r in res.values(): card["cost"] += r["cost"]
     for f in (dirs["answerer"] / "answers.json", dirs["judge"] / "report.json", dirs["newcomer"] / "newcomer.json"):
         ensure_json(f, model, logs)
+    card["cost"] += verify_high(d, tid, model)
 
     # 4. grader
     g = claude("grader", prompt("grader", quiz=quiz, answers=dirs["answerer"] / "answers.json", out=d / "grades.json"),
@@ -124,6 +125,22 @@ def run_topic(tid, run_dir, model, reuse, k=0):
     ensure_json(d / "grades.json", model, logs)
     card["cost"] = round(card["cost"], 2)
     return score(d, tid, card)
+
+
+def verify_high(d, tid, model):
+    """A second, independent judge confirms or rejects each HIGH error the judge reported. Returns its cost."""
+    t, src, jd = TOPICS[tid], d / "src", d / "judge"
+    rep_ = load(jd / "report.json", {}) or {}
+    high = [e for e in (rep_.get("fidelity") or {}).get("errors", []) if e.get("severity") == "high"]
+    out = jd / "verify.json"
+    if out.exists(): out.unlink()
+    if not high: return 0
+    (jd / "high-errors.json").write_text(json.dumps(high, indent=1))
+    r = claude("verifier", prompt("verifier", page=jd / "page.html", errors=jd / "high-errors.json", src=src,
+                                  source_list=source_list(t, src), out=out),
+               cwd=d, tools=["Read", "Write", "Glob", "Grep"], model=model, logs=d / "logs")
+    ensure_json(out, model, d / "logs")
+    return r["cost"]
 
 
 def rejudge(d, tid, model):
@@ -136,7 +153,7 @@ def rejudge(d, tid, model):
                                      style_line=style_line, skill=SKILL, out=old), cwd=d, tools=["Read", "Write", "Glob", "Grep"],
                model=model, logs=d / "logs", add_dirs=[SKILL])
     ensure_json(old, model, d / "logs")
-    return r["cost"]
+    return r["cost"] + verify_high(d, tid, model)
 
 
 def score(d, tid, card):
@@ -158,7 +175,15 @@ def score(d, tid, card):
     sev = lambda k: sum(1 for e in errs if e.get("severity") == k)
     rules = j.get("rules") or {}
     verdict = lambda v: (v.get("verdict") if isinstance(v, dict) else v) or ""
-    card["fidelity"] = {"high": sev("high"), "medium": sev("medium"), "low": sev("low"), "checked": (j.get("fidelity") or {}).get("self_written_checked")}
+    v = load(d / "judge" / "verify.json", None)
+    if sev("high") and isinstance(v, list):
+        confirmed = sum(1 for x in v if x.get("verdict") == "confirmed")
+        downgraded = sum(1 for x in v if x.get("verdict") == "medium")
+        card["fidelity"] = {"high": confirmed, "high_raw": sev("high"), "medium": sev("medium") + downgraded, "low": sev("low"),
+                            "checked": (j.get("fidelity") or {}).get("self_written_checked"), "verified": True}
+    else:
+        card["fidelity"] = {"high": sev("high"), "high_raw": sev("high"), "medium": sev("medium"), "low": sev("low"),
+                            "checked": (j.get("fidelity") or {}).get("self_written_checked"), "verified": not sev("high")}
     card["rubric"] = (j.get("rubric") or {}).get("means", {})
     secs = (j.get("rubric") or {}).get("sections", [])
     if any("claim_kind" in x for x in secs):
@@ -198,7 +223,12 @@ def spread_md(cards):
 
 
 def scorecard_md(cards, base):
-    bmap = {c["topic"]: c for c in (base or {}).get("cards", [])}
+    bmap = {}
+    for t in {c["topic"] for c in (base or {}).get("cards", []) if c.get("quiz")}:
+        cs = [c for c in base["cards"] if c["topic"] == t and c.get("quiz") and c.get("judge_ok", True)]
+        avg = lambda f: (lambda v: sum(v) / len(v) if v else None)([f(c) for c in cs if f(c) is not None])
+        bmap[t] = {"quiz": {"score": avg(lambda c: c["quiz"]["score"])}, "fidelity": {"high": avg(lambda c: c["fidelity"]["high"])},
+                   "rubric": {"overall": avg(lambda c: c["rubric"].get("overall"))}, "n": len(cs)}
     rows = ["| topic | style | quiz | high / med / low | rubric | mechanism | mech. gaps | first read | states problems | newcomer | build | cost |",
             "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     flags = []
@@ -213,7 +243,7 @@ def scorecard_md(cards, base):
                     f"{num(c['newcomer']['confidence'])}/5 | {num((c['build'] or {}).get('seconds'))}s | ${num(c['cost'])} |")
         if b:
             if q["score"] <= b["quiz"]["score"] - 1: flags.append(f"{c['topic']}: quiz fell {b['quiz']['score']} → {q['score']}")
-            if f["high"] > b["fidelity"]["high"]: flags.append(f"{c['topic']}: high-severity errors rose {b['fidelity']['high']} → {f['high']}")
+            if f["high"] > (b["fidelity"]["high"] or 0) + 0.5: flags.append(f"{c['topic']}: high-severity errors rose {b['fidelity']['high']} → {f['high']}")
             if (r.get("overall") or 0) <= (b["rubric"].get("overall") or 0) - 0.3: flags.append(f"{c['topic']}: rubric fell {b['rubric'].get('overall')} → {r.get('overall')}")
         if not c.get("judge_ok", True): flags.append(f"{c['topic']}: the judge's report is missing or unreadable; its fidelity and rubric are blank, not zero")
         if probs: flags.append(f"{c['topic']}: states.sh found {probs} problem(s)")
