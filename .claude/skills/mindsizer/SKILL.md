@@ -196,9 +196,21 @@ worship will eat you alive" is an invented claim, even though every quote on the
    - **close**: names or quoted terms that appear for the first time in the close (move them
      into an earlier section, or cut them), or a page with no `id="close"` section;
    - script errors.
-3. Look at the screenshots, especially every figure at 400px. Fix what you see in one pass.
-   Don't loop.
-4. **Fidelity pass.** Start with the lines you wrote yourself, because exact quotes rarely drift
+3. **Figure review.** `states.sh` also writes `review-<figure>.png`: every state of one
+   figure side by side, captioned by its control. Open each sheet and look only at the
+   drawings and their notes, not your prose. For each state, write one line:
+   `<state>: <what is drawn differently> because <the cause the drawing shows>`.
+   Redraw the figure if:
+   - a line can only name a change of colour, dashing, size or label ("the ring turns dashed",
+     "the grass shrinks a bit");
+   - two states change in the same way (every switch shrinks the same thing by the same step);
+   - the "because" is in your head or your paragraph, not in the drawing.
+
+   Put these lines in your reply to the user, or your report, so the review can be checked.
+   Then rerun `states.sh` once on the redrawn figures.
+4. Look at the full-page screenshots, especially every figure at 400px. Fix what you see in
+   one pass. Don't loop.
+5. **Fidelity pass.** Start with the lines you wrote yourself, because exact quotes rarely drift
    and summaries do: the dek, the map, every heading, every "so" line, every verdict and every
    figure label. Hold each against the source sentence named in the spine.
    - Every number and quote is in the source, or labelled illustrative.

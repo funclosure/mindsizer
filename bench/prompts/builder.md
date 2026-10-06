@@ -12,4 +12,4 @@ $notes
 
 5. Do the skill's quick check (check.sh and states.sh, output into $workdir/page) and its fidelity pass, once each.
 
-6. Reply with: the map and spine (with the source sentence next to each heading and "so" line), each interaction and why you chose it, what is illustrative, what you folded, states.sh's summary, anything in the skill that was unclear or that you had to work around.
+6. Reply with: the map and spine (with the source sentence next to each heading and "so" line), each interaction and why you chose it, your figure-review lines (one per state, as the skill asks), what is illustrative, what you folded, states.sh's summary, anything in the skill that was unclear or that you had to work around.

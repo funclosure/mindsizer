@@ -13,7 +13,8 @@ let html = fs.readFileSync(pageFile, 'utf8');
 if (!/^\s*<!doctype/i.test(html.slice(0, 200))) html = '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">' + html;
 
 const browser = await chromium.launch();
-const report = { same: [], small: [], errors: [], dupKeys: [], shots: 0 };
+const report = { same: [], small: [], errors: [], dupKeys: [], shots: 0, review: [] };
+const sheets = {}; // figure id -> [{ file, caption }] at 1280, for the figure review
 for (const width of [1280, 400]) {
   const page = await browser.newPage({ viewport: { width, height: 900 } });
   page.on('pageerror', e => report.errors.push(`${width}: ${e.message}`));
@@ -26,26 +27,33 @@ for (const width of [1280, 400]) {
     const id = (await fig.evaluate(e => (e.closest('[id]') || {}).id)) || 'fig';
     const sig = () => fig.evaluate(e => [...e.querySelectorAll('svg, .words')].map(n => n.tagName === 'DIV' ? [...n.children].map(c => c.className).join() : n.innerHTML).join('|'));
     const seen = new Map();
-    const shoot = async (name) => {
+    const shoot = async (name, caption) => {
       await page.waitForTimeout(750);
-      await fig.screenshot({ path: path.join(out, `${width}-${id}-${name}.png`) }); report.shots++;
+      const file = path.join(out, `${width}-${id}-${name}.png`);
+      await fig.screenshot({ path: file }); report.shots++;
+      if (width === 1280) (sheets[id] = sheets[id] || []).push({ file, caption });
       const s = await sig(); if (width === 1280) { if (seen.has(s)) report.same.push(`${id}: "${name}" looks the same as "${seen.get(s)}"`); else seen.set(s, name); }
     };
-    await fig.scrollIntoViewIfNeeded(); await shoot('rest');
+    const labelOf = (sel) => page.$eval(sel, e => e.textContent.trim().replace(/\s+/g, ' ')).catch(() => '');
+    const checked = await fig.$('input[type=radio]:checked');
+    await fig.scrollIntoViewIfNeeded();
+    await shoot('rest', 'at rest' + (checked ? ': ' + await labelOf(`label[for="${await checked.getAttribute('id')}"]`) : ''));
     for (const r of await fig.$$('input[type=radio]')) {
       const rid = await r.getAttribute('id'); if (await r.isChecked()) continue;
-      await page.click(`label[for="${rid}"]`); await shoot(rid);
+      await page.click(`label[for="${rid}"]`); await shoot(rid, await labelOf(`label[for="${rid}"]`));
     }
     for (const c of await fig.$$('input[type=checkbox]')) {
       const cid = await c.getAttribute('id');
-      await page.click(`label:has(#${cid})`); await shoot(`${cid}-off`); await page.click(`label:has(#${cid})`);
+      await page.click(`label:has(#${cid})`); await shoot(`${cid}-off`, 'off: ' + await labelOf(`label:has(#${cid})`)); await page.click(`label:has(#${cid})`);
     }
   }
   for (const [s, scrolly] of (await page.$$('.scrolly')).entries()) {
     const beats = await scrolly.$$('.beat');
     for (let i = 0; i < beats.length; i++) {
       await beats[i].evaluate(e => e.scrollIntoView({ block: 'center' })); await page.waitForTimeout(800);
-      const stick = await scrolly.$('.stick'); await stick.screenshot({ path: path.join(out, `${width}-scrolly${s}-beat${i}.png`) }); report.shots++;
+      const stick = await scrolly.$('.stick'), file = path.join(out, `${width}-scrolly${s}-beat${i}.png`);
+      await stick.screenshot({ path: file }); report.shots++;
+      if (width === 1280) (sheets[`scrolly${s}`] = sheets[`scrolly${s}`] || []).push({ file, caption: `beat ${i + 1}: ` + await beats[i].evaluate(e => (e.querySelector('h3') || e).textContent.trim()) });
     }
   }
   if (width === 400) report.small = await page.evaluate(() => [...document.querySelectorAll('svg text, svg tspan')].filter(t => !t.querySelector('tspan')).map(t => {
@@ -91,6 +99,18 @@ for (const width of [1280, 400]) {
   });
   await page.close();
 }
+// figure review: one sheet per figure, every state side by side, captioned by its control (see SKILL.md, quick check)
+const sheetPage = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+for (const [id, shots] of Object.entries(sheets)) {
+  if (shots.length < 2) continue;
+  const cells = shots.map(x => `<figure><figcaption>${x.caption.replace(/</g, '&lt;')}</figcaption><img src="data:image/png;base64,${fs.readFileSync(x.file).toString('base64')}"></figure>`).join('');
+  await sheetPage.setContent(`<style>body{margin:0;padding:16px;background:#fff;font:15px -apple-system,Helvetica,Arial,sans-serif;color:#222}
+    main{display:grid;grid-template-columns:1fr 1fr;gap:18px}figure{margin:0;border:1px solid #ddd;border-radius:8px;padding:10px}
+    figcaption{font-weight:600;margin-bottom:6px}img{width:100%;height:auto;display:block}h1{font-size:17px;margin:0 0 12px}</style>
+    <h1>${id}: every state, side by side</h1><main>${cells}</main>`, { waitUntil: 'load' });
+  const file = path.join(out, `review-${id}.png`);
+  await sheetPage.screenshot({ path: file, fullPage: true }); report.review.push(file);
+}
 await browser.close();
 fs.writeFileSync(path.join(out, 'states.json'), JSON.stringify(report, null, 2));
 console.log(`shots: ${report.shots} in ${out}`);
@@ -100,4 +120,5 @@ console.log(`svg text under 12px at 400 wide: ${report.small.length}` + report.s
 console.log(`handwriting problems: ${report.handCode.length}` + report.handCode.slice(0, 8).map(s => '\n  ' + s).join(''));
 console.log(`duplicate draw keys: ${report.dupKeys.length}` + report.dupKeys.slice(0, 5).map(s => '\n  ' + s).join(''));
 console.log(report.close.missing ? 'close: no section with id="close"' : `close: ${report.close.fresh.length} name(s) or term(s) not shown earlier` + (report.close.fresh.length ? ': ' + report.close.fresh.slice(0, 8).join(', ') : ''));
+console.log(`figure review sheets: ${report.review.length}` + report.review.map(s => '\n  ' + s).join(''));
 console.log(`script errors: ${report.errors.length}` + report.errors.map(s => '\n  ' + s).join(''));
