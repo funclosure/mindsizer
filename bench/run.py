@@ -126,6 +126,19 @@ def run_topic(tid, run_dir, model, reuse, k=0):
     return score(d, tid, card)
 
 
+def rejudge(d, tid, model):
+    """Re-run only the judge on a saved page (keeps the old report as report.v1.json); returns the judge's cost."""
+    t, src, jd = TOPICS[tid], d / "src", d / "judge"
+    old = jd / "report.json"
+    if old.exists() and not (jd / "report.v1.json").exists(): shutil.copy(old, jd / "report.v1.json")
+    style_line = f", in the {t['style']} style." if t.get("style") else ""
+    r = claude("judge-rerun", prompt("judge", page=jd / "page.html", src=src, source_list=source_list(t, src), request=t["request"],
+                                     style_line=style_line, skill=SKILL, out=old), cwd=d, tools=["Read", "Write", "Glob", "Grep"],
+               model=model, logs=d / "logs", add_dirs=[SKILL])
+    ensure_json(old, model, d / "logs")
+    return r["cost"]
+
+
 def score(d, tid, card):
     """Fill a topic's card from the files a run left in d (so a run can be re-scored without re-running)."""
     quiz = BENCH / "quizzes" / f"{tid}.json"
@@ -147,6 +160,12 @@ def score(d, tid, card):
     verdict = lambda v: (v.get("verdict") if isinstance(v, dict) else v) or ""
     card["fidelity"] = {"high": sev("high"), "medium": sev("medium"), "low": sev("low"), "checked": (j.get("fidelity") or {}).get("self_written_checked")}
     card["rubric"] = (j.get("rubric") or {}).get("means", {})
+    secs = (j.get("rubric") or {}).get("sections", [])
+    if any("claim_kind" in x for x in secs):
+        mech = [x["mechanism_shown"] for x in secs if x.get("claim_kind") == "mechanism" and isinstance(x.get("mechanism_shown"), (int, float))]
+        card["mechanism"] = {"mean": round(sum(mech) / len(mech), 2) if mech else None, "sections": len(mech), "gaps": len(j.get("mechanism_gaps", []))}
+    else:
+        card["mechanism"] = {"mean": None, "sections": None, "gaps": None}  # judged before claim_kind existed
     card["rules"] = {k: verdict(v) for k, v in rules.items()}
     card["rules_failed"] = [k for k, v in card["rules"].items() if v.startswith("failed")]
     card["top5"] = [p.get("problem") for p in j.get("top5", [])]
@@ -170,18 +189,18 @@ def spread_md(cards):
         if not vals: return "–"
         m = sum(vals) / len(vals)
         return f"{m:.2f} ({min(vals):.2g}–{max(vals):.2g})" if len(vals) > 1 else f"{m:.2f}"
-    rows = ["| topic | builds | quiz score | high errors | medium errors | rubric | mechanism | first read |", "|---|---|---|---|---|---|---|---|"]
+    rows = ["| topic | builds | quiz score | high errors | medium errors | rubric | mechanism (mechanism sections) | mechanism gaps | first read |", "|---|---|---|---|---|---|---|---|---|"]
     for t, cs in by.items():
         rows.append(f"| {t} | {len(cs)} | {stat([c['quiz']['score'] for c in cs])} | {stat([c['fidelity']['high'] for c in cs])} | "
                     f"{stat([c['fidelity']['medium'] for c in cs])} | {stat([c['rubric'].get('overall') for c in cs])} | "
-                    f"{stat([c['rubric'].get('mechanism_shown') for c in cs])} | {stat([c['states']['first_read_words'] for c in cs])} |")
+                    f"{stat([(c.get('mechanism') or {}).get('mean') for c in cs])} | {stat([(c.get('mechanism') or {}).get('gaps') for c in cs])} | {stat([c['states']['first_read_words'] for c in cs])} |")
     return "\n\n**Spread over repeated builds** (mean, then min–max)\n\n" + "\n".join(rows)
 
 
 def scorecard_md(cards, base):
     bmap = {c["topic"]: c for c in (base or {}).get("cards", [])}
-    rows = ["| topic | style | quiz | high / med / low | rubric | mechanism | first read | states problems | newcomer | build | cost |",
-            "|---|---|---|---|---|---|---|---|---|---|---|"]
+    rows = ["| topic | style | quiz | high / med / low | rubric | mechanism | mech. gaps | first read | states problems | newcomer | build | cost |",
+            "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     flags = []
     for c in cards:
         if c.get("error"): rows.append(f"| {c['topic']} | {c['style']} | {c['error']} |||||||||"); continue
@@ -190,7 +209,7 @@ def scorecard_md(cards, base):
         delta = lambda now, old: "" if old is None or now is None else f" ({now - old:+.2g})"
         rows.append(f"| {c['topic']}{' #' + str(c['rep']) if c.get('rep') else ''}{' ⚠' if c['confounded'] else ''} | {c['style']} | {q['correct']}✓ {q['partial']}~ {q['wrong']}✗ of {q['of']}"
                     f"{delta(q['score'], b and b['quiz']['score'])} | {f['high']} / {f['medium']} / {f['low']} | {num(r.get('overall'))}"
-                    f"{delta(r.get('overall'), b and b['rubric'].get('overall'))} | {num(r.get('mechanism_shown'))} | {num(s['first_read_words'])} | {probs} | "
+                    f"{delta(r.get('overall'), b and b['rubric'].get('overall'))} | {num((c.get('mechanism') or {}).get('mean'))} | {num((c.get('mechanism') or {}).get('gaps'))} | {num(s['first_read_words'])} | {probs} | "
                     f"{num(c['newcomer']['confidence'])}/5 | {num((c['build'] or {}).get('seconds'))}s | ${num(c['cost'])} |")
         if b:
             if q["score"] <= b["quiz"]["score"] - 1: flags.append(f"{c['topic']}: quiz fell {b['quiz']['score']} → {q['score']}")
@@ -213,8 +232,16 @@ def main():
     ap.add_argument("--model", default="claude-opus-5-5"); ap.add_argument("--jobs", type=int, default=2)
     ap.add_argument("--reuse"); ap.add_argument("--save-baseline", action="store_true")
     ap.add_argument("--repeat", type=int, default=1, help="build each topic N times and report mean and range")
+    ap.add_argument("--rejudge", help="re-run only the judge on a saved run's pages (optionally only the named topics), then rescore")
     ap.add_argument("--rescore", help="rebuild a run's scorecard from its saved files (repairs broken JSON first)")
     a = ap.parse_args()
+    if a.rejudge:
+        run_dir = pathlib.Path(a.rejudge); old = load(run_dir / "scorecard.json")
+        todo = [c for c in old["cards"] if not a.topics or c["topic"] in a.topics]
+        with cf.ThreadPoolExecutor(a.jobs) as ex:
+            costs = list(ex.map(lambda c: rejudge(run_dir / c.get("dir", c["topic"]), c["topic"], a.model), todo))
+        print(f"re-judged {len(todo)} page(s) in {run_dir.name} for ${sum(costs):.2f}")
+        a.rescore = a.rejudge
     if a.rescore:
         run_dir = pathlib.Path(a.rescore); old = load(run_dir / "scorecard.json")
         cards = []
