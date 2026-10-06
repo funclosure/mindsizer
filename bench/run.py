@@ -67,8 +67,8 @@ def source_list(t, src):
     return "\n".join(f"   - {src / s['file']}" + (f" ({s['url']})" if s.get("url") else "") + (f": {s['hint']}" if s.get("hint") else "") for s in t["sources"])
 
 
-def run_topic(tid, run_dir, model, reuse):
-    t, d = TOPICS[tid], run_dir / tid
+def run_topic(tid, run_dir, model, reuse, k=0):
+    t, d = TOPICS[tid], run_dir / (f"{tid}-{k}" if k else tid)
     src, page_dir, logs = d / "src", d / "page", d / "logs"
     for x in (src, page_dir, logs): x.mkdir(parents=True, exist_ok=True)
     cache = BENCH / ".cache" / tid
@@ -78,7 +78,7 @@ def run_topic(tid, run_dir, model, reuse):
         shutil.copy(f, src / s["file"])
     page = page_dir / f"{tid}.html"
     style_line = f", in the {t['style']} style." if t.get("style") else ""
-    card = {"topic": tid, "style": t.get("style") or "default", "confounded": bool(t.get("confounded")), "cost": 0}
+    card = {"topic": tid, "rep": k, "dir": d.name, "style": t.get("style") or "default", "confounded": bool(t.get("confounded")), "cost": 0}
 
     # 1. build
     if reuse:
@@ -159,6 +159,25 @@ def num(x, nd=2):
     return "–" if x is None else (f"{x:.{nd}f}" if isinstance(x, float) else str(x))
 
 
+def spread_md(cards):
+    """Mean and range per topic over repeated builds: how much a single build can swing."""
+    by = {}
+    for c in cards:
+        if not c.get("error") and c.get("judge_ok", True): by.setdefault(c["topic"], []).append(c)
+    if not any(len(v) > 1 for v in by.values()): return ""
+    def stat(vals):
+        vals = [v for v in vals if isinstance(v, (int, float))]
+        if not vals: return "–"
+        m = sum(vals) / len(vals)
+        return f"{m:.2f} ({min(vals):.2g}–{max(vals):.2g})" if len(vals) > 1 else f"{m:.2f}"
+    rows = ["| topic | builds | quiz score | high errors | medium errors | rubric | mechanism | first read |", "|---|---|---|---|---|---|---|---|"]
+    for t, cs in by.items():
+        rows.append(f"| {t} | {len(cs)} | {stat([c['quiz']['score'] for c in cs])} | {stat([c['fidelity']['high'] for c in cs])} | "
+                    f"{stat([c['fidelity']['medium'] for c in cs])} | {stat([c['rubric'].get('overall') for c in cs])} | "
+                    f"{stat([c['rubric'].get('mechanism_shown') for c in cs])} | {stat([c['states']['first_read_words'] for c in cs])} |")
+    return "\n\n**Spread over repeated builds** (mean, then min–max)\n\n" + "\n".join(rows)
+
+
 def scorecard_md(cards, base):
     bmap = {c["topic"]: c for c in (base or {}).get("cards", [])}
     rows = ["| topic | style | quiz | high / med / low | rubric | mechanism | first read | states problems | newcomer | build | cost |",
@@ -169,7 +188,7 @@ def scorecard_md(cards, base):
         q, f, r, s, b = c["quiz"], c["fidelity"], c["rubric"], c["states"], bmap.get(c["topic"])
         probs = sum(s[k] or 0 for k in ("look_alike", "small_text", "handwriting", "dup_keys", "script_errors", "close_new"))
         delta = lambda now, old: "" if old is None or now is None else f" ({now - old:+.2g})"
-        rows.append(f"| {c['topic']}{' ⚠' if c['confounded'] else ''} | {c['style']} | {q['correct']}✓ {q['partial']}~ {q['wrong']}✗ of {q['of']}"
+        rows.append(f"| {c['topic']}{' #' + str(c['rep']) if c.get('rep') else ''}{' ⚠' if c['confounded'] else ''} | {c['style']} | {q['correct']}✓ {q['partial']}~ {q['wrong']}✗ of {q['of']}"
                     f"{delta(q['score'], b and b['quiz']['score'])} | {f['high']} / {f['medium']} / {f['low']} | {num(r.get('overall'))}"
                     f"{delta(r.get('overall'), b and b['rubric'].get('overall'))} | {num(r.get('mechanism_shown'))} | {num(s['first_read_words'])} | {probs} | "
                     f"{num(c['newcomer']['confidence'])}/5 | {num((c['build'] or {}).get('seconds'))}s | ${num(c['cost'])} |")
@@ -180,7 +199,7 @@ def scorecard_md(cards, base):
         if not c.get("judge_ok", True): flags.append(f"{c['topic']}: the judge's report is missing or unreadable; its fidelity and rubric are blank, not zero")
         if probs: flags.append(f"{c['topic']}: states.sh found {probs} problem(s)")
         if c.get("rules_failed"): flags.append(f"{c['topic']}: rules failed: {', '.join(c['rules_failed'])}")
-    out = "\n".join(rows)
+    out = "\n".join(rows) + spread_md(cards)
     out += "\n\n⚠ = confounded topic (the skill's example is this topic); read as a ceiling.\n"
     out += ("\n**Flags**\n" + "\n".join(f"- {x}" for x in flags)) if flags else "\nNo flags."
     for c in cards:
@@ -193,16 +212,17 @@ def main():
     ap.add_argument("topics", nargs="*"); ap.add_argument("--all", action="store_true")
     ap.add_argument("--model", default="claude-opus-5-5"); ap.add_argument("--jobs", type=int, default=2)
     ap.add_argument("--reuse"); ap.add_argument("--save-baseline", action="store_true")
+    ap.add_argument("--repeat", type=int, default=1, help="build each topic N times and report mean and range")
     ap.add_argument("--rescore", help="rebuild a run's scorecard from its saved files (repairs broken JSON first)")
     a = ap.parse_args()
     if a.rescore:
         run_dir = pathlib.Path(a.rescore); old = load(run_dir / "scorecard.json")
         cards = []
         for c in old["cards"]:
-            d = run_dir / c["topic"]
+            d = run_dir / c.get("dir", c["topic"])
             for f in (d / "answerer" / "answers.json", d / "judge" / "report.json", d / "newcomer" / "newcomer.json", d / "grades.json"):
                 ensure_json(f, a.model, d / "logs")
-            cards.append(score(d, c["topic"], {k: c[k] for k in ("topic", "style", "confounded", "cost", "build") if k in c}))
+            cards.append(score(d, c["topic"], {k: c[k] for k in ("topic", "rep", "dir", "style", "confounded", "cost", "build") if k in c}))
         old["cards"] = cards
         (run_dir / "scorecard.json").write_text(json.dumps(old, indent=1))
         md = f"# mindsizer benchmark {run_dir.name} (skill {old['skill_commit']}, {old['model']}), rescored\n\n" + scorecard_md(cards, load(BENCH / "baseline.json"))
@@ -215,13 +235,13 @@ def main():
     sha = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=BENCH, capture_output=True, text=True).stdout.strip()
     print(f"run {run_dir.name}: {', '.join(ids)} with {a.model} at skill {sha}", flush=True)
     with cf.ThreadPoolExecutor(a.jobs) as ex:
-        futs = {ex.submit(run_topic, i, run_dir, a.model, a.reuse): i for i in ids}
+        futs = {ex.submit(run_topic, i, run_dir, a.model, a.reuse, k if a.repeat > 1 else 0): i for i in ids for k in range(1, a.repeat + 1)}
         cards = []
         for f in cf.as_completed(futs):
             try: c = f.result()
             except BaseException as e: c = {"topic": futs[f], "style": "", "error": f"crashed: {e}"}
             cards.append(c); print(f"done: {c['topic']}", flush=True)
-    cards.sort(key=lambda c: ids.index(c["topic"]))
+    cards.sort(key=lambda c: (ids.index(c["topic"]), c.get("rep", 0)))
     result = {"run": run_dir.name, "skill_commit": sha, "model": a.model, "cards": cards,
               "total_cost": round(sum(c.get("cost", 0) for c in cards), 2)}
     (run_dir / "scorecard.json").write_text(json.dumps(result, indent=1))
