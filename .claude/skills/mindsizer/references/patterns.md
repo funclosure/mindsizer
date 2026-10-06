@@ -4,6 +4,32 @@ Prefer the light ones (switch off, pick, flip, reveal): one click, nothing to se
 reader sees *why*. Reach for a simulator (train) or a dense chart only when a quantity is the
 point. Every pattern needs one line next to the control saying what to watch.
 
+## Showing why: worked examples from evals
+
+The judge's weakest score across every eval is "mechanism shown": figures that relabel, recolour
+or light things up instead of drawing the cause. Each pair below is a real failure and the fix.
+
+- **Switch off a condition.** *Fails:* unticking "clear boundaries" turns the boundary ring
+  dashed, and every other switch shrinks the pasture by the same step. *Shows why:* each switch
+  breaks the outcome in its own way: no boundary → outsiders' herds walk in; no rules → herds grow
+  unchecked; no community → nobody notices. The reader sees four different failures, not one.
+- **Light up what matters.** *Fails:* "realizing what's relevant" lights three items in a room,
+  with no reason given. *Shows why:* each lit item is tied by a line to the goal that makes it
+  relevant ("the slide → following the talk"), and changing the goal moves the lines.
+- **A process carried by a set.** *Fails:* "everybody worships something" as four parallel
+  items, each tagged "worship". *Shows why:* the drift itself: a default that pulls you toward
+  one of them a step at a time unless you choose, drawn as the path you slide along.
+- **The defining move, described but not drawn.** *Fails:* a page that says "only a mod can
+  draw in the interface", then never draws a pane. *Shows why:* a sketch of the screen where the
+  reader adds the pane, and the part Claude Code draws stays put.
+- **A toy model that invents a law.** *Fails:* a herd simulation where every setting ends in
+  collapse ("none removes it"), when the source says the tragedy is "by no means inevitable".
+  *Shows why:* the same model reaches both outcomes, and the reader finds the settings where
+  the commons holds.
+- **Recolour.** *Fails:* the young fish's view and the older fish's view differ only in whether
+  the water lines are solid or dashed. *Shows why:* something the water does becomes visible in
+  one view (it carries them, it touches everything), so the change has content, not just ink.
+
 ## pick: choose a case, watch what changes
 **When:** the same input means different things depending on the case (what is relevant
 depends on your plan; which rule applies depends on who you're talking to).

@@ -86,7 +86,8 @@ def run_topic(tid, run_dir, model, reuse):
     s = load(st_dir / "states.json", {}) or {}
     card["states"] = {"first_read_words": (s.get("words") or {}).get("firstRead"), "look_alike": len(s.get("same", [])),
                       "small_text": len(s.get("small", [])), "handwriting": len(s.get("handCode", [])),
-                      "dup_keys": len(s.get("dupKeys", [])), "script_errors": len(s.get("errors", []))}
+                      "dup_keys": len(s.get("dupKeys", [])), "script_errors": len(s.get("errors", [])),
+                      "close_new": len((s.get("close") or {}).get("fresh", [])) + (1 if (s.get("close") or {}).get("missing") else 0)}
 
     # 3. readers, in parallel, each in its own folder with its own copy of the page
     quiz = BENCH / "quizzes" / f"{tid}.json"
@@ -143,7 +144,7 @@ def scorecard_md(cards, base):
     for c in cards:
         if c.get("error"): rows.append(f"| {c['topic']} | {c['style']} | {c['error']} |||||||||"); continue
         q, f, r, s, b = c["quiz"], c["fidelity"], c["rubric"], c["states"], bmap.get(c["topic"])
-        probs = sum(s[k] or 0 for k in ("look_alike", "small_text", "handwriting", "dup_keys", "script_errors"))
+        probs = sum(s[k] or 0 for k in ("look_alike", "small_text", "handwriting", "dup_keys", "script_errors", "close_new"))
         delta = lambda now, old: "" if old is None or now is None else f" ({now - old:+.2g})"
         rows.append(f"| {c['topic']}{' ⚠' if c['confounded'] else ''} | {c['style']} | {q['correct']}✓ {q['partial']}~ {q['wrong']}✗ of {q['of']}"
                     f"{delta(q['score'], b and b['quiz']['score'])} | {f['high']} / {f['medium']} / {f['low']} | {num(r.get('overall'))}"

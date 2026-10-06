@@ -85,6 +85,15 @@ These came from comparing pages with the user. They matter more than any single 
    that explodes or trades off is a **slider**; a case that changes the answer is a **pick**;
    a condition that matters is a **switch off**. Aim for 3–5 interactive sections. If two
    sections share a mechanism, make one control show both.
+
+   **Name the mechanism before you draw.** For every section whose claim is a cause, a
+   process, a trade-off or a choice, write one sentence with a "because" in the spine ("the
+   herd grows because the gain is private and the cost is shared"). The figure must draw the
+   "because": the arrow, the flow, the quantity that moves. A set only carries parallel
+   things; it can't carry a mechanism on its own. And whatever the page calls the subject's
+   defining move (what only a mod can do, the step the whole argument turns on) gets drawn,
+   not just described. `references/patterns.md` has worked examples of passing and failing
+   figures, all from real evals.
 4. **Facts.** List the numbers, names and quotes you will use, each traceable to the source.
    For an argument, also list each **attribution** ("Filler argues X") and each **link** you
    draw between steps ("A, therefore B"), with the source line it rests on.
@@ -127,6 +136,9 @@ worship will eat you alive" is an invented claim, even though every quote on the
   - It opens in a meaningful state, never an empty shell. Every control says what it does.
   - Next to the control, at body contrast, one line says what to watch and what it means.
   - Its effect is immediate and visible, and it is labelled illustrative if modelled.
+  - A model's outcome is never stronger than the source. If the source says "can", "often" or
+    "by no means inevitable", the model must reach the other outcome too, under a setting the
+    reader can find. A simulation where every setting ends the same way has invented a law.
   - Axes stay fixed while the reader operates. Every stop or option visibly changes
     something.
   - If removing it loses no understanding, remove it.
@@ -143,8 +155,10 @@ worship will eat you alive" is an invented claim, even though every quote on the
   `<span class="ann h2" data-note="…">phrase</span>` at the end of a paragraph with
   `.room-below`.
 - **Figure test:** cover the prose and ask whether the figure alone shows *why* the state changed.
-  If the answer lives only in the paragraph, redraw it (draw the loop, the need, the missing
-  link). Two states that differ only in colour, dashing or a label fail the test.
+  Say the mechanism in one sentence with a "because", then point at the part of the drawing
+  that is the "because". If you can't point at it, redraw (the loop, the need, the missing
+  link). Two states that differ only in colour, dashing or a label fail the test, and so do
+  switches that all produce the same change.
 - **Default state:** a figure opens on the case the source leads with (the reader the source
   holds up as its example, the version it argues against first), not on a case you chose.
 - **Labels and verdicts are claims.** Every word inside a figure, and every verdict line, either
@@ -179,6 +193,8 @@ worship will eat you alive" is an invented claim, even though every quote on the
      long for one line;
    - **duplicate draw keys**: two items in one figure sharing a key, so one silently replaces
      the other;
+   - **close**: names or quoted terms that appear for the first time in the close (move them
+     into an earlier section, or cut them), or a page with no `id="close"` section;
    - script errors.
 3. Look at the screenshots, especially every figure at 400px. Fix what you see in one pass.
    Don't loop.

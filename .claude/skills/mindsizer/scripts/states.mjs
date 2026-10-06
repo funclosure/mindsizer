@@ -64,6 +64,25 @@ for (const width of [1280, 400]) {
     }
     return out;
   });
+  if (width === 1280) report.close = await page.evaluate(() => {
+    // the close may only use what the page has already shown: flag names and quoted terms that first appear there
+    const main = document.querySelector('main') || document.body, close = document.getElementById('close');
+    if (!close) return { missing: true, fresh: [] };
+    const all = main.textContent, idx = all.indexOf(close.textContent), before = (idx > 0 ? all.slice(0, idx) : '').toLowerCase();
+    // a landing quote (blockquote) is allowed to be new; everything else must have been shown
+    const c = close.cloneNode(true); c.querySelectorAll('blockquote').forEach(b => b.remove()); document.body.appendChild(c); c.style.position = 'absolute'; c.style.left = '-99999px';
+    const text = c.innerText; c.remove();
+    const terms = new Set();
+    for (const m of text.matchAll(/[“"]([^”"]{3,60})[”"]/g)) terms.add(m[1].trim());
+    for (const line of text.split(/\n|(?<=[.!?:;])\s+/)) {
+      const words = line.trim().split(/\s+/);
+      for (let i = 1; i < words.length; i++) {
+        const w = words[i].replace(/^[^A-Za-z]+|[^A-Za-z’'-]+$/g, '').replace(/[’']s$/, '');
+        if (/^[A-Z][a-z’'-]{2,}$/.test(w)) terms.add(w);
+      }
+    }
+    return { missing: false, fresh: [...terms].filter(t => !before.includes(t.toLowerCase())) };
+  });
   if (width === 1280) report.words = await page.evaluate(() => {
     const main = document.querySelector('main') || document.body; const words = el => (el.innerText || '').split(/\s+/).filter(Boolean).length;
     const folded = [...main.querySelectorAll('details.more')].reduce((n, d) => n + words(d) - words(d.querySelector('summary') || d), 0);
@@ -80,4 +99,5 @@ console.log(`states that look the same: ${report.same.length}` + report.same.map
 console.log(`svg text under 12px at 400 wide: ${report.small.length}` + report.small.slice(0, 5).map(s => `\n  ${s.px}px "${s.text}"`).join(''));
 console.log(`handwriting problems: ${report.handCode.length}` + report.handCode.slice(0, 8).map(s => '\n  ' + s).join(''));
 console.log(`duplicate draw keys: ${report.dupKeys.length}` + report.dupKeys.slice(0, 5).map(s => '\n  ' + s).join(''));
+console.log(report.close.missing ? 'close: no section with id="close"' : `close: ${report.close.fresh.length} name(s) or term(s) not shown earlier` + (report.close.fresh.length ? ': ' + report.close.fresh.slice(0, 8).join(', ') : ''));
 console.log(`script errors: ${report.errors.length}` + report.errors.map(s => '\n  ' + s).join(''));
