@@ -47,8 +47,22 @@ reader should take from the source, not what any one page chose to say.
 - **Flags** compare with `bench/baseline.json`: the quiz falling by a point or more, more
   high-severity errors, the rubric falling by 0.3 or more, or a skill rule judged "failed".
 
-Single runs are noisy (a different builder makes a different page; judges vary by about ±0.2 on
-the rubric), so read a flag as "look at this", and re-run a topic before concluding.
+**Noise, measured** (2026-10-06: three builds each of `commons` and `this-is-water` on the same
+skill): one build's page can differ a lot from the next.
+
+| metric | spread over 3 builds of one topic |
+|---|---|
+| high-severity errors | 0 in all six builds |
+| quiz score (of 8) | ±0.25 to ±0.7 (range up to 1.5) |
+| medium errors | ±0.5 to ±1 |
+| rubric overall | ±0.1 (range up to 0.33) |
+| mechanism shown | ±0.3 to ±0.4 (range up to 1.0) |
+| first-read words | ±20 to ±50 |
+
+So a single build can't show a change smaller than these ranges. To test a skill change, run
+`--repeat 3` on the topics it targets and compare averages: a mechanism change under about 0.5,
+or a rubric change under about 0.2, is noise. The flags compare single cards with the baseline,
+so read them as "look at this", not as a verdict.
 
 ## Topics
 
