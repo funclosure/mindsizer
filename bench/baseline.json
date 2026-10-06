@@ -1,48 +1,59 @@
 {
- "run": "20261005-233614",
- "skill_commit": "69c6631",
+ "run": "20261006-224536",
+ "skill_commit": "7e1e56a",
  "model": "claude-opus-5-5",
  "cards": [
   {
    "topic": "claude-mods",
+   "rep": 1,
+   "dir": "claude-mods-1",
    "style": "default",
    "confounded": false,
-   "cost": 5.58,
+   "cost": 6.25,
    "build": {
     "ok": true,
-    "seconds": 605,
-    "cost": 3.286422199999999
+    "seconds": 681,
+    "cost": 3.6368810000000003
    },
    "states": {
-    "first_read_words": 1413,
+    "first_read_words": 1454,
     "look_alike": 0,
     "small_text": 0,
     "handwriting": 0,
     "dup_keys": 0,
-    "script_errors": 0
+    "script_errors": 0,
+    "close_new": 0
    },
    "quiz": {
-    "correct": 6,
-    "partial": 2,
+    "correct": 7,
+    "partial": 1,
     "wrong": 0,
     "not_covered": 0,
     "of": 8,
-    "score": 7.0
+    "score": 7.5
    },
+   "judge_ok": true,
    "fidelity": {
     "high": 0,
-    "medium": 3,
+    "high_raw": 0,
+    "medium": 2,
     "low": 6,
-    "checked": 112
+    "checked": 72,
+    "verified": true
    },
    "rubric": {
-    "claim_at_rest": 3.63,
-    "mechanism_shown": 2.25,
-    "device_works": 3.25,
-    "fidelity": 3.5,
-    "craft": 3.13,
-    "calm": 3.5,
-    "overall": 3.21
+    "claim_at_rest": 4,
+    "mechanism_shown": 2.8,
+    "device_works": 4,
+    "fidelity": 3.38,
+    "craft": 3.38,
+    "calm": 3.63,
+    "overall": 3.53
+   },
+   "mechanism": {
+    "mean": 2.8,
+    "sections": 5,
+    "gaps": 1
    },
    "rules": {
     "spine_grounded": "partly",
@@ -51,107 +62,44 @@
     "labels_traced_or_marked": "partly",
     "switch_off_shows_consequence": "held",
     "map_links_and_paths": "held",
-    "close_uses_only_page_material": "partly",
-    "first_read_budget": "held",
-    "handwriting_only_asides": "partly",
+    "close_uses_only_page_material": "held",
+    "first_read_budget": "partly",
+    "handwriting_only_asides": "held",
     "use_cases_distinct": "held"
    },
    "rules_failed": [],
    "top5": [
-    "The capability the page calls unique to mods, drawing in the interface, is never shown. No figure has a pane, a band or a redrawn spinner, while three sections cover control and review.",
-    "The use-case why-not lines are self-written and labelled only in the footer. The CI case fuses the launch post's pane with the API guide's status-line timer through an invented 'same idea drawn bigger'.",
-    "The trust switch figure mixes an admin-only setting into a user-facing 'switch off with' control. It draws an inference (safe-mode stops settings hooks) with no note at the figure, and its 'so' overstates 'none of these four'.",
-    "In the API and trust figures, states differ mainly by lit/unlit lines and crosses, which doesn't show why static listing works (every way out goes through $ written in full).",
-    "Small internal inconsistencies weaken trust: 'the docs' first mod' means two different files (two-hook overview vs tutorial with /tally), and the close h2 introduces 'one function per event'."
+    "The no-guard state of the order figure says the deny rule is 'never asked' and the call goes through, which is unconditional where the docs are conditional and ignores managed hooks.",
+    "'The first to load has the last word' turns 'sees the result last' into final authority, though managed PreToolUse hooks and deny rules outrank every mod.",
+    "The trust section's mechanism (everything goes through $, so validate can list it) is carried only by prose and a static listing; the set's highlight on 'your session' is arbitrary.",
+    "The overview's 'Pick it when' guidance is missing, and status lines are dropped from the comparison, so a newcomer can't tell when a settings hook or skill would do.",
+    "'The docs' first mod uses three hooks' matches neither source (two in the overview, four in create), and next's role in chaining other mods is dropped."
    ],
    "newcomer": {
     "confidence": 4,
-    "length": "right: five sections, each with one claim and one interaction; slightly dense in the trust section, but the folds keep the first read short."
+    "length": "right \u2014 five steps, each with one picture, felt manageable; only the turn-off table and the use-case recap felt like padding."
    }
   },
   {
-   "topic": "this-is-water",
-   "style": "pencil",
+   "topic": "claude-mods",
+   "rep": 2,
+   "dir": "claude-mods-2",
+   "style": "default",
    "confounded": false,
-   "cost": 3.82,
+   "cost": 6.59,
    "build": {
     "ok": true,
-    "seconds": 486,
-    "cost": 2.1218869999999996
+    "seconds": 770,
+    "cost": 3.9176574000000004
    },
    "states": {
-    "first_read_words": 1163,
+    "first_read_words": 1415,
     "look_alike": 0,
     "small_text": 0,
     "handwriting": 0,
     "dup_keys": 0,
-    "script_errors": 0
-   },
-   "quiz": {
-    "correct": 4,
-    "partial": 4,
-    "wrong": 0,
-    "not_covered": 0,
-    "of": 8,
-    "score": 6.0
-   },
-   "fidelity": {
-    "high": 0,
-    "medium": 2,
-    "low": 4,
-    "checked": 112
-   },
-   "rubric": {
-    "claim_at_rest": 3.86,
-    "mechanism_shown": 2.29,
-    "device_works": 2.57,
-    "fidelity": 3.43,
-    "craft": 3.14,
-    "calm": 3.86,
-    "overall": 3.19
-   },
-   "rules": {
-    "spine_grounded": "held",
-    "thesis_visible": "held",
-    "figure_default_is_source_lead": "held",
-    "labels_traced_or_marked": "held",
-    "switch_off_shows_consequence": "n/a",
-    "map_links_and_paths": "held",
-    "close_uses_only_page_material": "partly",
-    "first_read_budget": "held",
-    "handwriting_only_asides": "held",
-    "use_cases_distinct": "n/a"
-   },
-   "rules_failed": [],
-   "top5": [
-    "The Default flip ('As it is for everyone') and the close table's 'with awareness: It's the same for all of us' turn Wallace's statement that self-centredness is universal into the aware alternative.",
-    "The Worship section has no mechanism. It is a set of four items with identical 'worship' tags, and the speech's core point, that you slip into worship unconsciously, gets one three-word annotation.",
-    "The speech's ending is missing: 'about life BEFORE death', 'the job of a lifetime... commences: now', 'unimaginably hard'.",
-    "The bridge from Certainty to Choosing is folded. The first read never says Wallace thinks how we construct meaning is 'a matter of personal, intentional choice'.",
-    "A group quantifier is overgeneralised: 'blind certainty, in believers and unbelievers alike', where the source says 'religious dogmatists'."
-   ],
-   "newcomer": {
-    "confidence": 4,
-    "length": "right. Five short sections, each with one picture or flip, read in about ten minutes, and the folds keep the extra quotes out of the way."
-   }
-  },
-  {
-   "topic": "commons",
-   "style": "graphite",
-   "confounded": false,
-   "cost": 5.26,
-   "build": {
-    "ok": true,
-    "seconds": 696,
-    "cost": 3.0531093999999994
-   },
-   "states": {
-    "first_read_words": 1426,
-    "look_alike": 0,
-    "small_text": 0,
-    "handwriting": 0,
-    "dup_keys": 0,
-    "script_errors": 0
+    "script_errors": 0,
+    "close_new": 0
    },
    "quiz": {
     "correct": 5,
@@ -161,20 +109,413 @@
     "of": 8,
     "score": 6.5
    },
+   "judge_ok": true,
    "fidelity": {
     "high": 0,
-    "medium": 4,
+    "high_raw": 0,
+    "medium": 2,
     "low": 8,
-    "checked": 185
+    "checked": 128,
+    "verified": true
    },
    "rubric": {
-    "claim_at_rest": 3.88,
-    "mechanism_shown": 2.63,
-    "device_works": 3.0,
-    "fidelity": 3.25,
-    "craft": 3.25,
-    "calm": 3.63,
-    "overall": 3.27
+    "claim_at_rest": 3.38,
+    "mechanism_shown": 3.33,
+    "device_works": 3.4,
+    "fidelity": 3.63,
+    "craft": 3.13,
+    "calm": 3.25,
+    "overall": 3.35
+   },
+   "mechanism": {
+    "mean": 3.33,
+    "sections": 3,
+    "gaps": 0
+   },
+   "rules": {
+    "spine_grounded": "held",
+    "thesis_visible": "held",
+    "figure_default_is_source_lead": "held",
+    "labels_traced_or_marked": "partly",
+    "switch_off_shows_consequence": "partly",
+    "map_links_and_paths": "held",
+    "close_uses_only_page_material": "held",
+    "first_read_budget": "held",
+    "handwriting_only_asides": "held",
+    "use_cases_distinct": "held"
+   },
+   "rules_failed": [],
+   "top5": [
+    "The use-case verdicts put source tags on 'why a mod, not X' comparisons that the cited sources don't make (MCP for CI, skill 'needs a turn' for replay).",
+    "The Watch CI figure feeds the docs' timer example (which writes a status line under the prompt) into the launch post's pane, without saying the two were joined.",
+    "In the Draw section, the switch-off is cosmetic: unticking only hides the part it names. The section's claim ('only a mod can draw') is never contrasted with the other three kinds.",
+    "The Order h2 says the first mod sees 'the result last', but the figure only draws the downward pass. The so-line then generalises prepend control to 'every user's mod' without the docs' fail-open caveat.",
+    "The close is a slogan: an h2 restating the h1, plus the blog quote. Failure modes a newcomer needs before trusting a mod (hooks skipped on throw or timeout, mods unloaded after three worker crashes) and how to get started are folded or missing."
+   ],
+   "newcomer": {
+    "confidence": 4,
+    "length": "right \u2014 six sections each with one claim and one interaction; the folds carry the density, so the main path stays readable, though the trust section is a bit list-heavy."
+   }
+  },
+  {
+   "topic": "this-is-water",
+   "rep": 1,
+   "dir": "this-is-water-1",
+   "style": "pencil",
+   "confounded": false,
+   "cost": 4.58,
+   "build": {
+    "ok": true,
+    "seconds": 642,
+    "cost": 2.571192
+   },
+   "states": {
+    "first_read_words": 1365,
+    "look_alike": 1,
+    "small_text": 0,
+    "handwriting": 0,
+    "dup_keys": 0,
+    "script_errors": 0,
+    "close_new": 1
+   },
+   "quiz": {
+    "correct": 6,
+    "partial": 2,
+    "wrong": 0,
+    "not_covered": 0,
+    "of": 8,
+    "score": 7.0
+   },
+   "judge_ok": true,
+   "fidelity": {
+    "high": 0,
+    "high_raw": 0,
+    "medium": 3,
+    "low": 7,
+    "checked": 128,
+    "verified": true
+   },
+   "rubric": {
+    "claim_at_rest": 3.71,
+    "mechanism_shown": 2.75,
+    "device_works": 3.33,
+    "fidelity": 3.29,
+    "craft": 3.29,
+    "calm": 3.86,
+    "overall": 3.37
+   },
+   "mechanism": {
+    "mean": 2.75,
+    "sections": 4,
+    "gaps": 1
+   },
+   "rules": {
+    "spine_grounded": "held",
+    "thesis_visible": "held",
+    "figure_default_is_source_lead": "held",
+    "labels_traced_or_marked": "partly",
+    "switch_off_shows_consequence": "n/a",
+    "map_links_and_paths": "held",
+    "close_uses_only_page_material": "held",
+    "first_read_budget": "held",
+    "handwriting_only_asides": "held",
+    "use_cases_distinct": "n/a"
+   },
+   "rules_failed": [],
+   "top5": [
+    "The drift figure's final verdict and its 'alone at the centre' label reuse Wallace's 'lords of our tiny skull-sized kingdoms' as the result of worshipping money. In the source it describes the culture's kind of freedom, which he says 'has much to recommend it'.",
+    "The attention section carries a process on a static numbered chain that invents an order (aware \u2192 attention \u2192 meaning). 'The terrible master', the section's real 'because', is never drawn.",
+    "The drift figure's second control (when) means little in 'aware' mode. Its stops split one source sentence into fragments that end in commas, aware shows smooth improvement over time, and 'Money is still there, in view' is invented.",
+    "The close leaves out the speech's own last beat ('unimaginably hard... the job of a lifetime. And it commences: now.') and its repeated 'not moral advice' disclaimer, so the ending feels more prescriptive than Wallace's.",
+    "In the fish figure, the watch line says 'nothing new arrives when you flip' while the water visibly draws in. The verdict 'the older fish adds nothing' is the page's interpretation, and its only 'the drawing is ours' note is hidden in the fold."
+   ],
+   "newcomer": {
+    "confidence": 4,
+    "length": "right \u2014 four ideas, each with one example and one interaction, plus optional folds. I never felt padded or rushed."
+   }
+  },
+  {
+   "topic": "this-is-water",
+   "rep": 2,
+   "dir": "this-is-water-2",
+   "style": "pencil",
+   "confounded": false,
+   "cost": 5.48,
+   "build": {
+    "ok": true,
+    "seconds": 910,
+    "cost": 3.5625395999999996
+   },
+   "states": {
+    "first_read_words": 1236,
+    "look_alike": 0,
+    "small_text": 0,
+    "handwriting": 0,
+    "dup_keys": 0,
+    "script_errors": 0,
+    "close_new": 0
+   },
+   "quiz": {
+    "correct": 5,
+    "partial": 3,
+    "wrong": 0,
+    "not_covered": 0,
+    "of": 8,
+    "score": 6.5
+   },
+   "judge_ok": true,
+   "fidelity": {
+    "high": 0,
+    "high_raw": 0,
+    "medium": 1,
+    "low": 8,
+    "checked": 150,
+    "verified": true
+   },
+   "rubric": {
+    "claim_at_rest": 3.43,
+    "mechanism_shown": 3.0,
+    "device_works": 3.5,
+    "fidelity": 3.57,
+    "craft": 3.0,
+    "calm": 3.57,
+    "overall": 3.35
+   },
+   "mechanism": {
+    "mean": 3.0,
+    "sections": 4,
+    "gaps": 0
+   },
+   "rules": {
+    "spine_grounded": "held",
+    "thesis_visible": "held",
+    "figure_default_is_source_lead": "held",
+    "labels_traced_or_marked": "partly",
+    "switch_off_shows_consequence": "held",
+    "map_links_and_paths": "partly",
+    "close_uses_only_page_material": "partly",
+    "first_read_budget": "held",
+    "handwriting_only_asides": "held",
+    "use_cases_distinct": "n/a"
+   },
+   "rules_failed": [],
+   "top5": [
+    "The speech's own statements of its point are folded: 'I submit' education is about not living 'dead, unconscious, a slave to your head'; 'This, I submit, is the freedom of a real education... decide what to worship'; and real freedom as caring for and sacrificing for others. The first read gives the diagnosis but not Wallace's answer.",
+    "The blizzard figure draws the religious man's frame as closed, with the note 'shut: one reading'. That judges him as blindly certain, which Wallace pointedly avoids; he criticises the atheist and 'dogmatists' in general.",
+    "The close adds new material ('Maybe their lives are harder than mine', which no earlier figure or verdict shows) and files a Choosing example under the Default setting row. The close's prose line is the page's own synthesis.",
+    "The speech's own landing is missing: 'life BEFORE death', 'unimaginably hard... day in and day out', 'your education really IS the job of a lifetime. And it commences: now.', plus 'none of this is about morality or religion or dogma'.",
+    "The certainty/blizzard section is filed under the 'Water' map step and takes water's colour, although its idea (blind certainty, belief templates) is a different step. A reader using the map can't find 'how to think' or 'certainty'."
+   ],
+   "newcomer": {
+    "confidence": 4,
+    "length": "right \u2014 five short sections, one idea each, readable in about ten minutes with the toggles; any shorter and the examples would go."
+   }
+  },
+  {
+   "topic": "commons",
+   "rep": 1,
+   "dir": "commons-1",
+   "style": "graphite",
+   "confounded": false,
+   "cost": 5.11,
+   "build": {
+    "ok": true,
+    "seconds": 607,
+    "cost": 2.9332814000000007
+   },
+   "states": {
+    "first_read_words": 1332,
+    "look_alike": 0,
+    "small_text": 0,
+    "handwriting": 0,
+    "dup_keys": 0,
+    "script_errors": 0,
+    "close_new": 0
+   },
+   "quiz": {
+    "correct": 4,
+    "partial": 4,
+    "wrong": 0,
+    "not_covered": 0,
+    "of": 8,
+    "score": 6.0
+   },
+   "judge_ok": true,
+   "fidelity": {
+    "high": 0,
+    "high_raw": 0,
+    "medium": 4,
+    "low": 6,
+    "checked": 74,
+    "verified": true
+   },
+   "rubric": {
+    "claim_at_rest": 3.57,
+    "mechanism_shown": 3.0,
+    "device_works": 4.0,
+    "fidelity": 3.14,
+    "craft": 3.0,
+    "calm": 3.57,
+    "overall": 3.38
+   },
+   "mechanism": {
+    "mean": 3.0,
+    "sections": 5,
+    "gaps": 1
+   },
+   "rules": {
+    "spine_grounded": "held",
+    "thesis_visible": "held",
+    "figure_default_is_source_lead": "held",
+    "labels_traced_or_marked": "partly",
+    "switch_off_shows_consequence": "held",
+    "map_links_and_paths": "partly",
+    "close_uses_only_page_material": "held",
+    "first_read_budget": "held",
+    "handwriting_only_asides": "held",
+    "use_cases_distinct": "n/a"
+   },
+   "rules_failed": [],
+   "top5": [
+    "The page never leaves the pasture: none of the article's modern cases (overfishing, climate, antibiotics, vaccines, debt) appear, so a newcomer can't see why the idea matters today or generalise it.",
+    "The Hardin section's causal claim ('inevitable unless freedom gave way to mutual coercion') is carried by a set of three domains, which can't show the 'because'.",
+    "The Ostrom switch-off model makes each condition individually necessary: one untick strips grass and the verdict declares a failure. The source only calls them 'conducive' ('more easily', 'do better').",
+    "Hardin's 'Tragedy of the Unregulated Commons' remark is placed as a reply to the historical critics and used as the close's 'catch', but the source gives it as a clarification of a misunderstood word.",
+    "Labels overstate or misattribute: Hardin's picture is labelled 'no owner, no limit' / 'open to everybody', which is the critics' 'popular fallacy', not Hardin's words. 'The common, nearly bare' outruns Lloyd's 'could be depleted'. The map step 'Not inevitable' heads the 'never existed' section."
+   ],
+   "newcomer": {
+    "confidence": 4,
+    "length": "right \u2014 five focused sections with a summary table; the folds hold the history and name-dropping so the main path stays short."
+   }
+  },
+  {
+   "topic": "commons",
+   "rep": 2,
+   "dir": "commons-2",
+   "style": "graphite",
+   "confounded": false,
+   "cost": 5.24,
+   "build": {
+    "ok": true,
+    "seconds": 731,
+    "cost": 3.0693007999999993
+   },
+   "states": {
+    "first_read_words": 1342,
+    "look_alike": 0,
+    "small_text": 0,
+    "handwriting": 0,
+    "dup_keys": 0,
+    "script_errors": 0,
+    "close_new": 0
+   },
+   "quiz": {
+    "correct": 6,
+    "partial": 2,
+    "wrong": 0,
+    "not_covered": 0,
+    "of": 8,
+    "score": 7.0
+   },
+   "judge_ok": true,
+   "fidelity": {
+    "high": 0,
+    "high_raw": 0,
+    "medium": 2,
+    "low": 8,
+    "checked": 138,
+    "verified": true
+   },
+   "rubric": {
+    "claim_at_rest": 3.5,
+    "mechanism_shown": 2.6,
+    "device_works": 3.6,
+    "fidelity": 3.38,
+    "craft": 3.13,
+    "calm": 3.5,
+    "overall": 3.28
+   },
+   "mechanism": {
+    "mean": 2.6,
+    "sections": 5,
+    "gaps": 2
+   },
+   "rules": {
+    "spine_grounded": "held",
+    "thesis_visible": "held",
+    "figure_default_is_source_lead": "held",
+    "labels_traced_or_marked": "partly",
+    "switch_off_shows_consequence": "held",
+    "map_links_and_paths": "partly",
+    "close_uses_only_page_material": "held",
+    "first_read_budget": "partly",
+    "handwriting_only_asides": "held",
+    "use_cases_distinct": "n/a"
+   },
+   "rules_failed": [],
+   "top5": [
+    "Hardin's remedy section (coercion) carries a mechanism, conscience fails because it rewards free riders, only in a set and a prose sentence.",
+    "The Hardin scrolly shows herds growing and grass shrinking but not why, and its invented details ('four herders', 'every herd starves') are labelled only in a fold.",
+    "Government fixes look reliably effective: the privatise verdict turns 'works when the owner pays the full price' into 'so the owner pays', and Privatise and Internalise produce identical numbers (\u22125).",
+    "A newcomer sees only the cow parable: every real-world case (overfishing, climate, antibiotics, digital commons) is in a fold, and so is the source's own snowball mechanism (reliance, rising demand, costs on a wider class).",
+    "The close settles the debate ('depends on whether\u2026 regulated'), its 'Government fixes' limit cell ('Used where those factors are missing') isn't a limit, and Hardin's coercion and its criticism have no row."
+   ],
+   "newcomer": {
+    "confidence": 4,
+    "length": "right \u2014 five steps with one interaction each kept it moving, and the folds let me go deeper only where I wanted."
+   }
+  },
+  {
+   "topic": "vervaeke",
+   "rep": 1,
+   "dir": "vervaeke-1",
+   "style": "margins",
+   "confounded": true,
+   "cost": 5.22,
+   "build": {
+    "ok": true,
+    "seconds": 721,
+    "cost": 2.9475684
+   },
+   "states": {
+    "first_read_words": 1488,
+    "look_alike": 0,
+    "small_text": 0,
+    "handwriting": 0,
+    "dup_keys": 0,
+    "script_errors": 0,
+    "close_new": 0
+   },
+   "quiz": {
+    "correct": 0,
+    "partial": 8,
+    "wrong": 0,
+    "not_covered": 0,
+    "of": 8,
+    "score": 4.0
+   },
+   "judge_ok": true,
+   "fidelity": {
+    "high": 0,
+    "high_raw": 0,
+    "medium": 5,
+    "low": 6,
+    "checked": 152,
+    "verified": true
+   },
+   "rubric": {
+    "claim_at_rest": 3.44,
+    "mechanism_shown": 2.75,
+    "device_works": 3.4,
+    "fidelity": 3.44,
+    "craft": 3.22,
+    "calm": 3.44,
+    "overall": 3.28
+   },
+   "mechanism": {
+    "mean": 2.75,
+    "sections": 4,
+    "gaps": 2
    },
    "rules": {
     "spine_grounded": "partly",
@@ -184,93 +525,102 @@
     "switch_off_shows_consequence": "partly",
     "map_links_and_paths": "held",
     "close_uses_only_page_material": "failed",
-    "first_read_budget": "held",
-    "handwriting_only_asides": "held",
+    "first_read_budget": "partly",
+    "handwriting_only_asides": "partly",
     "use_cases_distinct": "n/a"
    },
    "rules_failed": [
     "close_uses_only_page_material"
    ],
    "top5": [
-    "The page's resolving idea is new in the close. Hardin's own concession (\"Unregulated Commons\") and the regulated vs open-access distinction it relies on appear first in the closing h2, and the land section's \"so\" line uses \"common-pool\" and \"open-access\" without defining them.",
-    "The ruin toy model creates an inevitability claim (\"Each factor moves the collapse; none removes it\", \"later, still gone\") that comes from its own assumption that every herder adds a cow each season. It contradicts the source's \"by no means inevitable\".",
-    "Hardin's case is shown as a numbered four-step chain with arrows, an order and causation the source never gives. The section has no interaction and its \"so\" line splices two separate statements.",
-    "Everything beyond the pasture is folded: fisheries, climate, pollution as a negative commons, antibiotics, the digital commons. A newcomer finishes the first read without seeing why the idea matters today.",
-    "The Ostrom switch-off is weak, and attributions blur. Every unticked condition just shrinks the grass by the same step, and two parts only turn dashed. Notes vanish once three or more are off. In the land flip, the article's own overgrazing sentence sits under Rodgers' quote as if it were his."
+    "The relation-first section's h2 rests on Filler's argument, but the scrolly draws a history whose states differ mostly by labels and added marks. The argument itself is only in a fold.",
+    "The relevance toy invents a mechanism ('your goal ties these in'). It shows relevance realization as goal-filtering, which looks algorithmic and contradicts the talk's 'neither algorithmic nor arbitrary' and its demotion of purpose.",
+    "The close introduces new material: Schellenberg, the triple transcendent and 'it saves you'.",
+    "The bridge from 'relevance is transjective' to 'relationality is primordial' is missing from the first read: conformity/co-shaping, religio as the name for belonging, and 'information and intelligibility are relational'. The talk's central identity therefore reads as a leap.",
+    "Self-written lines overreach and a template placeholder ships. 'Every process\u2026' (the talk examines five), 'you can bind yourself\u2026 again' (talk: 'there's the potential'), mattering defined by meaning-in-life diagnostics, interpretive one-missing verdicts. The <title> is still '[Page name: 2-4 words]'."
    ],
    "newcomer": {
-    "confidence": 4,
-    "length": "right \u2014 five steps plus a summary table, each readable in a minute or two, with the extra detail tucked away; only the Hardin's-remedy section felt a little long for its relevance."
+    "confidence": 3,
+    "length": "right: the first half is well paced; the main thing missing is a bit more room for the metaphysics and 'sacred' ending, not cutting anything."
    }
   },
   {
    "topic": "vervaeke",
+   "rep": 2,
+   "dir": "vervaeke-2",
    "style": "margins",
    "confounded": true,
-   "cost": 4.93,
+   "cost": 5.41,
    "build": {
     "ok": true,
-    "seconds": 746,
-    "cost": 2.7390528000000005
+    "seconds": 730,
+    "cost": 3.1871468000000007
    },
    "states": {
-    "first_read_words": 1358,
+    "first_read_words": 1374,
     "look_alike": 0,
     "small_text": 0,
     "handwriting": 0,
     "dup_keys": 0,
-    "script_errors": 0
+    "script_errors": 0,
+    "close_new": 0
    },
    "quiz": {
-    "correct": 1,
-    "partial": 7,
+    "correct": 0,
+    "partial": 8,
     "wrong": 0,
     "not_covered": 0,
     "of": 8,
-    "score": 4.5
+    "score": 4.0
    },
+   "judge_ok": true,
    "fidelity": {
     "high": 0,
-    "medium": 2,
-    "low": 7,
-    "checked": 140
+    "high_raw": 0,
+    "medium": 3,
+    "low": 9,
+    "checked": 96,
+    "verified": true
    },
    "rubric": {
-    "claim_at_rest": 3.67,
-    "mechanism_shown": 2.44,
-    "device_works": 3.22,
-    "fidelity": 3.44,
-    "craft": 3.44,
+    "claim_at_rest": 3.44,
+    "mechanism_shown": 2.75,
+    "device_works": 3.2,
+    "fidelity": 3.33,
+    "craft": 3.11,
     "calm": 3.56,
-    "overall": 3.3
+    "overall": 3.23
+   },
+   "mechanism": {
+    "mean": 2.75,
+    "sections": 4,
+    "gaps": 1
    },
    "rules": {
-    "spine_grounded": "held",
+    "spine_grounded": "partly",
     "thesis_visible": "partly",
     "figure_default_is_source_lead": "held",
     "labels_traced_or_marked": "partly",
     "switch_off_shows_consequence": "held",
-    "map_links_and_paths": "partly",
-    "close_uses_only_page_material": "failed",
-    "first_read_budget": "held",
+    "map_links_and_paths": "held",
+    "close_uses_only_page_material": "partly",
+    "first_read_budget": "partly",
     "handwriting_only_asides": "held",
     "use_cases_distinct": "n/a"
    },
-   "rules_failed": [
-    "close_uses_only_page_material"
-   ],
+   "rules_failed": [],
    "top5": [
-    "The central thesis (meaning in life = relevance realization = religio) is asserted in a 'so' line hung on the transjective section and never shown. The talk's own grounds (meaning as a sentence's parts fitting together and fitting you to the world; caring, connectedness and conformity as one binding) are missing.",
-    "There is no close. The final 'sacred' section adds a new name (Schellenberg) and new criteria, then ends on a quote, so nothing ties the six steps together.",
-    "The link that carries the argument from relevance realization to relational metaphysics ('so relationality is primordial; information and intelligibility are relational') sits in the transjective fold, so the move to Aristotle and Filler looks unmotivated.",
-    "Unlabelled illustration in verdicts. Each one-missing case in the questions figure gets an explanation the talk never gives, and the note marks only the two-missing case. The wind advice lines and the Searle tag on the pencil example have the same problem.",
-    "The figures that matter most show the least. 'Transjective' is a text-only set, the RR 'realizing' state just shows three lit labels with no reason why, and the regress section stacks a figure on a four-item set. Mechanism averages 2.4."
+    "The 'Realizing what's relevant' state shows a mechanism the talk never gives: the goal filters the room. Read as a rule, this undercuts the next section's argument that rules can't ground relevance realization.",
+    "The talk's conclusion, that the relational ground is the sacred (Schellenberg's triple transcendent), gets one prose line, and 'the sacred' first appears in the closing quote.",
+    "The history scrolly figure uses invented examples (apple/red, stone/heavy, a wall, a brain) and has no 'our illustration' note. The scrolly template has no slot for one.",
+    "Headings overstate their quantifiers or conflate terms: 'Every process you might propose\u2026', 'Things can only matter\u2026', and 'Mattering is being connected\u2026' (the questions diagnose meaning in life, and the heading drops the 'beyond you' value question).",
+    "The central thesis ('religio \u2026 is that relevance realization') is buried mid-section in 'Transjective'. Vervaeke's hedges ('not rejecting logic', 'algorithms still apply') sit only in folds, so he reads as more anti-logic than he claims, and the first read runs about 250 words over budget."
    ],
    "newcomer": {
     "confidence": 3,
-    "length": "right \u2014 six steps with one interaction each felt manageable; if anything the last two sections were too short for the weight of their claims."
+    "length": "right \u2014 the first-read path is quick, though the last section is too short for the size of its claim"
    }
   }
  ],
- "total_cost": 19.59
+ "total_cost": 43.88
 }
