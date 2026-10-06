@@ -45,6 +45,19 @@ def claude(role, text, cwd, tools, model, logs, add_dirs=(), timeout=1800):
     return {"ok": not out.get("is_error"), "seconds": secs, "cost": out.get("total_cost_usd") or 0, "result": out.get("result", "")}
 
 
+def ensure_json(path, model, logs):
+    """Roles write JSON by hand and sometimes break it (an unescaped quote). Ask once for a syntax-only repair."""
+    path = pathlib.Path(path)
+    if not path.exists(): return False
+    try: json.loads(path.read_text()); return True
+    except json.JSONDecodeError as e: err = str(e)
+    claude("repair-" + path.stem, f"The file {path} is not valid JSON ({err}). Fix only the JSON syntax (escape quotes, "
+           f"add missing commas or brackets); keep every value and the structure exactly as they are. Write it back to {path}. Reply 'fixed'.",
+           cwd=path.parent, tools=["Read", "Write", "Edit"], model=model, logs=logs, timeout=600)
+    try: json.loads(path.read_text()); return True
+    except json.JSONDecodeError: return False
+
+
 def load(path, default=None):
     try: return json.loads(pathlib.Path(path).read_text())
     except Exception: return default
@@ -83,11 +96,6 @@ def run_topic(tid, run_dir, model, reuse):
     # 2. states.sh
     st_dir = d / "states"
     subprocess.run([str(SKILL / "scripts" / "states.sh"), str(page), str(st_dir)], capture_output=True, text=True, timeout=900)
-    s = load(st_dir / "states.json", {}) or {}
-    card["states"] = {"first_read_words": (s.get("words") or {}).get("firstRead"), "look_alike": len(s.get("same", [])),
-                      "small_text": len(s.get("small", [])), "handwriting": len(s.get("handCode", [])),
-                      "dup_keys": len(s.get("dupKeys", [])), "script_errors": len(s.get("errors", [])),
-                      "close_new": len((s.get("close") or {}).get("fresh", [])) + (1 if (s.get("close") or {}).get("missing") else 0)}
 
     # 3. readers, in parallel, each in its own folder with its own copy of the page
     quiz = BENCH / "quizzes" / f"{tid}.json"
@@ -106,17 +114,33 @@ def run_topic(tid, run_dir, model, reuse):
         futs = {r: ex.submit(claude, r, p, cwd, tools, model, logs, adds) for r, (p, cwd, tools, adds) in jobs.items()}
         res = {r: f.result() for r, f in futs.items()}
     for r in res.values(): card["cost"] += r["cost"]
+    for f in (dirs["answerer"] / "answers.json", dirs["judge"] / "report.json", dirs["newcomer"] / "newcomer.json"):
+        ensure_json(f, model, logs)
 
     # 4. grader
     g = claude("grader", prompt("grader", quiz=quiz, answers=dirs["answerer"] / "answers.json", out=d / "grades.json"),
                cwd=d, tools=["Read", "Write"], model=model, logs=logs, add_dirs=[BENCH / "quizzes"])
     card["cost"] += g["cost"]
+    ensure_json(d / "grades.json", model, logs)
+    card["cost"] = round(card["cost"], 2)
+    return score(d, tid, card)
+
+
+def score(d, tid, card):
+    """Fill a topic's card from the files a run left in d (so a run can be re-scored without re-running)."""
+    quiz = BENCH / "quizzes" / f"{tid}.json"
+    s = load(d / "states" / "states.json", {}) or {}
+    card["states"] = {"first_read_words": (s.get("words") or {}).get("firstRead"), "look_alike": len(s.get("same", [])),
+                      "small_text": len(s.get("small", [])), "handwriting": len(s.get("handCode", [])),
+                      "dup_keys": len(s.get("dupKeys", [])), "script_errors": len(s.get("errors", [])),
+                      "close_new": len((s.get("close") or {}).get("fresh", [])) + (1 if (s.get("close") or {}).get("missing") else 0)}
     grades = load(d / "grades.json", []) or []
     count = lambda k: sum(1 for x in grades if x.get("grade") == k)
     card["quiz"] = {"correct": count("correct"), "partial": count("partial"), "wrong": count("wrong"), "not_covered": count("not-covered"),
                     "of": len(load(quiz)["questions"]), "score": count("correct") + 0.5 * count("partial")}
 
-    j = load(dirs["judge"] / "report.json", {}) or {}
+    j = load(d / "judge" / "report.json", {}) or {}
+    card["judge_ok"] = bool(j)
     errs = (j.get("fidelity") or {}).get("errors", [])
     sev = lambda k: sum(1 for e in errs if e.get("severity") == k)
     rules = j.get("rules") or {}
@@ -126,9 +150,8 @@ def run_topic(tid, run_dir, model, reuse):
     card["rules"] = {k: verdict(v) for k, v in rules.items()}
     card["rules_failed"] = [k for k, v in card["rules"].items() if v.startswith("failed")]
     card["top5"] = [p.get("problem") for p in j.get("top5", [])]
-    n = load(dirs["newcomer"] / "newcomer.json", {}) or {}
+    n = load(d / "newcomer" / "newcomer.json", {}) or {}
     card["newcomer"] = {"confidence": n.get("confidence"), "length": n.get("length")}
-    card["cost"] = round(card["cost"], 2)
     return card
 
 
@@ -154,6 +177,7 @@ def scorecard_md(cards, base):
             if q["score"] <= b["quiz"]["score"] - 1: flags.append(f"{c['topic']}: quiz fell {b['quiz']['score']} → {q['score']}")
             if f["high"] > b["fidelity"]["high"]: flags.append(f"{c['topic']}: high-severity errors rose {b['fidelity']['high']} → {f['high']}")
             if (r.get("overall") or 0) <= (b["rubric"].get("overall") or 0) - 0.3: flags.append(f"{c['topic']}: rubric fell {b['rubric'].get('overall')} → {r.get('overall')}")
+        if not c.get("judge_ok", True): flags.append(f"{c['topic']}: the judge's report is missing or unreadable; its fidelity and rubric are blank, not zero")
         if probs: flags.append(f"{c['topic']}: states.sh found {probs} problem(s)")
         if c.get("rules_failed"): flags.append(f"{c['topic']}: rules failed: {', '.join(c['rules_failed'])}")
     out = "\n".join(rows)
@@ -169,7 +193,22 @@ def main():
     ap.add_argument("topics", nargs="*"); ap.add_argument("--all", action="store_true")
     ap.add_argument("--model", default="claude-opus-5-5"); ap.add_argument("--jobs", type=int, default=2)
     ap.add_argument("--reuse"); ap.add_argument("--save-baseline", action="store_true")
+    ap.add_argument("--rescore", help="rebuild a run's scorecard from its saved files (repairs broken JSON first)")
     a = ap.parse_args()
+    if a.rescore:
+        run_dir = pathlib.Path(a.rescore); old = load(run_dir / "scorecard.json")
+        cards = []
+        for c in old["cards"]:
+            d = run_dir / c["topic"]
+            for f in (d / "answerer" / "answers.json", d / "judge" / "report.json", d / "newcomer" / "newcomer.json", d / "grades.json"):
+                ensure_json(f, a.model, d / "logs")
+            cards.append(score(d, c["topic"], {k: c[k] for k in ("topic", "style", "confounded", "cost", "build") if k in c}))
+        old["cards"] = cards
+        (run_dir / "scorecard.json").write_text(json.dumps(old, indent=1))
+        md = f"# mindsizer benchmark {run_dir.name} (skill {old['skill_commit']}, {old['model']}), rescored\n\n" + scorecard_md(cards, load(BENCH / "baseline.json"))
+        (run_dir / "scorecard.md").write_text(md); print(md)
+        if a.save_baseline: shutil.copy(run_dir / "scorecard.json", BENCH / "baseline.json"); print(f"\nbaseline saved from {run_dir.name}")
+        return
     ids = list(TOPICS) if a.all else a.topics
     if not ids or any(i not in TOPICS for i in ids): sys.exit(f"pick topics from: {', '.join(TOPICS)} (or --all)")
     run_dir = BENCH / "runs" / datetime.datetime.now().strftime("%Y%m%d-%H%M%S"); run_dir.mkdir(parents=True)
