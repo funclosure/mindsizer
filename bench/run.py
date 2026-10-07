@@ -21,7 +21,7 @@ Needs: the claude CLI, logged in; run `python3 bench/fetch.py` first.
 import argparse, concurrent.futures as cf, datetime, json, pathlib, shutil, string, subprocess, sys, time
 
 BENCH = pathlib.Path(__file__).resolve().parent
-SKILL = BENCH.parent / ".claude" / "skills" / "mindsizer"
+SKILL = BENCH.parent / "skills" / "mindsizer"
 TOPICS = {t["id"]: t for t in json.loads((BENCH / "topics.json").read_text())["topics"]}
 
 

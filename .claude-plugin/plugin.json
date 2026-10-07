@@ -1,0 +1,9 @@
+{
+  "name": "mindsizer",
+  "version": "1.0.0",
+  "description": "Turns something hard into one clear, interactive web page: a map of the idea up front, one claim per section, figures that show why, and light interactions. Five calm styles; the output is a single HTML file.",
+  "author": { "name": "funclosure", "url": "https://github.com/funclosure" },
+  "homepage": "https://github.com/funclosure/mindsizer",
+  "repository": "https://github.com/funclosure/mindsizer",
+  "keywords": ["explainer", "learning", "explorable", "html", "teaching"]
+}

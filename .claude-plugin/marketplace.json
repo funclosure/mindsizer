@@ -1,0 +1,17 @@
+{
+  "name": "mindsizer",
+  "owner": {
+    "name": "funclosure",
+    "url": "https://github.com/funclosure"
+  },
+  "metadata": {
+    "description": "mindsizer: one clear, interactive web page for anything you want to understand."
+  },
+  "plugins": [
+    {
+      "name": "mindsizer",
+      "source": "./",
+      "description": "Turns something hard into one clear, interactive web page you can explore."
+    }
+  ]
+}

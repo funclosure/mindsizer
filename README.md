@@ -11,14 +11,14 @@ The aim is for you to see *why* something is true, not just read that it is.
 
 ## Examples
 
-- [`examples/vervaeke.html`](.claude/skills/mindsizer/examples/vervaeke.html), *How anything
+- [`examples/vervaeke.html`](skills/mindsizer/examples/vervaeke.html), *How anything
   comes to matter*: a 32-minute philosophy talk, from auto-captions, in the `ink` style. **The
   reference for "easy to take in"**: a map up front, sets side by side, one-click interactions,
   short pencilled notes on the figures.
-- [`examples/claude-mods.html`](.claude/skills/mindsizer/examples/claude-mods.html), *Claude Code
+- [`examples/claude-mods.html`](skills/mindsizer/examples/claude-mods.html), *Claude Code
   mods*: a new product feature explained from its docs, with three use cases; built by the
   skill in a fresh session, then revised after an eval.
-- [`examples/older-look/`](.claude/skills/mindsizer/examples/older-look/): an event told as a
+- [`examples/older-look/`](skills/mindsizer/examples/older-look/): an event told as a
   story and a concept explained with no source, in an earlier, retired look.
 
 ## Styles
@@ -33,11 +33,22 @@ points at what to notice. Name one in your request ("make it in ink"); the defau
 
 ## Use
 
-Inside this repo the skill loads automatically. To use it in every project:
+**As a Claude Code plugin** (anyone):
+
+```
+/plugin marketplace add funclosure/mindsizer
+/plugin install mindsizer@mindsizer
+```
+
+**From a clone** (to edit it): inside this repo the skill loads automatically. To use your clone
+in every project, link it into your personal skills:
 
 ```bash
-ln -s "$PWD/.claude/skills/mindsizer" ~/.claude/skills/mindsizer
+ln -s "$PWD/skills/mindsizer" ~/.claude/skills/mindsizer
 ```
+
+**In another agent:** the skill is plain Markdown plus scripts (`skills/mindsizer/`); any agent that
+reads `SKILL.md` files, or can follow instructions and run shell commands, can use it.
 
 Then just ask: "help me actually understand how RLHF works", or "make this paper click".
 
@@ -46,7 +57,9 @@ Then just ask: "help me actually understand how RLHF works", or "make this paper
 The skill is instructions plus a template. There is no CLI and no build step.
 
 ```
-.claude/skills/mindsizer/
+.claude-plugin/          plugin.json + marketplace.json (installable as a plugin)
+bench/                   the benchmark: topics, frozen quizzes, runner, baseline (see bench/README.md)
+skills/mindsizer/
   SKILL.md               spine → one interaction per idea → write in one pass → quick check → deliver
   references/style.md    the five styles, the token contract, colour, type, figures, annotations
   references/patterns.md interaction patterns: train, scrub, flip, reveal, slide, try, switch off
