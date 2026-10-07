@@ -7,7 +7,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 const mod = process.env.PLAYWRIGHT_MODULE;
 const { chromium } = await import(mod ? path.join(mod, 'index.mjs') : 'playwright');
-const [pageFile, out] = process.argv.slice(2);
+const [pageFile, out, level = 'medium'] = process.argv.slice(2);
+const TARGET = { low: 500, medium: 900, high: 1200 }[level] || 900;
 fs.mkdirSync(out, { recursive: true });
 let html = fs.readFileSync(pageFile, 'utf8');
 if (!/^\s*<!doctype/i.test(html.slice(0, 200))) html = '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">' + html;
@@ -112,9 +113,11 @@ for (const [id, shots] of Object.entries(sheets)) {
   await sheetPage.screenshot({ path: file, fullPage: true }); report.review.push(file);
 }
 await browser.close();
-fs.writeFileSync(path.join(out, 'states.json'), JSON.stringify(report, null, 2));
 console.log(`shots: ${report.shots} in ${out}`);
-console.log(`first read: ${report.words.firstRead} words` + (report.words.longProse.length ? `; prose over 110 words in: ${report.words.longProse.map(s => s.id + ' (' + s.prose + ')').join(', ')}` : ''));
+const over = report.words.firstRead > TARGET * 1.25;
+report.words.level = level; report.words.target = TARGET;
+console.log(`first read: ${report.words.firstRead} words (${level}: aim for about ${TARGET})` + (over ? `; over the ${level} budget, cut or fold` : '') + (report.words.longProse.length ? `; prose over 110 words in: ${report.words.longProse.map(s => s.id + ' (' + s.prose + ')').join(', ')}` : ''));
+fs.writeFileSync(path.join(out, 'states.json'), JSON.stringify(report, null, 2));
 console.log(`states that look the same: ${report.same.length}` + report.same.map(s => '\n  ' + s).join(''));
 console.log(`svg text under 12px at 400 wide: ${report.small.length}` + report.small.slice(0, 5).map(s => `\n  ${s.px}px "${s.text}"`).join(''));
 console.log(`handwriting problems: ${report.handCode.length}` + report.handCode.slice(0, 8).map(s => '\n  ' + s).join(''));
