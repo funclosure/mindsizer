@@ -1,7 +1,7 @@
 You are a strict judge in an evaluation of an explainer page built by the mindsizer skill. Page: $page (read the HTML, including script strings and folded sections). Sources it must be faithful to, in $src:
 $source_list
-The user's request was: "$request"$style_line
-Judge against the sources, not your own memory. You may read $skill/SKILL.md and $skill/references/*.md for section 5 only.
+The user's request was: "$request"$style_line$level_line
+Judge against the sources, not your own memory. You may read $skill/SKILL.md and $skill/references/*.md for section 5 only. Judge first_read_budget, the number of sections and interactions, folds and the close against the row for the level the user asked for in the skill's Effort table, not against high.
 
 1. Fidelity. Check every line the page writes itself first (dek, map, each h2, each "so" line, every verdict string, every figure label and note, set items, table cells), then quotes, attributions and "so/because/therefore" links. Severity: high = misstates the source or takes a side it doesn't take; medium = invented claim or connective presented as sourced, misattribution, unlabelled illustration, a quantifier stronger than the source; low = imprecise wording. Count the self-written lines you checked.
 2. Balance and coverage: does the page present positions as the source does? What does a newcomer most need that is missing or folded away?

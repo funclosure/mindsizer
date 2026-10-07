@@ -11,6 +11,7 @@ python3 bench/run.py commons                 # quick check: one topic
 python3 bench/run.py --all                   # full check: every topic
 python3 bench/run.py --all --save-baseline   # make this run the baseline the next runs compare against
 python3 bench/run.py commons --reuse bench/runs/<run>   # re-evaluate an earlier run's page, no rebuild
+python3 bench/run.py commons --level low        # build at another effort level (default high, like the baseline)
 ```
 
 Each run writes `bench/runs/<timestamp>/` (git-ignored): per topic the sources, the page, every
@@ -63,6 +64,11 @@ So a single build can't show a change smaller than these ranges. To test a skill
 `--repeat 3` on the topics it targets and compare averages: a mechanism change under about 0.5,
 or a rubric change under about 0.2, is noise. The flags compare single cards with the baseline,
 so read them as "look at this", not as a verdict.
+
+**Levels.** Runs build at `high` by default, so they compare with the baseline. A `--level low`
+or `--level medium` run is compared only with baseline cards of the same level (none yet), and
+the judge scores its budgets against that level's row in the skill's Effort table. Expect lower
+quiz scores at lower levels; high-severity errors should stay at 0.
 
 ## Topics
 
