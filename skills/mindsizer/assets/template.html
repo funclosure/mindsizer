@@ -27,6 +27,10 @@ h2 { font-size: clamp(24px, 3.4vw, 30px); line-height: 1.2; letter-spacing: -0.0
 h3 { font-size: 18px; line-height: 1.3; letter-spacing: -0.005em; }
 .prose { display: grid; gap: 18px; }
 strong { font-weight: 600; }
+/* an original-language gloss over a translated term: <ruby>意外<rt>surprise</rt></ruby>; overlaid so it never widens the term */
+ruby { position: relative; display: inline-block; text-indent: 0; }
+rt { position: absolute; left: 50%; bottom: 100%; transform: translate(-50%, 0.15em); font: 400 max(11px, 0.6em)/1 var(--ui); color: var(--ink-2); letter-spacing: 0; white-space: nowrap; pointer-events: none; }
+.prose p:has(ruby), .dek:has(ruby) { line-height: 1.85; }
 .note, .prose .note { font: 14.5px/1.55 var(--ui); color: var(--ink-2); }
 
 /* idea colours: put .h1-.h4 on a figure, a set item or a marker; everything inside picks up --c/--t/--m */

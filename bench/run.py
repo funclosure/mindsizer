@@ -67,7 +67,15 @@ def source_list(t, src):
     return "\n".join(f"   - {src / s['file']}" + (f" ({s['url']})" if s.get("url") else "") + (f": {s['hint']}" if s.get("hint") else "") for s in t["sources"])
 
 
-def run_topic(tid, run_dir, model, reuse, k=0):
+LEVELS = ("low", "medium", "high")
+
+
+def level_line(level):
+    """What the builder's and judge's prompts say about effort: the user named this level."""
+    return f" Build it at {level} effort."
+
+
+def run_topic(tid, run_dir, model, reuse, k=0, level="high"):
     t, d = TOPICS[tid], run_dir / (f"{tid}-{k}" if k else tid)
     src, page_dir, logs = d / "src", d / "page", d / "logs"
     for x in (src, page_dir, logs): x.mkdir(parents=True, exist_ok=True)
@@ -78,13 +86,13 @@ def run_topic(tid, run_dir, model, reuse, k=0):
         shutil.copy(f, src / s["file"])
     page = page_dir / f"{tid}.html"
     style_line = f", in the {t['style']} style." if t.get("style") else ""
-    card = {"topic": tid, "rep": k, "dir": d.name, "style": t.get("style") or "default", "confounded": bool(t.get("confounded")), "cost": 0}
+    card = {"topic": tid, "rep": k, "dir": d.name, "style": t.get("style") or "default", "level": level, "confounded": bool(t.get("confounded")), "cost": 0}
 
     # 1. build
     if reuse:
         shutil.copy(pathlib.Path(reuse) / tid / "page" / f"{tid}.html", page); card["build"] = {"reused": str(reuse)}
     else:
-        r = claude("builder", prompt("builder", skill=SKILL, request=t["request"], style_line=style_line, src=src,
+        r = claude("builder", prompt("builder", skill=SKILL, request=t["request"], style_line=style_line, level_line=level_line(level), src=src,
                                      source_list=source_list(t, src), notes=("   " + t["notes"]) if t.get("notes") else "",
                                      page=page, workdir=d),
                    cwd=d, tools=["Read", "Write", "Edit", "Glob", "Grep", "Bash"], model=model, logs=logs, add_dirs=[SKILL], timeout=3600)
@@ -95,7 +103,7 @@ def run_topic(tid, run_dir, model, reuse, k=0):
 
     # 2. states.sh
     st_dir = d / "states"
-    subprocess.run([str(SKILL / "scripts" / "states.sh"), str(page), str(st_dir)], capture_output=True, text=True, timeout=900)
+    subprocess.run([str(SKILL / "scripts" / "states.sh"), "--level", level, str(page), str(st_dir)], capture_output=True, text=True, timeout=900)
 
     # 3. readers, in parallel, each in its own folder with its own copy of the page
     quiz = BENCH / "quizzes" / f"{tid}.json"
@@ -107,7 +115,7 @@ def run_topic(tid, run_dir, model, reuse, k=0):
         "answerer": (prompt("answerer", page=dirs["answerer"] / "page.html", questions=dirs["answerer"] / "questions.json", out=dirs["answerer"] / "answers.json"),
                      dirs["answerer"], ["Read", "Write"], []),
         "judge": (prompt("judge", page=dirs["judge"] / "page.html", src=src, source_list=source_list(t, src), request=t["request"],
-                         style_line=style_line, skill=SKILL, out=dirs["judge"] / "report.json"), d, ["Read", "Write", "Glob", "Grep"], [SKILL]),
+                         style_line=style_line, level_line=level_line(level), skill=SKILL, out=dirs["judge"] / "report.json"), d, ["Read", "Write", "Glob", "Grep"], [SKILL]),
         "newcomer": (prompt("newcomer", page=dirs["newcomer"] / "page.html", out=dirs["newcomer"] / "newcomer.json"), dirs["newcomer"], ["Read", "Write"], []),
     }
     with cf.ThreadPoolExecutor(3) as ex:
@@ -143,14 +151,14 @@ def verify_high(d, tid, model):
     return r["cost"]
 
 
-def rejudge(d, tid, model):
+def rejudge(d, tid, model, level="high"):
     """Re-run only the judge on a saved page (keeps the old report as report.v1.json); returns the judge's cost."""
     t, src, jd = TOPICS[tid], d / "src", d / "judge"
     old = jd / "report.json"
     if old.exists() and not (jd / "report.v1.json").exists(): shutil.copy(old, jd / "report.v1.json")
     style_line = f", in the {t['style']} style." if t.get("style") else ""
     r = claude("judge-rerun", prompt("judge", page=jd / "page.html", src=src, source_list=source_list(t, src), request=t["request"],
-                                     style_line=style_line, skill=SKILL, out=old), cwd=d, tools=["Read", "Write", "Glob", "Grep"],
+                                     style_line=style_line, level_line=level_line(level), skill=SKILL, out=old), cwd=d, tools=["Read", "Write", "Glob", "Grep"],
                model=model, logs=d / "logs", add_dirs=[SKILL])
     ensure_json(old, model, d / "logs")
     return r["cost"] + verify_high(d, tid, model)
@@ -224,20 +232,20 @@ def spread_md(cards):
 
 def scorecard_md(cards, base):
     bmap = {}
-    for t in {c["topic"] for c in (base or {}).get("cards", []) if c.get("quiz")}:
-        cs = [c for c in base["cards"] if c["topic"] == t and c.get("quiz") and c.get("judge_ok", True)]
+    for t, lv in {(c["topic"], c.get("level", "high")) for c in (base or {}).get("cards", []) if c.get("quiz")}:
+        cs = [c for c in base["cards"] if c["topic"] == t and c.get("level", "high") == lv and c.get("quiz") and c.get("judge_ok", True)]
         avg = lambda f: (lambda v: sum(v) / len(v) if v else None)([f(c) for c in cs if f(c) is not None])
-        bmap[t] = {"quiz": {"score": avg(lambda c: c["quiz"]["score"])}, "fidelity": {"high": avg(lambda c: c["fidelity"]["high"])},
-                   "rubric": {"overall": avg(lambda c: c["rubric"].get("overall"))}, "n": len(cs)}
-    rows = ["| topic | style | quiz | high / med / low | rubric | mechanism | mech. gaps | first read | states problems | newcomer | build | cost |",
-            "|---|---|---|---|---|---|---|---|---|---|---|---|"]
+        bmap[(t, lv)] = {"quiz": {"score": avg(lambda c: c["quiz"]["score"])}, "fidelity": {"high": avg(lambda c: c["fidelity"]["high"])},
+                         "rubric": {"overall": avg(lambda c: c["rubric"].get("overall"))}, "n": len(cs)}
+    rows = ["| topic | level | style | quiz | high / med / low | rubric | mechanism | mech. gaps | first read | states problems | newcomer | build | cost |",
+            "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     flags = []
     for c in cards:
-        if c.get("error"): rows.append(f"| {c['topic']} | {c['style']} | {c['error']} |||||||||"); continue
-        q, f, r, s, b = c["quiz"], c["fidelity"], c["rubric"], c["states"], bmap.get(c["topic"])
+        if c.get("error"): rows.append(f"| {c['topic']} | {c.get('level', 'high')} | {c['style']} | {c['error']} ||||||||||"); continue
+        q, f, r, s, b = c["quiz"], c["fidelity"], c["rubric"], c["states"], bmap.get((c["topic"], c.get("level", "high")))
         probs = sum(s[k] or 0 for k in ("look_alike", "small_text", "handwriting", "dup_keys", "script_errors", "close_new"))
         delta = lambda now, old: "" if old is None or now is None else f" ({now - old:+.2g})"
-        rows.append(f"| {c['topic']}{' #' + str(c['rep']) if c.get('rep') else ''}{' ⚠' if c['confounded'] else ''} | {c['style']} | {q['correct']}✓ {q['partial']}~ {q['wrong']}✗ of {q['of']}"
+        rows.append(f"| {c['topic']}{' #' + str(c['rep']) if c.get('rep') else ''}{' ⚠' if c['confounded'] else ''} | {c.get('level', 'high')} | {c['style']} | {q['correct']}✓ {q['partial']}~ {q['wrong']}✗ of {q['of']}"
                     f"{delta(q['score'], b and b['quiz']['score'])} | {f['high']} / {f['medium']} / {f['low']} | {num(r.get('overall'))}"
                     f"{delta(r.get('overall'), b and b['rubric'].get('overall'))} | {num((c.get('mechanism') or {}).get('mean'))} | {num((c.get('mechanism') or {}).get('gaps'))} | {num(s['first_read_words'])} | {probs} | "
                     f"{num(c['newcomer']['confidence'])}/5 | {num((c['build'] or {}).get('seconds'))}s | ${num(c['cost'])} |")
@@ -261,15 +269,17 @@ def main():
     ap.add_argument("topics", nargs="*"); ap.add_argument("--all", action="store_true")
     ap.add_argument("--model", default="claude-opus-5-5"); ap.add_argument("--jobs", type=int, default=2)
     ap.add_argument("--reuse"); ap.add_argument("--save-baseline", action="store_true")
+    ap.add_argument("--level", choices=LEVELS, default="high", help="effort level to build at (default high, so runs compare with the baseline)")
     ap.add_argument("--repeat", type=int, default=1, help="build each topic N times and report mean and range")
     ap.add_argument("--rejudge", help="re-run only the judge on a saved run's pages (optionally only the named topics), then rescore")
     ap.add_argument("--rescore", help="rebuild a run's scorecard from its saved files (repairs broken JSON first)")
     a = ap.parse_args()
+    if a.save_baseline and a.level != "high" and not (a.rescore or a.rejudge): sys.exit("--save-baseline only for --level high (baseline.json holds the high baseline)")
     if a.rejudge:
         run_dir = pathlib.Path(a.rejudge); old = load(run_dir / "scorecard.json")
         todo = [c for c in old["cards"] if not a.topics or c["topic"] in a.topics]
         with cf.ThreadPoolExecutor(a.jobs) as ex:
-            costs = list(ex.map(lambda c: rejudge(run_dir / c.get("dir", c["topic"]), c["topic"], a.model), todo))
+            costs = list(ex.map(lambda c: rejudge(run_dir / c.get("dir", c["topic"]), c["topic"], a.model, c.get("level", "high")), todo))
         print(f"re-judged {len(todo)} page(s) in {run_dir.name} for ${sum(costs):.2f}")
         a.rescore = a.rejudge
     if a.rescore:
@@ -279,12 +289,14 @@ def main():
             d = run_dir / c.get("dir", c["topic"])
             for f in (d / "answerer" / "answers.json", d / "judge" / "report.json", d / "newcomer" / "newcomer.json", d / "grades.json"):
                 ensure_json(f, a.model, d / "logs")
-            cards.append(score(d, c["topic"], {k: c[k] for k in ("topic", "rep", "dir", "style", "confounded", "cost", "build") if k in c}))
+            cards.append(score(d, c["topic"], {k: c[k] for k in ("topic", "rep", "dir", "style", "level", "confounded", "cost", "build") if k in c}))
         old["cards"] = cards
         (run_dir / "scorecard.json").write_text(json.dumps(old, indent=1))
-        md = f"# mindsizer benchmark {run_dir.name} (skill {old['skill_commit']}, {old['model']}), rescored\n\n" + scorecard_md(cards, load(BENCH / "baseline.json"))
+        md = f"# mindsizer benchmark {run_dir.name} (skill {old['skill_commit']}, {old['model']}, {old.get('level', 'high')} effort), rescored\n\n" + scorecard_md(cards, load(BENCH / "baseline.json"))
         (run_dir / "scorecard.md").write_text(md); print(md)
-        if a.save_baseline: shutil.copy(run_dir / "scorecard.json", BENCH / "baseline.json"); print(f"\nbaseline saved from {run_dir.name}")
+        if a.save_baseline:
+            if old.get("level", "high") != "high": sys.exit("--save-baseline only for --level high (baseline.json holds the high baseline)")
+            shutil.copy(run_dir / "scorecard.json", BENCH / "baseline.json"); print(f"\nbaseline saved from {run_dir.name}")
         return
     ids = list(TOPICS) if a.all else a.topics
     if not ids or any(i not in TOPICS for i in ids): sys.exit(f"pick topics from: {', '.join(TOPICS)} (or --all)")
@@ -292,17 +304,17 @@ def main():
     sha = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=BENCH, capture_output=True, text=True).stdout.strip()
     print(f"run {run_dir.name}: {', '.join(ids)} with {a.model} at skill {sha}", flush=True)
     with cf.ThreadPoolExecutor(a.jobs) as ex:
-        futs = {ex.submit(run_topic, i, run_dir, a.model, a.reuse, k if a.repeat > 1 else 0): i for i in ids for k in range(1, a.repeat + 1)}
+        futs = {ex.submit(run_topic, i, run_dir, a.model, a.reuse, k if a.repeat > 1 else 0, level=a.level): i for i in ids for k in range(1, a.repeat + 1)}
         cards = []
         for f in cf.as_completed(futs):
             try: c = f.result()
             except BaseException as e: c = {"topic": futs[f], "style": "", "error": f"crashed: {e}"}
             cards.append(c); print(f"done: {c['topic']}", flush=True)
     cards.sort(key=lambda c: (ids.index(c["topic"]), c.get("rep", 0)))
-    result = {"run": run_dir.name, "skill_commit": sha, "model": a.model, "cards": cards,
+    result = {"run": run_dir.name, "skill_commit": sha, "model": a.model, "level": a.level, "cards": cards,
               "total_cost": round(sum(c.get("cost", 0) for c in cards), 2)}
     (run_dir / "scorecard.json").write_text(json.dumps(result, indent=1))
-    md = f"# mindsizer benchmark {run_dir.name} (skill {sha}, {a.model})\n\n" + scorecard_md(cards, load(BENCH / "baseline.json"))
+    md = f"# mindsizer benchmark {run_dir.name} (skill {sha}, {a.model}, {a.level} effort)\n\n" + scorecard_md(cards, load(BENCH / "baseline.json"))
     md += f"\n\nTotal cost: ${result['total_cost']}"
     (run_dir / "scorecard.md").write_text(md)
     print("\n" + md)

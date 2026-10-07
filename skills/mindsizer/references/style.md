@@ -55,6 +55,9 @@ themes; `--h*-t` is the text version of a colour, `--h*-c` is for strokes only.
 - A tag fits on one line (about three words); the CSS cuts off anything longer, and
   `scripts/states.sh` reports it, so every item's heading lines up.
 - Mono only for literal code, paths and data (`.listing`).
+- Original-language glosses (`<ruby>term<rt>original</rt></ruby>`, see SKILL.md) are small
+  `--ui` text centred above the term. The template overlays them, so a long gloss never
+  widens its term or opens a gap in the line.
 
 ## Layout
 - Reading column 660px (`.col`). Figures sit in the column; their SVG is at most 600 wide.

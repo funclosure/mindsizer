@@ -52,6 +52,11 @@ reads `SKILL.md` files, or can follow instructions and run shell commands, can u
 
 Then just ask: "help me actually understand how RLHF works", or "make this paper click".
 
+Pages come at three effort levels. **Medium** is the default. Say "quick" (or "low") for a
+three-minute, high-level page that is cheaper and faster to build, or "go deep" (or "high") for
+the full treatment: more sections and interactions, folded detail and a stricter check. Ask to
+"go deeper" on a page to rebuild it one level up.
+
 ## How it works
 
 The skill is instructions plus a template. There is no CLI and no build step.

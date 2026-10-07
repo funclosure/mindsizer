@@ -29,3 +29,4 @@ node_modules/
 # benchmark: fetched sources (copyrighted) and run outputs
 bench/.cache/
 bench/runs/
+bench/__pycache__/
