@@ -110,5 +110,6 @@ catch this, because the drawing does change: check it by eye.
 
 ## static, on purpose
 When the claim is a definition, a quote, or a single striking number, use a big number, a
-quote, or a simple labelled figure. Not every section needs a control. A page with 3–5
-interactions and some quiet sections reads better than eight widgets.
+quote, or a simple labelled figure. Not every section needs a control. A page with the
+level's number of interactions (see the Effort table in SKILL.md) and some quiet sections reads
+better than eight widgets.
