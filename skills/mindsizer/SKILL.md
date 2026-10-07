@@ -166,6 +166,11 @@ worship will eat you alive" is an invented claim, even though every quote on the
   that the source rules out.
 - **Copy:** plain, short, active sentences, with concrete examples over abstractions. No hype,
   no "In this section we will…".
+- **Pages not in English:** where a translated term loses its reference (a field term, a
+  name the reader will meet in English, a word the source uses in English), gloss it at its
+  first appearance with the original above it: `<ruby>意外<rt>surprise</rt></ruby>`. Only key
+  terms, once each, not every noun; never in a heading or a figure. This replaces
+  "term (English)" in brackets.
 - **Map links:** each map chip links to the section that introduces its idea, and path kickers
   use only the map's exact names. If two sections sit under one step, both kickers end in that
   step's name; don't invent sub-names the map doesn't show.
