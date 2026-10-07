@@ -41,7 +41,7 @@ Today's pages (the Vervaeke example, the mindsizer explainer and its zh-TW versi
 | Spine notes | the source line for each heading | + the source line for each "so" line | + the facts list, attributions and links |
 | Checks | `check.sh` | + `states.sh` | + figure review sheets and one redraw pass |
 | Fidelity pass | numbers, quotes, headings | + quantifiers and hedges | full (incl. side-by-side claims) |
-| Close | one line or a landing quote | a quote or a table | a table, one row per map step |
+| Close | one line or a landing quote | a quote or a table | a table (one row per map step) or a landing quote |
 
 Section rule at every level: at most one section more than the map has steps, as now.
 

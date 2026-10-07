@@ -7,12 +7,13 @@ description: >-
   between two) that let the reader see why. Built in one of five calm styles (neat, graphite,
   ink, margins, pencil); the user can name one. Three effort levels: low (a quick, high-level
   page), medium (the default) and high. Use whenever the user wants to UNDERSTAND, LEARN,
-  EXPLAIN, TEACH or DIGEST something: a
-  concept ("explain how RLHF works"), an article, paper, talk transcript, README or event.
+  EXPLAIN, TEACH or DIGEST something: a concept ("explain how RLHF works"), an article, paper,
+  talk transcript, README or event.
   Casual phrasings count: "help me get this", "make this click", "explain this to me properly",
   "build me an explainer". Output is a single self-contained HTML file that opens in any browser
-  (published as a Claude Artifact when the host has that tool). Do NOT use it for a short TL;DR, for writing new prose from
-  scratch, or when the user asks for a specific format (PowerPoint, PDF, Google Slides).
+  (published as a Claude Artifact when the host has that tool). Do NOT use it for a short
+  TL;DR, for writing new prose from scratch, or when the user asks for a specific format
+  (PowerPoint, PDF, Google Slides).
 ---
 
 # mindsizer
@@ -42,7 +43,7 @@ the size of the source: a long paper at medium is still a medium page. The refer
 | Spine notes | the source line for each heading | + the source line for each "so" line | + the facts list, attributions and links |
 | Checks | `check.sh` | + `states.sh` | + figure review sheets and one redraw pass |
 | Fidelity pass | numbers, quotes, headings | + quantifiers and hedges | all of it |
-| Close | one line or a landing quote | a quote or a table | a table, one row per map step |
+| Close | one line or a landing quote | a quote or a table | a table (one row per map step) or a landing quote |
 
 **Every level keeps:** reading the whole source; the map and path kickers; one claim per
 section; every number and quote traceable, and anything made up labelled "illustrative";
@@ -61,9 +62,9 @@ Steps below marked "(medium, high)" or "(high)" are skipped at the levels not na
 
 These came from comparing pages with the user. They matter more than any single widget.
 
-1. **Map before territory.** The hero shows the whole idea as a chain of steps (as many as the level allows;
-   chips joined by arrows, each linking to its section). The reader knows where they're going before
-   they start.
+1. **Map before territory.** The hero shows the whole idea as a chain of steps (as many as the
+   level allows; chips joined by arrows, each linking to its section). The reader knows where
+   they're going before they start.
 2. **Always know where you are.** Each section's kicker is a path through that map
    (`meaning-in-life/` → `meaning-in-life/mattering/` → `relevance-realization/no-shortcut/`),
    not a number.
@@ -83,21 +84,21 @@ These came from comparing pages with the user. They matter more than any single 
 7. **A concise first read.** Each section's first read is the claim, one or two short
    paragraphs (about 60–110 words in all), the figure, and one bold takeaway line. Read top to
    bottom without opening anything, the page teaches the whole idea. Aim for the level's
-   first-read budget as `scripts/states.sh` counts it (headings, labels and tables included); it says when
-   you are well over. Code goes in a fold unless the code itself is the point.
-   Everything else the
-   source offers (supporting research, asides, extra examples, names and citations) goes in a
-   foldable `details.more` at the end of the section, whose summary says what's inside
-   (at low, leave it out instead). Never
-   fold the source's own statement of its point, or the steps it uses to get there ("I
-   submit…", "the point is…", "there is no such thing as…"): those stay in the first read. Keep
-   the detail (at medium and high), just fold it. Warm, plain prose, like a good lecture.
+   first-read budget as `scripts/states.sh` counts it (headings, labels and tables included; at
+   low, estimate it); at medium and high, `states.sh` says when you are well over. Code goes in
+   a fold (at low, cut it) unless the code itself is the point. Everything else the source
+   offers (supporting research, asides, extra examples, names and citations) goes in a
+   foldable `details.more` at the end of the section, whose summary says what's inside (at
+   low, leave it out instead). Never fold the source's own statement of its point, or the
+   steps it uses to get there ("I submit…", "the point is…", "there is no such thing
+   as…"): those stay in the first read. Keep the detail (at medium and high), just fold it.
+   Warm, plain prose, like a good lecture.
 8. **Say what the colour means.** Each map step gets an idea colour (`.h1`–`.h4`) that follows
    it through the page. One line under the map says what colour means.
 9. **Point at what matters.** A figure gets 1–3 short pencilled notes saying what to notice
-   ("this loop is the need"), not just a part's name. The pencil is only ever an aside: anything the reader must
-   read exactly (code, a command, a number) stays in print. A key phrase in the prose can carry one
-   too. Print carries the argument; the pencil only points.
+   ("this loop is the need"), not just a part's name. The pencil is only ever an aside:
+   anything the reader must read exactly (code, a command, a number) stays in print. A key
+   phrase in the prose can carry one too. Print carries the argument; the pencil only points.
 
 ## 1. Find the spine (think before you write)
 
@@ -105,11 +106,11 @@ These came from comparing pages with the user. They matter more than any single 
    obvious caption mishearings of names. If they named a concept only, use what you know and
    say so on the page. Ask what it's for only when the purpose really changes the page.
 2. **Map and spine.** Write the map of the whole idea first, with the level's number of steps.
-   Then choose the level's number of sections
-   (not counting hero and close), each **one claim**, grouped under those steps in the order
-   the understanding builds. Every section sits under a map step, and there is at most one
-   section more than the map has steps. A section that isn't on the map gets a step of its own
-   or merges into a neighbour, or the reader loses their place.
+   Then choose the level's number of sections (not counting hero and close), each **one
+   claim**, grouped under those steps in the order the understanding builds. Every section
+   sits under a map step, and there is at most one section more than the map has steps. A
+   section that isn't on the map gets a step of its own or merges into a neighbour, or the
+   reader loses their place.
 3. **Per section, the form.** Decide what carries the claim:
    - **a set** (`.set`), when it's parallel things; a **chain** (`.chain`) when order is the point;
    - an **interaction** from `references/patterns.md` (switch off, pick, flip, reveal, slide,
@@ -133,8 +134,8 @@ These came from comparing pages with the user. They matter more than any single 
    figures, all from real evals.
 4. **Facts.** Every number, name and quote you use is traceable to the source. At high, write
    them down as a list, and for an argument also list each **attribution** ("Filler argues X")
-   and each **link** you
-   draw between steps ("A, therefore B"), with the source line it rests on.
+   and each **link** you draw between steps ("A, therefore B"), with the source line it
+   rests on.
    - Anything made up for illustration (toy dynamics, example names) is labelled
      "illustrative".
    - A toy model may show the shape of a claim the source makes. It must not produce a new
@@ -151,11 +152,11 @@ These came from comparing pages with the user. They matter more than any single 
    says in one line why a simpler tool wouldn't do. A `.set` is usually the right form.
 
 Write the map and spine down briefly before coding. They decide the page. In the spine, write
-next to every heading (and at medium and high, every "so" line) the source sentence
-it rests on. These are the lines
-the page writes itself, they compress the most, and they are where pages drift: a heading that
-says "unchosen worship eats you alive" when the source says "pretty much anything else you
-worship will eat you alive" is an invented claim, even though every quote on the page is exact.
+next to every heading (and at medium and high, every "so" line) the source sentence it rests
+on. These are the lines the page writes itself, they compress the most, and they are where
+pages drift: a heading that says "unchosen worship eats you alive" when the source says
+"pretty much anything else you worship will eat you alive" is an invented claim, even though
+every quote on the page is exact.
 
 ## 2. Write the page in one pass
 
@@ -168,10 +169,9 @@ worship will eat you alive" is an invented claim, even though every quote on the
 - **Hero:** a kicker naming the source, the title, a dek that states the whole idea in 2–3
   sentences, the map, and the one-line colour note.
 - **Each section:** the path kicker, the claim as `h2`, one or two short paragraphs, then a
-  set, an interaction or a figure, then one bold takeaway line, then (at medium and high, if there's more)
-  a
-  `details.more` with the rest. Before writing a paragraph in the first read, ask whether the
-  claim needs it; if it only supports or decorates, it goes in the fold.
+  set, an interaction or a figure, then one bold takeaway line, then (at medium and high, if
+  there's more) a `details.more` with the rest. Before writing a paragraph in the first read,
+  ask whether the claim needs it; if it only supports or decorates, it goes in the fold.
 - **Interaction rules:**
   - It opens in a meaningful state, never an empty shell. Every control says what it does.
   - Next to the control, at body contrast, one line says what to watch and what it means.
@@ -185,13 +185,13 @@ worship will eat you alive" is an invented claim, even though every quote on the
 - **Figures:** one function per figure builds the items for the current state with the pencil
   kit (`ring`, `line`, `head`, `blob`, `ann`) and calls `draw(svg, items)`; call it on every
   control change. New strokes draw themselves in, so the change is visible.
-- **Annotations:** `ann(key, { to, at, text, side })`, labels in a gutter, ≤ 6 words. Put the label
-  above or beside its target, never below it: the stroke leaves from under the label, so a
-  label below its target gets crossed by its own stroke. Write a note
-  for every reachable state, never one note reused across states. When a switch turns a
-  condition off, show what that does to the outcome (the commons shrinks, the link breaks, the
-  text blurs), and point the note at the consequence; a dashed ghost of the removed part is at
-  most a reminder of what is gone, never the whole change. A note never contradicts the drawing. In prose,
+- **Annotations:** `ann(key, { to, at, text, side })`, labels in a gutter, ≤ 6 words. Put the
+  label above or beside its target, never below it: the stroke leaves from under the label,
+  so a label below its target gets crossed by its own stroke. Write a note for every reachable
+  state, never one note reused across states. When a switch turns a condition off, show what
+  that does to the outcome (the commons shrinks, the link breaks, the text blurs), and point
+  the note at the consequence; a dashed ghost of the removed part is at most a reminder of
+  what is gone, never the whole change. A note never contradicts the drawing. In prose,
   `<span class="ann h2" data-note="…">phrase</span>` at the end of a paragraph with
   `.room-below`.
 - **Figure test:** cover the prose and ask whether the figure alone shows *why* the state changed.
@@ -217,12 +217,13 @@ worship will eat you alive" is an invented claim, even though every quote on the
 - **Close:** one short final section that ties the threads together (a claim plus a compact
   table, or a quote that lands the point). A closing table has one row per map step, named as
   on the map, and adds something (a contrast, a "so what"); if it only restates, use a quote.
-  Its cells use only what the page has already shown: a close never introduces a new idea, name
-  or counter-example. A distinction the close relies on (say, "regulated" vs "open to anyone")
-  must be explained in the first read, not only in a fold. At low the close is one line or a
-  landing quote; at medium, a quote or a table; at high, a table. Then the footer: sources, and a
-  one-line note on
-  what is illustrative, simplified or "our reading".
+  Its cells use only what the page has already shown: a close never introduces a new idea,
+  name or counter-example. A distinction the close relies on (say, "regulated" vs "open to
+  anyone") must be explained in the first read, not only in a fold. At low the close is one
+  line or a landing quote; at medium and high, a quote or a table. Then the footer: sources,
+  and a one-line note on what is illustrative, simplified or "our reading". At low, add the
+  line "This is the high-level version; ask for medium or high for more depth." in the
+  page's language.
 
 ## 3. Quick check (once, then deliver)
 
@@ -258,11 +259,12 @@ worship will eat you alive" is an invented claim, even though every quote on the
    Then rerun `states.sh` once on the redrawn figures.
 4. Look at the full-page screenshots, especially every figure at 400px. Fix what you see in
    one pass. Don't loop.
-5. **Fidelity pass.** At low, check numbers, quotes and headings; at medium, add quantifiers
-   and hedges; at high, all of the below. Start with the lines you wrote yourself, because exact quotes
-   rarely drift
-   and summaries do: the dek, the map, every heading, every "so" line, every verdict and every
-   figure label. Hold each against the source sentence named in the spine.
+5. **Fidelity pass.** At low, check every number and quote, and the lines you wrote yourself
+   (dek, map, headings, verdicts); at medium, add "so" lines, attributions and quantifiers and
+   hedges; at high, all of the below. Start with the lines you wrote yourself, because exact
+   quotes rarely drift and summaries do: the dek, the map, every heading, every "so" line,
+   every verdict and every figure label. Hold each against the source sentence named in
+   the spine.
    - Every number and quote is in the source, or labelled illustrative.
    - Every "X says" names the person the source names, the same way everywhere.
    - Every "therefore" or mapping follows the source's direction. "Our reading" may extend
@@ -284,8 +286,9 @@ worship will eat you alive" is an invented claim, even though every quote on the
   publish a copy without the first line (the Artifact tool adds its own page skeleton, so
   `tail -n +2 page.html > page.artifact.html`) and give the link. Anywhere else, the file is
   already a web page: it can be hosted as is.
-- Reply in a few lines: the level you built at (and that the user can ask for one level up),
-  what the page covers, the interactions, what is illustrative, and what you did NOT check.
+- Reply in a few lines: the level you built at (below high, and that the user can ask for
+  one level up), what the page covers, the interactions, what is illustrative, and what you
+  did NOT check.
 
 ## Follow-ups
 

@@ -32,6 +32,17 @@ class LevelTests(unittest.TestCase):
         md = run.scorecard_md([card("commons", "medium")], None)
         self.assertIn("| commons | medium |", md)
 
+    def test_save_baseline_refused_below_high(self):
+        import sys, tempfile, pathlib
+        from unittest import mock
+        with tempfile.TemporaryDirectory() as tmp:
+            with mock.patch.object(run, "BENCH", pathlib.Path(tmp)), \
+                 mock.patch.object(sys, "argv", ["run.py", "commons", "--level", "low", "--save-baseline"]):
+                with self.assertRaises(SystemExit) as cm:
+                    run.main()
+            self.assertIn("--save-baseline only for --level high", str(cm.exception))
+            self.assertFalse((pathlib.Path(tmp) / "runs").exists())
+
 
 if __name__ == "__main__":
     unittest.main()

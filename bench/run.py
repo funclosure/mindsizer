@@ -274,6 +274,7 @@ def main():
     ap.add_argument("--rejudge", help="re-run only the judge on a saved run's pages (optionally only the named topics), then rescore")
     ap.add_argument("--rescore", help="rebuild a run's scorecard from its saved files (repairs broken JSON first)")
     a = ap.parse_args()
+    if a.save_baseline and a.level != "high" and not (a.rescore or a.rejudge): sys.exit("--save-baseline only for --level high (baseline.json holds the high baseline)")
     if a.rejudge:
         run_dir = pathlib.Path(a.rejudge); old = load(run_dir / "scorecard.json")
         todo = [c for c in old["cards"] if not a.topics or c["topic"] in a.topics]
@@ -293,7 +294,9 @@ def main():
         (run_dir / "scorecard.json").write_text(json.dumps(old, indent=1))
         md = f"# mindsizer benchmark {run_dir.name} (skill {old['skill_commit']}, {old['model']}, {old.get('level', 'high')} effort), rescored\n\n" + scorecard_md(cards, load(BENCH / "baseline.json"))
         (run_dir / "scorecard.md").write_text(md); print(md)
-        if a.save_baseline: shutil.copy(run_dir / "scorecard.json", BENCH / "baseline.json"); print(f"\nbaseline saved from {run_dir.name}")
+        if a.save_baseline:
+            if old.get("level", "high") != "high": sys.exit("--save-baseline only for --level high (baseline.json holds the high baseline)")
+            shutil.copy(run_dir / "scorecard.json", BENCH / "baseline.json"); print(f"\nbaseline saved from {run_dir.name}")
         return
     ids = list(TOPICS) if a.all else a.topics
     if not ids or any(i not in TOPICS for i in ids): sys.exit(f"pick topics from: {', '.join(TOPICS)} (or --all)")
