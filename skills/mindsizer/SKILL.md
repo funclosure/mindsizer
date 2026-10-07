@@ -209,8 +209,10 @@ every quote on the page is exact.
 - **Pages not in English:** where a translated term loses its reference (a field term, a
   name the reader will meet in English, a word the source uses in English), gloss it at its
   first appearance with the original above it: `<ruby>意外<rt>surprise</rt></ruby>`. Only key
-  terms, once each, not every noun; never in a heading or a figure. This replaces
-  "term (English)" in brackets.
+  terms, once each, not every noun. Only in body prose (paragraphs, the dek, set
+  definitions, verdict lines): never in a heading, a figure, a chain step or a small-text
+  note, where the gloss collides with the line above. This replaces "term (English)" in
+  brackets.
 - **Map links:** each map chip links to the section that introduces its idea, and path kickers
   use only the map's exact names. If two sections sit under one step, both kickers end in that
   step's name; don't invent sub-names the map doesn't show.

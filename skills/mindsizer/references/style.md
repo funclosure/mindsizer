@@ -57,7 +57,8 @@ themes; `--h*-t` is the text version of a colour, `--h*-c` is for strokes only.
 - Mono only for literal code, paths and data (`.listing`).
 - Original-language glosses (`<ruby>term<rt>original</rt></ruby>`, see SKILL.md) are small
   `--ui` text centred above the term. The template overlays them, so a long gloss never
-  widens its term or opens a gap in the line.
+  widens its term or opens a gap in the line. It needs the extra line height of body prose:
+  in tight text (chain steps, `.note`) it lands on the line above, so it stays out of those.
 
 ## Layout
 - Reading column 660px (`.col`). Figures sit in the column; their SVG is at most 600 wide.
